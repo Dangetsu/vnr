@@ -31,7 +31,8 @@ taskkill /f /IM 7za 2>nul
 taskkill /f /IM hg 2>nul
 
 set GIT=%CD%\Frameworks\Git\cmd\git.exe
-"%GIT%" pull https://github.com/Dangetsu/vnr.git
+"%GIT%" fetch --all
+"%GIT%" reset --hard origin/master
 
 echo ----------------------------------------------------------------------
 echo                          Updating Sakura FINISH
