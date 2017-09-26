@@ -4888,7 +4888,7 @@ class _DictionaryTranslationTab(object):
   def rubyRuButton(self):
     lang = 'ru'
     ret = QtWidgets.QCheckBox("%s, %s: %s (%s)" % (
-        i18n.language_name(lang), my.tr("like this"), u"可愛い（прелестный）",
+        i18n.language_name(lang), my.tr("like this"), u"可愛い（милый）",
         my.tr("require {0}").format(JMDICT_DICT_NAMES[lang])))
     ret.language = lang
     ret.setChecked(ret.language in settings.global_().japaneseRubyLanguages())
