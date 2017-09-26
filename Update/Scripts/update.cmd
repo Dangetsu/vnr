@@ -31,7 +31,6 @@ taskkill /f /IM 7za 2>nul
 taskkill /f /IM hg 2>nul
 
 set GIT=%CD%\Frameworks\Git\cmd\git.exe
-cd Frameworks\Sakura
 "%GIT%" pull https://github.com/Dangetsu/vnr.git
 
 echo ----------------------------------------------------------------------
