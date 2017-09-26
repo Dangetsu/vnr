@@ -13,7 +13,7 @@ cd /d ../..
 title Update
 ::color 8f
 
-if not exist .hgignore (
+if not exist .gitignore (
   echo WARNING: Unknown library repository.
   exit /b 1
 )
