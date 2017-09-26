@@ -1,0 +1,151 @@
+/* bootstrap/nav.sass
+   12/31/2013 jichi
+   See: http://stackoverflow.com/questions/18529274/change-navbar-color-in-twitter-bootstrap-3
+   See: http://jsfiddle.net/zessx/drSbw/
+   See: http://smarchal.com/twbscolor/?bd=e74c3c&bh=c0392b&cd=ecf0f1&ch=ffbbbc
+
+@import bootstrap/defs
+@import bootstrap/navdefs/clean
+//@import navdefs/skyblue
+//@import navdefs/red
+//@import navdefs/green
+//@import navdefs/orange
+//@import navdefs/purple
+
+// - Cursors
+//@import main/cursor
+//.navbar-nav > li.active > a
+//  @extend .cursor-pointer
+
+// - Colors -
+
+.nav.nav-clean
+  &.nav-pills > li.active > a,
+  &.nav-pills > li.active > a:hover,
+  &.nav-pills > li.active > a:focus
+    //color: #fff // bootstrap default
+    //background-color: #428bca // bootstrap default
+    color: $bs-highlight-default
+    background-color: transparent
+    border: 2px solid $bs-highlight-default
+    border-radius: 6px // default is 4px
+    margin-top: -2px // reduce the size of the border
+    //margin-left: -2px // reduce the size of the border
+
+// - Navigation bar -
+
+.navbar-default.nav-clean
+  background-color: $nav-bg-default
+  //border-color: $nav-bg-highlight  // 12/31/2013: remove border
+  border-color: none
+  .navbar-brand
+    color: $nav-col-default
+    &:hover, &:focus
+      color: $nav-col-hover
+  .navbar-nav
+    > li
+      > a
+        color: $nav-col-default
+        &:hover, &:focus
+          color: $nav-col-hover
+    .active
+      > a, > a:hover, > a:focus
+        color: $nav-col-hover
+        background-color: $nav-bg-highlight
+    .open
+      > a, > a:hover, > a:focus
+        color: $nav-col-hover
+        background-color: $nav-bg-highlight
+        .caret
+          border-top-color: $nav-col-hover
+          border-bottom-color: $nav-col-hover
+    > .dropdown
+      > a
+        .caret
+          border-top-color: $nav-col-default
+          border-bottom-color: $nav-col-default
+        &:hover, &:focus
+          .caret
+            border-top-color: $nav-col-hover
+            border-bottom-color: $nav-col-hover
+  .navbar-toggle
+    border-color: $nav-bg-highlight
+    &:hover, &:focus
+      background-color: $nav-bg-highlight
+    .icon-bar
+      background-color: $nav-col-default
+
+@media (max-width: 767px)
+  .navbar-default .navbar-nav .open .dropdown-menu > li > a
+    color: $nav-col-default
+    &:hover, &:focus
+      color: $nav-col-hover
+      background-color: $nav-bg-highlight
+
+// Thinner navbar
+// http://stackoverflow.com/questions/18599778/decreasing-height-of-bootstrap-3-0-navbar
+$nav-zoom-sm: 0.75
+$nav-zoom-xs: 0.5
+.navbar
+  &.nav-condensed // get rid of margins
+    .navbar-nav
+      margin-left: -15px !important
+  //&.nav-md // the default one
+  //  min-height: 40px
+  //  .navbar-brand
+  //    padding: 15px 15px
+  //    line-height: 20px
+  //    //font-size: 18px
+  //  .navbar-nav &
+  //    //margin: 7.5px -15px // the default one
+  //    margin-left: 7.5px
+  //    > li > a
+  //      line-height: 20px
+  //      padding-top: 10px
+  //      padding-bottom: 10px
+  &.nav-sm // x.75
+    min-height: 40px * $nav-zoom-sm
+    .navbar-brand
+      padding: 15px * $nav-zoom-sm 15px * $nav-zoom-sm
+      line-height: 20px * $nav-zoom-sm
+    .navbar-nav
+      margin-left: 7.5px * $nav-zoom-sm
+      & > li > a
+        padding-top: 10px * $nav-zoom-sm
+        padding-bottom: 10px * $nav-zoom-sm
+        //font-size: 90%
+        //line-height: 20px * $nav-zoom-sm
+  &.nav-xs // x.75
+    min-height: 40px * $nav-zoom-xs
+    .navbar-brand
+      padding: 15px * $nav-zoom-xs 15px * $nav-zoom-xs
+      line-height: 20px * $nav-zoom-xs
+    .navbar-nav
+      margin-left: 7.5px * $nav-zoom-xs
+      & > li > a
+        padding-top: 10px * $nav-zoom-xs
+        padding-bottom: 10px * $nav-zoom-xs
+        font-size: 90%
+        //line-height: 20px * $nav-zoom-xs
+
+.nav
+  //&.nav-md > li > a
+  //  padding: 10px 15px // bootstrap default
+  &.nav-sm > li > a
+    padding: 10px * $nav-zoom-sm 15px * $nav-zoom-sm
+  &.nav-xs > li > a
+    padding: 10px * $nav-zoom-xs 15px * $nav-zoom-xs
+    font-size: 90%
+
+ul.nav
+  > li.divider
+    border-left: thin dashed #ddd // ddd is the same as bootstrap
+    margin: 0 4px
+    height: 40px
+  &.nav-sm > li.divider
+    height: 40px * $nav-zoom-sm
+  &.nav-xs > li.divider
+    height: 40px * $nav-zoom-xs
+    margin-top: 2px
+
+// EOF

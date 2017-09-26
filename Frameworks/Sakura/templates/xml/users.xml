@@ -1,0 +1,34 @@
+{# users.xml 5/23/2013 jichi
+ # @param  now  datetime.datetime
+ # @param  users  iter[dataman.UserDigest]
+-#}
+<?xml version="1.0" encoding="utf-8"?>
+<!-- users.xml {{now.strftime("%Y-%m-%d %H:%M")}} -->
+<grimoire version="1.0">
+	<users>
+%for it in users
+		<user id="{{it.id}}">
+			<name>{{it.name|e}}</name>
+			<language>{{it.language}}</language>
+%	if it.gender
+			<gender>{{it.gender}}</gender>
+%	endif
+%	if it.homepage
+			<homepage>{{it.homepage|e}}</homepage>
+%	endif
+%	if it.avatar
+			<avatar>{{it.avatar|e}}</avatar>
+%	endif
+%	if it.color
+			<color>{{it.color}}</color>
+%	endif
+%	if it.termLevel
+			<termLevel>{{it.termLevel}}</termLevel>
+%	endif
+%	if it.commentLevel
+			<commentLevel>{{it.commentLevel}}</commentLevel>
+%	endif
+		</user>
+%endfor
+	</users>
+</grimoire>

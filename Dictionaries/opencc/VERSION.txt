@@ -1,0 +1,4 @@
+https://github.com/BYVoid/OpenCC/tree/master/data/dictionary
+10/4/2015
+
+JPVariants.txt is modified to skip unnecessary update by running python dump_safe_jp.py.

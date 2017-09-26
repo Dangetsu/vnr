@@ -1,0 +1,492 @@
+// Created by Microsoft (R) C/C++ Compiler Version 10.00.30319.01 (f97952f2).
+//
+// c:\tmp\build-sakura-desktop-release\cpp\tests\ceviotest\release\cevio.talk.remoteservice.tlh
+//
+// C++ source equivalent of Win32 type library C:\Program Files\CeVIO\CeVIO Creative Studio\CeVIO.Talk.RemoteService.tlb
+// compiler-generated file created 06/29/14 at 03:20:57 - DO NOT EDIT!
+
+#pragma once
+#pragma pack(push, 8)
+
+#include <comdef.h>
+
+namespace CeVIO {
+
+//
+// Forward references and typedefs
+//
+
+struct __declspec(uuid("d3aea482-b527-4818-8cea-810affcb24b6"))
+/* LIBID */ __CeVIO_Talk_RemoteService;
+struct __declspec(uuid("2b1de3af-b3a6-4ba6-ab41-17501fa4d7da"))
+/* dual interface */ ITalkerComponent;
+struct /* coclass */ TalkerComponent;
+struct __declspec(uuid("3432764c-a3fe-432b-8a12-56a28fe1e281"))
+/* dual interface */ ITalkerComponentArray;
+struct /* coclass */ TalkerComponentCollection;
+struct __declspec(uuid("1f96250e-7ea8-4ffe-8c36-c010d0921428"))
+/* dual interface */ IStringArray;
+struct /* coclass */ StringArray;
+struct __declspec(uuid("50dea452-98d9-49b8-a103-13671bc43caf"))
+/* dual interface */ IPhonemeDataArray;
+struct /* coclass */ PhonemeDataArray;
+struct __declspec(uuid("8a791747-30bb-4b6a-bc91-bcc61dcdad85"))
+/* dual interface */ IServiceControl;
+struct /* coclass */ ServiceControl;
+struct __declspec(uuid("987319b8-6940-39c5-9d91-b33ac5ddbfab"))
+/* dual interface */ IPhonemeData;
+struct /* coclass */ PhonemeData;
+struct __declspec(uuid("5dd7584f-c9a9-326d-8396-404911a5550b"))
+/* dual interface */ ITalker;
+struct /* coclass */ Talker;
+struct __declspec(uuid("0091179b-02f6-4eb9-bff5-cf727f28b2fe"))
+/* dual interface */ ISpeakingState;
+struct /* coclass */ SpeakingState;
+
+//
+// Smart pointer typedef declarations
+//
+
+_COM_SMARTPTR_TYPEDEF(ITalkerComponent, __uuidof(ITalkerComponent));
+_COM_SMARTPTR_TYPEDEF(ITalkerComponentArray, __uuidof(ITalkerComponentArray));
+_COM_SMARTPTR_TYPEDEF(IStringArray, __uuidof(IStringArray));
+_COM_SMARTPTR_TYPEDEF(IServiceControl, __uuidof(IServiceControl));
+_COM_SMARTPTR_TYPEDEF(IPhonemeData, __uuidof(IPhonemeData));
+_COM_SMARTPTR_TYPEDEF(IPhonemeDataArray, __uuidof(IPhonemeDataArray));
+_COM_SMARTPTR_TYPEDEF(ISpeakingState, __uuidof(ISpeakingState));
+_COM_SMARTPTR_TYPEDEF(ITalker, __uuidof(ITalker));
+
+//
+// Type library items
+//
+
+struct __declspec(uuid("2b1de3af-b3a6-4ba6-ab41-17501fa4d7da"))
+ITalkerComponent : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetId))
+    _bstr_t Id;
+    __declspec(property(get=GetName))
+    _bstr_t Name;
+    __declspec(property(get=GetValue,put=PutValue))
+    unsigned long Value;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    _bstr_t GetId ( );
+    _bstr_t GetName ( );
+    unsigned long GetValue ( );
+    void PutValue (
+        unsigned long pRetVal );
+
+    //
+    // Raw methods provided by interface
+    //
+
+      virtual HRESULT __stdcall get_Id (
+        /*[out,retval]*/ BSTR * pRetVal ) = 0;
+      virtual HRESULT __stdcall get_Name (
+        /*[out,retval]*/ BSTR * pRetVal ) = 0;
+      virtual HRESULT __stdcall get_Value (
+        /*[out,retval]*/ unsigned long * pRetVal ) = 0;
+      virtual HRESULT __stdcall put_Value (
+        /*[in]*/ unsigned long pRetVal ) = 0;
+};
+
+struct __declspec(uuid("f00e2e36-abcc-498a-ab2c-a2db9519945e"))
+TalkerComponent;
+    // interface _Object
+    // [ default ] interface ITalkerComponent
+
+struct __declspec(uuid("3432764c-a3fe-432b-8a12-56a28fe1e281"))
+ITalkerComponentArray : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetLength))
+    long Length;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    long GetLength ( );
+    ITalkerComponentPtr At (
+        long index );
+    ITalkerComponentPtr ByName (
+        _bstr_t Name );
+    ITalkerComponentArrayPtr Duplicate ( );
+
+    //
+    // Raw methods provided by interface
+    //
+
+      virtual HRESULT __stdcall get_Length (
+        /*[out,retval]*/ long * pRetVal ) = 0;
+      virtual HRESULT __stdcall raw_At (
+        /*[in]*/ long index,
+        /*[out,retval]*/ struct ITalkerComponent * * pRetVal ) = 0;
+      virtual HRESULT __stdcall raw_ByName (
+        /*[in]*/ BSTR Name,
+        /*[out,retval]*/ struct ITalkerComponent * * pRetVal ) = 0;
+      virtual HRESULT __stdcall raw_Duplicate (
+        /*[out,retval]*/ struct ITalkerComponentArray * * pRetVal ) = 0;
+};
+
+struct __declspec(uuid("c5b0df86-621e-4938-a358-ca146db66ddc"))
+TalkerComponentCollection;
+    // interface _Object
+    // [ default ] interface IEnumerable
+    // interface ITalkerComponentArray
+
+struct __declspec(uuid("1f96250e-7ea8-4ffe-8c36-c010d0921428"))
+IStringArray : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetLength))
+    long Length;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    long GetLength ( );
+    _bstr_t At (
+        long index );
+    IStringArrayPtr Duplicate ( );
+
+    //
+    // Raw methods provided by interface
+    //
+
+      virtual HRESULT __stdcall get_Length (
+        /*[out,retval]*/ long * pRetVal ) = 0;
+      virtual HRESULT __stdcall raw_At (
+        /*[in]*/ long index,
+        /*[out,retval]*/ BSTR * pRetVal ) = 0;
+      virtual HRESULT __stdcall raw_Duplicate (
+        /*[out,retval]*/ struct IStringArray * * pRetVal ) = 0;
+};
+
+struct __declspec(uuid("301bc7a9-6ce4-4979-ba4b-3e0beee877a2"))
+StringArray;
+    // interface _Object
+    // [ default ] interface IStringArray
+
+struct __declspec(uuid("42600733-2b77-43c9-9b91-536c00ea6d02"))
+PhonemeDataArray;
+    // interface _Object
+    // [ default ] interface IPhonemeDataArray
+
+struct __declspec(uuid("8a791747-30bb-4b6a-bc91-bcc61dcdad85"))
+IServiceControl : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsHostStarted))
+    VARIANT_BOOL IsHostStarted;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    VARIANT_BOOL GetIsHostStarted ( );
+    long StartHost (
+        VARIANT_BOOL noWait );
+    HRESULT CloseHost (
+        long mode );
+
+    //
+    // Raw methods provided by interface
+    //
+
+      virtual HRESULT __stdcall get_IsHostStarted (
+        /*[out,retval]*/ VARIANT_BOOL * pRetVal ) = 0;
+      virtual HRESULT __stdcall raw_StartHost (
+        /*[in]*/ VARIANT_BOOL noWait,
+        /*[out,retval]*/ long * pRetVal ) = 0;
+      virtual HRESULT __stdcall raw_CloseHost (
+        /*[in]*/ long mode ) = 0;
+};
+
+struct __declspec(uuid("c2dc23a5-a574-426e-9105-e6cfd0e1c69d"))
+ServiceControl;
+    // interface _Object
+    // [ default ] interface IServiceControl
+
+struct __declspec(uuid("987319b8-6940-39c5-9d91-b33ac5ddbfab"))
+IPhonemeData : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetPhoneme))
+    _bstr_t Phoneme;
+    __declspec(property(get=GetStartTime))
+    double StartTime;
+    __declspec(property(get=GetEndTime))
+    double EndTime;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    _bstr_t GetPhoneme ( );
+    double GetStartTime ( );
+    double GetEndTime ( );
+
+    //
+    // Raw methods provided by interface
+    //
+
+      virtual HRESULT __stdcall get_Phoneme (
+        /*[out,retval]*/ BSTR * pRetVal ) = 0;
+      virtual HRESULT __stdcall get_StartTime (
+        /*[out,retval]*/ double * pRetVal ) = 0;
+      virtual HRESULT __stdcall get_EndTime (
+        /*[out,retval]*/ double * pRetVal ) = 0;
+};
+
+struct __declspec(uuid("50dea452-98d9-49b8-a103-13671bc43caf"))
+IPhonemeDataArray : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetLength))
+    long Length;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    long GetLength ( );
+    IPhonemeDataPtr At (
+        long index );
+    IPhonemeDataArrayPtr Duplicate ( );
+
+    //
+    // Raw methods provided by interface
+    //
+
+      virtual HRESULT __stdcall get_Length (
+        /*[out,retval]*/ long * pRetVal ) = 0;
+      virtual HRESULT __stdcall raw_At (
+        /*[in]*/ long index,
+        /*[out,retval]*/ struct IPhonemeData * * pRetVal ) = 0;
+      virtual HRESULT __stdcall raw_Duplicate (
+        /*[out,retval]*/ struct IPhonemeDataArray * * pRetVal ) = 0;
+};
+
+struct __declspec(uuid("77efdc19-4273-3b4d-b81c-7c9c39e4d396"))
+PhonemeData;
+    // interface _Object
+    // [ default ] interface IPhonemeData
+
+struct __declspec(uuid("901d047d-2cad-4461-aa3c-db8596649255"))
+Talker;
+    // interface _Object
+    // [ default ] interface ITalker
+
+struct __declspec(uuid("0091179b-02f6-4eb9-bff5-cf727f28b2fe"))
+ISpeakingState : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetIsSucceeded))
+    VARIANT_BOOL IsSucceeded;
+    __declspec(property(get=GetIsCompleted))
+    VARIANT_BOOL IsCompleted;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    VARIANT_BOOL GetIsSucceeded ( );
+    VARIANT_BOOL GetIsCompleted ( );
+    HRESULT Wait ( );
+    HRESULT Wait_2 (
+        double timeoutSeconds );
+
+    //
+    // Raw methods provided by interface
+    //
+
+      virtual HRESULT __stdcall get_IsSucceeded (
+        /*[out,retval]*/ VARIANT_BOOL * pRetVal ) = 0;
+      virtual HRESULT __stdcall get_IsCompleted (
+        /*[out,retval]*/ VARIANT_BOOL * pRetVal ) = 0;
+      virtual HRESULT __stdcall raw_Wait ( ) = 0;
+      virtual HRESULT __stdcall raw_Wait_2 (
+        /*[in]*/ double timeoutSeconds ) = 0;
+};
+
+struct __declspec(uuid("5dd7584f-c9a9-326d-8396-404911a5550b"))
+ITalker : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetVolume,put=PutVolume))
+    unsigned long Volume;
+    __declspec(property(get=GetSpeed,put=PutSpeed))
+    unsigned long Speed;
+    __declspec(property(get=GetTone,put=PutTone))
+    unsigned long Tone;
+    __declspec(property(get=GetAlpha,put=PutAlpha))
+    unsigned long Alpha;
+    __declspec(property(get=GetComponents))
+    ITalkerComponentArrayPtr Components;
+    __declspec(property(get=GetCast,put=PutCast))
+    _bstr_t Cast;
+    __declspec(property(get=GetAvailableCasts))
+    IStringArrayPtr AvailableCasts;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    unsigned long GetVolume ( );
+    void PutVolume (
+        unsigned long pRetVal );
+    unsigned long GetSpeed ( );
+    void PutSpeed (
+        unsigned long pRetVal );
+    unsigned long GetTone ( );
+    void PutTone (
+        unsigned long pRetVal );
+    unsigned long GetAlpha ( );
+    void PutAlpha (
+        unsigned long pRetVal );
+    ITalkerComponentArrayPtr GetComponents ( );
+    _bstr_t GetCast ( );
+    void PutCast (
+        _bstr_t pRetVal );
+    IStringArrayPtr GetAvailableCasts ( );
+    ISpeakingStatePtr Speak (
+        _bstr_t text );
+    VARIANT_BOOL Stop ( );
+    double GetTextDuration (
+        _bstr_t text );
+    IPhonemeDataArrayPtr GetPhonemes (
+        _bstr_t text );
+    VARIANT_BOOL OutputWaveToFile (
+        _bstr_t text,
+        _bstr_t path );
+
+    //
+    // Raw methods provided by interface
+    //
+
+      virtual HRESULT __stdcall get_Volume (
+        /*[out,retval]*/ unsigned long * pRetVal ) = 0;
+      virtual HRESULT __stdcall put_Volume (
+        /*[in]*/ unsigned long pRetVal ) = 0;
+      virtual HRESULT __stdcall get_Speed (
+        /*[out,retval]*/ unsigned long * pRetVal ) = 0;
+      virtual HRESULT __stdcall put_Speed (
+        /*[in]*/ unsigned long pRetVal ) = 0;
+      virtual HRESULT __stdcall get_Tone (
+        /*[out,retval]*/ unsigned long * pRetVal ) = 0;
+      virtual HRESULT __stdcall put_Tone (
+        /*[in]*/ unsigned long pRetVal ) = 0;
+      virtual HRESULT __stdcall get_Alpha (
+        /*[out,retval]*/ unsigned long * pRetVal ) = 0;
+      virtual HRESULT __stdcall put_Alpha (
+        /*[in]*/ unsigned long pRetVal ) = 0;
+      virtual HRESULT __stdcall get_Components (
+        /*[out,retval]*/ struct ITalkerComponentArray * * pRetVal ) = 0;
+      virtual HRESULT __stdcall get_Cast (
+        /*[out,retval]*/ BSTR * pRetVal ) = 0;
+      virtual HRESULT __stdcall put_Cast (
+        /*[in]*/ BSTR pRetVal ) = 0;
+      virtual HRESULT __stdcall get_AvailableCasts (
+        /*[out,retval]*/ struct IStringArray * * pRetVal ) = 0;
+      virtual HRESULT __stdcall raw_Speak (
+        /*[in]*/ BSTR text,
+        /*[out,retval]*/ struct ISpeakingState * * pRetVal ) = 0;
+      virtual HRESULT __stdcall raw_Stop (
+        /*[out,retval]*/ VARIANT_BOOL * pRetVal ) = 0;
+      virtual HRESULT __stdcall raw_GetTextDuration (
+        /*[in]*/ BSTR text,
+        /*[out,retval]*/ double * pRetVal ) = 0;
+      virtual HRESULT __stdcall raw_GetPhonemes (
+        /*[in]*/ BSTR text,
+        /*[out,retval]*/ struct IPhonemeDataArray * * pRetVal ) = 0;
+      virtual HRESULT __stdcall raw_OutputWaveToFile (
+        /*[in]*/ BSTR text,
+        /*[in]*/ BSTR path,
+        /*[out,retval]*/ VARIANT_BOOL * pRetVal ) = 0;
+};
+
+struct __declspec(uuid("16ad25ce-fd8e-429e-b44d-dee90d960ad7"))
+SpeakingState;
+    // interface _Object
+    // [ default ] interface ISpeakingState
+
+//
+// Named GUID constants initializations
+//
+
+extern "C" const GUID __declspec(selectany) LIBID_CeVIO =
+    {0xd3aea482,0xb527,0x4818,{0x8c,0xea,0x81,0x0a,0xff,0xcb,0x24,0xb6}};
+extern "C" const GUID __declspec(selectany) IID_ITalkerComponent =
+    {0x2b1de3af,0xb3a6,0x4ba6,{0xab,0x41,0x17,0x50,0x1f,0xa4,0xd7,0xda}};
+extern "C" const GUID __declspec(selectany) CLSID_TalkerComponent =
+    {0xf00e2e36,0xabcc,0x498a,{0xab,0x2c,0xa2,0xdb,0x95,0x19,0x94,0x5e}};
+extern "C" const GUID __declspec(selectany) IID_ITalkerComponentArray =
+    {0x3432764c,0xa3fe,0x432b,{0x8a,0x12,0x56,0xa2,0x8f,0xe1,0xe2,0x81}};
+extern "C" const GUID __declspec(selectany) CLSID_TalkerComponentCollection =
+    {0xc5b0df86,0x621e,0x4938,{0xa3,0x58,0xca,0x14,0x6d,0xb6,0x6d,0xdc}};
+extern "C" const GUID __declspec(selectany) IID_IStringArray =
+    {0x1f96250e,0x7ea8,0x4ffe,{0x8c,0x36,0xc0,0x10,0xd0,0x92,0x14,0x28}};
+extern "C" const GUID __declspec(selectany) CLSID_StringArray =
+    {0x301bc7a9,0x6ce4,0x4979,{0xba,0x4b,0x3e,0x0b,0xee,0xe8,0x77,0xa2}};
+extern "C" const GUID __declspec(selectany) CLSID_PhonemeDataArray =
+    {0x42600733,0x2b77,0x43c9,{0x9b,0x91,0x53,0x6c,0x00,0xea,0x6d,0x02}};
+extern "C" const GUID __declspec(selectany) IID_IServiceControl =
+    {0x8a791747,0x30bb,0x4b6a,{0xbc,0x91,0xbc,0xc6,0x1d,0xcd,0xad,0x85}};
+extern "C" const GUID __declspec(selectany) CLSID_ServiceControl =
+    {0xc2dc23a5,0xa574,0x426e,{0x91,0x05,0xe6,0xcf,0xd0,0xe1,0xc6,0x9d}};
+extern "C" const GUID __declspec(selectany) IID_IPhonemeData =
+    {0x987319b8,0x6940,0x39c5,{0x9d,0x91,0xb3,0x3a,0xc5,0xdd,0xbf,0xab}};
+extern "C" const GUID __declspec(selectany) IID_IPhonemeDataArray =
+    {0x50dea452,0x98d9,0x49b8,{0xa1,0x03,0x13,0x67,0x1b,0xc4,0x3c,0xaf}};
+extern "C" const GUID __declspec(selectany) CLSID_PhonemeData =
+    {0x77efdc19,0x4273,0x3b4d,{0xb8,0x1c,0x7c,0x9c,0x39,0xe4,0xd3,0x96}};
+extern "C" const GUID __declspec(selectany) CLSID_Talker =
+    {0x901d047d,0x2cad,0x4461,{0xaa,0x3c,0xdb,0x85,0x96,0x64,0x92,0x55}};
+extern "C" const GUID __declspec(selectany) IID_ISpeakingState =
+    {0x0091179b,0x02f6,0x4eb9,{0xbf,0xf5,0xcf,0x72,0x7f,0x28,0xb2,0xfe}};
+extern "C" const GUID __declspec(selectany) IID_ITalker =
+    {0x5dd7584f,0xc9a9,0x326d,{0x83,0x96,0x40,0x49,0x11,0xa5,0x55,0x0b}};
+extern "C" const GUID __declspec(selectany) CLSID_SpeakingState =
+    {0x16ad25ce,0xfd8e,0x429e,{0xb4,0x4d,0xde,0xe9,0x0d,0x96,0x0a,0xd7}};
+
+//
+// Wrapper method implementations
+//
+
+//#include "c:\tmp\build-sakura-desktop-release\cpp\tests\ceviotest\release\cevio.talk.remoteservice.tli"
+#include "CeVIO.Talk.RemoteService.tli"
+
+} // namespace CeVIO
+
+#pragma pack(pop)

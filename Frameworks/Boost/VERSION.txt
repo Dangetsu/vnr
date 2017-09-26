@@ -1,0 +1,6 @@
+# 4/26/2014 jichi
+# Version: boost 1.5.6
+# Config:
+# - threading=mt
+# - icu: missing
+# - zlib: missing

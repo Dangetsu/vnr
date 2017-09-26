@@ -1,0 +1,141 @@
+; help.haml
+; 1/23/2013 jichi
+; No parameters.
+;!!! 5
+%html
+  %head
+    :css
+      /* Bootstrap link */
+      a {
+        color: #0088cc;
+        text-decoration: none;
+      }
+      a:hover,
+      a:focus {
+        color: #005580;
+        text-decoration: underline;
+      }
+  %body
+    %h4 Downloads
+    %p
+      -set url = "http://goo.gl/t31MqY"
+      %a.hl(href="#{url}",title="#{url}") Google Drive
+      -set url = "https://mega.co.nz/#F!g00SQJZS!pm3bAcS6qHotPzJQUT596Q"
+      %a.hl(href="#{url}",title="#{url}") Megashares
+
+    %h4 Bug report
+    %p
+      -set url = "http://sakuradite.com/subject/100"
+      %a(href="#{url}",title="#{url}") Sakuradite
+      -set url = "mailto:annotcloud@gmail.com"
+      %a(href="#{url}",title="#{url}") Email
+
+    %h4 Demo videos
+    %p
+      -set url = "http://sakimichi.wordpress.com"
+      %a.user(href="#{url}",title="#{url}")
+        @Sakimichi
+        (en):
+      %ol
+        %li
+          -set url = "http://www.youtube.com/watch?v=9HvSy_gJQcY"
+          %a(href="#{url}",title="#{url}") How to install Visual Novel Reader
+        %li
+          -set url = "http://www.youtube.com/watch?v=5LJ5RN1GLIw"
+          %a(href="#{url}",title="#{url}") Basic Visual Novel Reade
+    %p
+      -set url = "http://tieba.baidu.com/home/main?un=%C6%AE%C3%EC%D0%A6"
+      %a.user(href="#{url}",title="#{url}")
+        @飘渺笑
+        (zh):
+      %ol
+        %li
+          -set url = "http://www.tudou.com/programs/view/veoeFfX8sfU"
+          %a(href="#{url}",title="#{url}") VNR的下载和安装
+        %li
+          -set url = "http://www.tudou.com/programs/view/se9NocFZU_4"
+          %a(href="#{url}",title="#{url}") 游戏的转区和启动
+        %li
+          -set url = "http://www.tudou.com/programs/view/8iuDdiJHGn0"
+          %a(href="#{url}",title="#{url}") VNR的具体使用
+    %p
+      -set url = "https://www.youtube.com/channel/UCX4eS7ALiRtkGTTfTineebg"
+      %a.user(href="#{url}",title="#{url}")
+        @CFS
+        (vi):
+      %ol
+        %li
+          -set url = "https://www.youtube.com/watch?v=sZO_JWIsa6Y"
+          %a(href="#{url}",title="#{url}") Hướng dẫn dùng Visual novel Reader:
+
+    %h4 Tutorials:
+    %p
+      -set url = "http://sakimichi.wordpress.com"
+      %a.user(href="#{url}",title="#{url}") @Sakimichi
+      (en):
+      -set url = "http://sakimichi.wordpress.com/2013/09/19/translating-visual-novels-without-hacking/"
+      %a(href="#{url}",title="#{url}") Visual Novel Reader Basic Tutorial
+    %p
+      -set url = "http://sakimichi.wordpress.com"
+      %a.user(href="#{url}",title="#{url}") @Sakimichi
+      (en): Advanced Guide
+      -set url = "http://sakimichi.wordpress.com/2014/03/21/vnreader-advance-guidetutorial-part-1/"
+      %a(href="#{url}",title="#{url}") 1
+      -set url = "http://sakimichi.wordpress.com/2014/03/22/vnreader-advance-guidetutorial-part-2/"
+      %a(href="#{url}",title="#{url}") 2
+      -set url = "http://sakimichi.wordpress.com/2014/08/11/vnreader-advance-guidetutorial-part-3/"
+      %a(href="#{url}",title="#{url}") 3
+      -set url = "http://sakimichi.wordpress.com/2014/08/11/vnreader-advance-guidetutorial-part-4/"
+      %a(href="#{url}",title="#{url}") 4
+      -set url = "http://sakimichi.wordpress.com/2014/08/12/vnreader-advance-guidetutorial-part-5/"
+      %a(href="#{url}",title="#{url}") 5
+    %p
+      -set url = "http://sakimichi.wordpress.com"
+      %a.user(href="#{url}",title="#{url}") @Sakimichi
+      (en):
+      -set url = "http://sakimichi.wordpress.com/2014/03/21/vnreader-advance-guidetutorial-part-1/"
+      %a(href="#{url}",title="#{url}") VNReader Advance Guide/Tutorial
+    %p
+      -set url = "http://visualnovelaer.fuwanovel.org"
+      %a.user(href="#{url}",title="#{url}") @Aaeru
+      (en):
+      -set url = "http://visualnovelaer.fuwanovel.org/2013/03/this-is-how-you-do-edits-in-visual-novel-reader/"
+      %a(href="#{url}",title="#{url}") This is how you do edits in Visual Novel Reader
+    %p
+      -set url = "http://tieba.baidu.com/home/main/?un=goodboyye"
+      %a.user(href="#{url}",title="#{url}") @goodboyye
+      (zh):
+      -set url = "http://tieba.baidu.com/p/2886735424"
+      %a(href="#{url}",title="#{url}") VNR简单教程
+    %p
+      -set url = "http://867258173.diandian.com"
+      %a.user(href="#{url}",title="#{url}") @王子夜礼服假面
+      (zh):
+      -set url = "http://867258173.diandian.com/post/2014-07-19/40062240755"
+      %a(href="#{url}",title="#{url}") VNR翻译日语游戏汉化简易图解教材
+    %p
+      -set url = "http://forum2.hkgolden.com/topics_an.htm"
+      %a.user(href="#{url}",title="#{url}") 香港高登討論區
+      (zh-YUE):
+      -set url = "https://sites.google.com/site/hkggalg/vnr"
+      %a(href="#{url}",title="#{url}") Visual Novel Reader安裝及使用
+    %p
+      -set url = "http://mireado.blog.me"
+      %a.user(href="#{url}",title="#{url}") @mireado
+      (ko):
+      -set url = "http://mireado.blog.me/220432010012"
+      %a(href="#{url}",title="#{url}") VNR 초보자 가이드
+    %p
+      -set url = "http://forum.tirkx.com/main/member.php?21337-sakuhana"
+      %a.suer(href="#{url}",title="#{url}") @sakuhana
+      (th):
+      -set url = "http://forum.tirkx.com/main/showthread.php?121907-Visual-Novel-Reader-%E0%B8%AD%E0%B8%B8%E0%B8%9B%E0%B8%81%E0%B8%A3%E0%B8%93%E0%B9%8C%E0%B9%81%E0%B8%9B%E0%B8%A5%E0%B9%80%E0%B8%81%E0%B8%A1-VN-%E0%B8%95%E0%B8%B1%E0%B8%A7%E0%B9%80%E0%B8%A1%E0%B8%9E"
+      %a(href="#{url}",title="#{url}") Visual Novel Reader : อุปกรณ์แปลเกม VN ตัวเมพ
+    %p
+      -set url = "http://hako.re/forum/members/142/"
+      %a.user(href="#{url}",title="#{url}") @jofori89
+      (vi):
+      -set url = "http://hako.re/forum/16-huong-dan/4519-huong-dan-co-ban-su-dung-visual-novel-reader-dich-phu-de-cho-galge.html"
+      %a(href="#{url}",title="#{url}") Hướng dẫn cơ bản sử dụng Visual Novel Reader dịch phụ đề cho galge
+
+; EOF

@@ -1,0 +1,12 @@
+# termview/qmldir
+# 2/20/2013 jichi
+Counter         counter.qml
+FilterToolBar   filtertoolbar.qml
+HostComboBox    hostcombobox.qml
+HostMenuItem    hostmenuitem.qml
+Inspector       inspector.qml
+MainToolBar     maintoolbar.qml
+OptionPanel     optionpanel.qml
+SearchToolBar   searchtoolbar.qml
+SelectToolBar   selecttoolbar.qml
+Table           table.qml

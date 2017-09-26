@@ -1,0 +1,17 @@
+#ifndef QTEMBEDAPP_H
+#define QTEMBEDAPP_H
+
+// qtembedapp.h
+// 2/1/2013 jichi
+
+#ifndef QTEMBEDAPP_BEGIN_NAMESPACE
+# define QTEMBEDAPP_BEGIN_NAMESPACE namespace QtEmbedApp {
+#endif
+#ifndef QTEMBEDAPP_END_NAMESPACE
+# define QTEMBEDAPP_END_NAMESPACE   } // namespace QtEmbedApp
+#endif
+
+QTEMBEDAPP_BEGIN_NAMESPACE
+QTEMBEDAPP_END_NAMESPACE
+
+#endif // QTEMBEDAPP_H

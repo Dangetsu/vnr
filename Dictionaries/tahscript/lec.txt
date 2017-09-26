@@ -1,0 +1,5029 @@
+﻿*16:59 2016/02/24
+*this is an example of a simple regex script for TAHelper on VNR
+*originally it was made based on ATLAS V14 (+TA) behaviour
+*Update: the script adapting LEC behaviour now, so might not work on ATLAS or other translation engine
+*basically only for conversation text, so might not work on RPG or games with lots of "status" thing..
+*
+*
+*
+*
+*
+*topmost line = top priority
+*sometimes to make it work properly, it should be sorted by characterset
+*hiragana order : ぁあぃいぅうぇえぉおかがきぎくぐけげこごさざしじすずせぜそぞただちぢっつづてでとどなにぬねのはばぱひびぴふぶぷへべぺほぼぽまみむめもゃやゅゆょよらりるれろゎわゐゑをん
+*katakana order : ァアィイゥウェエォオカガキギクグケゲコゴサザシジスズセゼソゾタダチヂッツヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモャヤュユョヨラリルレロヮワヰヱヲンヴヵヶ
+*symbols order : 、。，．・：；？！゛゜´｀¨＾￣＿ヽヾゝゞー―‐～…‥‘’“”（）［］｛｝〈〉《》「」『』【】
+*kanji start-end : 一-龠 (not really sure...)
+*numbers : [0-9] (latin digit), [０-９] (fullwidth digit), [一二三四五六七八九十]
+*u-verb list : すくぐぶつむるぬう
+*-te form conj list : ([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)
+*-te form list 2 : (([一-龠])([しい]て|[いん]で))
+*conditional conj list : ([せえべげけめねれて]|なら|であれ|[あうけくす来]れ)(ば) and なら (unsafe)
+*(adj) : ([いさしなたらろつばこ]い)
+*(obj-prt) : をがにへとでのはも,から,より,まで
+*verb ended with る (not ru-verb) : [あいうえおか-ぢつ-もやゆよら-りれろわ]
+*if some characters not work/ignored (ex : “), use TA's substitution instead
+*character specific hex code:
+*to search specific character, use \x followed by hex code (ex: \x5B )
+*"[" = 5B
+*"]" = 5D
+*"{" = 7B
+*"}" = 7D
+*"\" = 5C or just use \\
+*"|" = 7C
+*"?" = 21
+*"!" = 3F
+*"^" = 5E
+*
+*
+*What this script do :
+*1. Cleaning text
+*2. Converting various dialects into normal form
+*
+*What's hard to-do :
+*1. Slurism (intonation based text)
+*2. Full hiragana or katakana text
+*3. Clause (quoted text, mixed clauses without conjuctions or particles, or connected by って)
+*4. 何, どう etc (how, how many, how much, how is it, what, why, etc)
+*5. て as clause quoting mark (the pattern is too general)
+*6. Katakana-ized ru-verb (バれる = good, バレる = not good, バレル = not good)
+*7. ほど, ぐらい
+*8. たい is always translated as first person (ex: 私たちも見たい = I want to see we)
+*
+*
+*
+*
+*==============================================================================================================================
+*to remove/replace names at the beginning
+*since we used "Replace all names" method, we can't use normal way
+*ex, we have a text from clipboard : アリス　「私の名前はアリスです、よろしくね」
+*if we put only アリス, the アリス text inside the sentence will be removed too
+*so put a unique condition like : (アリス　「)    <--- must use round braces (), otherwise it won't work
+*(アリス　「)(ctrl-tab)「
+*the result will be : 「私の名前はアリスです、よろしくね」
+*that's it, so we don't have problem with "name at the beginning" anymore
+*
+*
+*
+*trying to remove any names at beginning (experimental)
+*might break narations or multiple brackets texts. You might need to disable it on novel-text-mode game such as Fate, Tsukihime, Umineko etc.
+*notes :
+*to minimize text break you should only use one separator,
+*mostly used is 「, while 『 is used for quote in jpn, and （ is used for "thought"
+*not working when the game using multiple quote separator, please use name specific instead
+*
+*this is an example code for a game like Neko Koi (Whirlpool)
+*where the text :
+*- consist of speaker name, plus the name is repeatedly (ex: 美咲美咲美咲美咲)
+*- when in dialogue mode the sentence separator is "「」"
+*- when in thinking mode the sentence separator is "（）"
+*- when in naration mode there is no separator, no speaker name
+*- in dialogue, thinking, or naration mode, this game uses multiple type of quote separator
+*obviously we can't use global name removal, it's impossible
+*1. Firstly, remove speaker name for dialogue mode
+*In this part, we can safely remove all names using (.+)
+*read : gather any text until matching "「", then replace it with text contained in "slot position 5" which is "「"
+*(^(【(.+)】|(.+))([「])){1}	$5
+*2. Secondly, remove speaker name for thinking mode. Be careful to not mistook eng "(" with jap "（" symbol.
+*In this part we have to put specific name, otherwise the text before a quote will be considered as a name too
+*read : gather specific text until matching "（", then replace it with text contained in "slot position 9" which is "（"
+*(美咲)\3+ means phrase repetition of 美咲,
+*and \3 means text contained in "slot position 3" (see the order of "(", it is at 3th ), which is 美咲 too
+*please be mind that max "save slot" is 9 (1-9)
+*(^(司|(美咲)\3+|(真央)\4+|(ご先祖様)\5+|(陽南)\6+|(朔夜)\7+|(さやか)\8+|怜)(（))	$9
+*
+*how to remove unnecessary word inside a quote :
+*sometimes there are situation like this :
+*1. where font size and colour is included in text, like in Haramase series
+*ex: 「私はアリス[c=255 s=20]です」
+*2. or we got a kanji plus its furigana like in Zinmu (Alicesoft)
+*ex: 「私の名前は緑[みどり]です」
+*to remove those [c=255 s=20] or [みどり] :
+*firstly, mark the separator (in this case with "z"), then remove anything inside "z"
+*(\x5B)	z
+*(\x5D)	z
+*(z([^z]+)z)
+*
+*global name removal examples :
+*be mind that those codes wouldn't handle a multilevel quotes text, 
+*when this happen, just use ONLY ONE separator should fix it.
+*1. pattern : name「dialogue」 or 【name】「dialogue」, separators : 「『（
+*recommended, most games uses this pattern
+*(^(【(.+)】|(.+))([「『（])){1}	$5
+*(^(【(.+)】|(.+))([「])){1}	$5
+*2. pattern : name　「dialogue」 or 【name】　「dialogue」, with a space before dialogue, separators : 「『（
+*(^(【(.+)】|(.+))　([「『（])){1}	$5
+*3. pattern : 「dialogue」name 
+*known games uses this pattern: BaldrSky and any GIGA games, Shin Koihime Musou
+*(([」』）])(【(.+)】|(.+))$)	$2
+*(([」）])(【(.+)】|(.+))$)	$2
+*4. pattern : [name]dialogue, separator : [ (square bracket)
+*known games uses this pattern: G-Spot's Kyou no Okazu series and other "bruns engine" games
+*notes :
+*we can't put "[]" directly, because in regex it is an operator for grouping.
+*so \x means specify a hex code of a character, 5B is "[" and 5D is "]"
+*(^(\x5B(.+)\x5D)(.+))	「$4」
+*
+*how to replace a name :
+*IMO changing name directly into English is bad. Because it could make a mistranslation.
+*But it is needed if you are using other translation machine outside Atlas.
+*these 3 codes are required, otherwise replacement won't work on when the name occured more than once in one text.
+*1. This is for detecting name at the very beginning of text
+*^ニナ	Nina
+*2. This is for detecting name inside text
+*(.)ニナ(.)	$1Nina$2
+*3. This is for detecting name at the end of text
+*二ナ$	Nina
+*
+*--------------------------------------------
+*--------------------------------------------
+*temporary codes
+*
+*
+*---------------------------------------------
+*templates
+*remove ・ when make a deep impression word
+*(([あ-ん]{2,})・([あ-ん]{2,})・([あ-ん]{2,}))	$2x$3y$4
+*(([あ-ん]{2,})・([あ-ん]{2,}))	$2z$3
+*(([ア-ヴ]{2,})・([ア-ヴ]{2,})・([ア-ヴ]{2,}))	$2x$3y$4
+*(([ア-ヴ]{2,})・([ア-ヴ]{2,}))	$2z$3
+*(([一-龠]{2,})・([一-龠]{2,})・([一-龠]{2,}))	$2x$3y$4
+*(([一-龠]{2,})・([一-龠]{2,}))	$2z$3
+*(・)
+*(([あ-ん]{2,})x([あ-ん]{2,})y([あ-ん]{2,}))	$2・$3・$4
+*(([あ-ん]{2,})z([あ-ん]{2,}))	$2・$3
+*(([ア-ヴ]{2,})x([ア-ヴ]{2,})y([ア-ヴ]{2,}))	$2・$3・$4
+*(([ア-ヴ]{2,})z([ア-ヴ]{2,}))	$2・$3
+*(([一-龠]{2,})x([一-龠]{2,})y([一-龠]{2,}))	$2・$3・$4
+*(([一-龠]{2,})z([一-龠]{2,}))	$2・$3
+*
+*convert 「」 into 『』 in naration text
+*this code is very useful on some games when uses different delimiter for quoting
+*condition: speaker name must be removed!
+*(^(「)(.+)([^」]$))	『$3$4
+*(^([^「])(.+)([」]$))	$2$3』
+*(^(「))	z
+*((」)$)	y
+*(「)	『
+*(」)	』
+*(^(z))	「
+*((y)$)	」
+*
+*==============================================================================================================================
+*now, let's try to cleaning sentences
+*==============================================================================================================================
+*1. Initial filter, removing useless symbols
+*be careful, sometimes those symbols are required on specific games
+*ex :
+*- when between hiragana chars, sometimes ー or ― was used for replacing い or う
+*- symbol like (・) used as firstname-lastname separator, while in other game used as … replacement
+*
+*remove jpn space (　) from sentence
+*sometimes this occured on kirikiri engine based games
+*how this happened? This is because there is a script inside kirikiri itself (ex: linebreak codes),
+*and when agth get the text, it's considered as second line of text, but agth merge it in one line with (　) as a separator.
+*Atlas don't have problem reading sentence even if there are (　), however in modifying text we need to remove it.
+*disable it if you're not playing kirikiri games
+*((.)　(.))	$2$3
+*
+*remove ・ when make a deep impression word
+*disabled, try to see if LEC can handle it or not
+*(([あ-ん]{2,})・([あ-ん]{2,})・([あ-ん]{2,}))	$2x$3y$4
+*(([あ-ん]{2,})・([あ-ん]{2,}))	$2z$3
+*(([ア-ヴ]{2,})・([ア-ヴ]{2,})・([ア-ヴ]{2,}))	$2x$3y$4
+*(([ア-ヴ]{2,})・([ア-ヴ]{2,}))	$2z$3
+*(([一-龠]{2,})・([一-龠]{2,})・([一-龠]{2,}))	$2x$3y$4
+*(([一-龠]{2,})・([一-龠]{2,}))	$2z$3
+*(・)
+*(([あ-ん]{2,})x([あ-ん]{2,})y([あ-ん]{2,}))	$2・$3・$4
+*(([あ-ん]{2,})z([あ-ん]{2,}))	$2・$3
+*(([ア-ヴ]{2,})x([ア-ヴ]{2,})y([ア-ヴ]{2,}))	$2・$3・$4
+*(([ア-ヴ]{2,})z([ア-ヴ]{2,}))	$2・$3
+*(([一-龠]{2,})x([一-龠]{2,})y([一-龠]{2,}))	$2・$3・$4
+*(([一-龠]{2,})z([一-龠]{2,}))	$2・$3
+*
+*
+*symbols replacements :
+*\x21 = hex code for "?", \x3F = hex code for "!"
+*replacing this is important, I forgot why I disabled it...
+\x21	！
+\x3F	？
+*LEC : disabled ！？
+*！？	？
+(([０-９])(・)([０-９]))	$2─$4
+*how to detect ・ whether it's a name-separator or sentence-separator safely?
+*(([^・]{2,})(・)([^・]{2,}))	$2　$4
+*
+(([０-９])([－―─])([Ａ-Ｚ０-９]))	$2x$4
+(－|―|─|[・]{2,}|[･]{2,}|･･･|・・・|‥)	…
+(([０-９])x([Ａ-Ｚ０-９]))	$2─$3
+*LEC, temporary disabled "・"
+*(・)
+*symbols like ≪《＜≫》＞ maybe better use on game specific code only
+*([≪《])	＜
+*([≫》])	＞
+*a symbol like ☆ is a little complicated
+*sometimes used as :
+*1. separator between words (らき☆すた) => (らき　すた)
+*2. punctuation (えへへ☆) => (えへへ。)
+*how to properly detect it I'm still blank...
+(([あ-ん])☆([あ-ん]))	$2　$3
+*♪ already handled by VNR
+*masking symbols, try with … instead of 。
+*first limit to 1 symbols
+([★☆♪❤])\1+	$1
+♪	」MS0001「
+★	」MS0002「
+☆	」MS0003「
+❤	」MS0004「
+*(★|☆)	。
+*
+*remove "（？）", dunno what does this  means, but I often see this...
+(([一-龠あ-んア-ヴ])(（？）)([一-龠あ-んア-ヴ]))	$2$4
+*disabled : 　|
+*
+*specific codes:
+*moved to external file
+*
+*-------------------------------------------------
+*if there is a symbol repetition (ex : ーーーーーー, ああああああ), we replace it with just once
+*we can't remove it entirely because it's sometimes used on western terms.
+*can be used to remove hiragana & katakana vowel repetitions too
+*
+(([～ーっッァィゥェォんンを])\2+)	$2
+*
+*exception
+((あ){2,}(の)([っ、。？！…」』）]))	$2$3$4
+*
+((ア){2,})	$2$2
+((ウ){2,})	$2$2
+((エ){2,})	$2$2
+((オ){2,})	$2$2
+((あ){2,})	$2$2
+((う){2,})	$2$2
+((え){2,})	$2$2
+((お){2,})	$2$2
+*save word いい because it has a meaning
+*but don't group い with イ, because will break text like 面白いイベント
+((い){3,})	$2$2$2
+((イ){2,})	$2$2
+*
+*
+*put pre-mod lines here :
+*
+*firstly limit any repeating small vowels to 1, for next process
+(([ぁぃぅぇぉ])\2+)	$2
+*---しませぇぇぇん---
+(([けげせぜてでへべめれぺ])([ぇ]+)([んン])([っ、。？！…）」』]))	$2$4$5
+*remove any text after small vowels (ex: あぁああ)
+*katakana is disabled, might break text like ガーディアン, we gonna need better pattern.
+(([ぁぃぅぇぉァィゥェォ])([っぁぃぅぇぉァィゥェォあいうえおアイウエオ]{2,})([んン])([、。？！…）」』]))	$5
+*(([ぁぃぅぇぉァィゥェォ])([っぁぃぅぇぉァィゥェォあいうえおアイウエオんン]{2,})([、。？！…）」』]))	$4
+*
+*misc :
+*かがさざただなはばぱまやらわ,きぎしじちぢにひびぴみり,くぐすずつづぬふぶぷむる,けげせぜてでねへべぺめれ,こごそぞとどのほぼぽもろ
+*
+*================here goes the messy part=================
+*notes:
+*that's it, fixing improper word by intonation is fucking frustrating!
+*
+*reducing useless repetition
+*ex: "まーまーまー" => "まーまー" => "まあまあ"
+((まー)\2+)	$2$2
+*save
+(チャ)(ンス)	$1x$2
+*
+[っッ]?[ちチ][ゃャ][ぁあァア]*～*[んン](?!ネ)	ちゃん
+*restore
+(チャ)x(ンス)	$1$2
+*
+((ど)ー(しよ)ー)	$2う$3う
+((ど)ー(かな)([、。？！…」』）]))	$2う$3$4
+((ど)ー(でも|とか|する|いう|すんの))	$2う$3
+((ちゃお)([ー]))	$2う
+(([、。？！…「『（]|^)(って|と)ゆー(か)([、。？！…」』）]))	$2$3いう$4$5
+((って|の)(そ)ーゆー)	$2$3ういう
+(ってゆー([、。？！…」』）]))	という$2
+(ってゆー(の|[一-龠]))	という$2
+(([そこ])ーゆ[ーう](の|[一-龠]))	$2ういう$3
+((そう)ゆ[ーう](事))	$2いう$3
+そゆ(こと)	そういう$1
+(([あ])ーゆ[ーう](の))	$2あいう$3
+((ど)ーゆ[ーう])	$2ういう
+((そ)(ー)\2\3)	$2う$2う
+((そ)[～ーぉ](かも|に|です|なの))	$2う$3
+((そ)[～ーぉ](だ)([なよ]))	$2う$3$4
+((そ)ー(か)そーか)	$2う$3
+((そ)[ぉ]([、。？！…」』）]))	$2う$3
+((そ)[ー](だ)([、。？！…」』）]))	$2う$3$4
+((そ)[ー](だ)ね([、。？！…」』）]))	$2う$3$4
+((がそ)ー(やって))	$2う$3
+*((しそ)([～])(に))	$2う$4
+*unsafe:
+*も[～ーぉ] bcoz it could break も (also)
+*ど[～ーぉ] bcoz it could break けど
+(っつー([かの]))	という$2
+((あ)ー(いう))	$2$2$3
+((あ)ー(だこ)ー(だ))	$2あ$3う$4
+(([、。？！…「『（]|^)(あ)ー([あら])([、。？！…」』）]))	$2$3$4$5
+(([、。？！…「『（]|^)(あ)ー(も)ー([、。？！…」』）]))	$2$3$3$4う$5
+(([、。？！…「『（]|^)(と)ゆー(わけ|こと))	$2$3いう$4
+(([、。？！…「『（]|^)([そこど])[ーぉ](ゆー|いう))	$2$3ういう
+*(([、。？！…「『（]|^)(そ)ー([なだよでか]|いえば))	$2$3う$4
+(([、。？！…「『（]|^)(そ)ー([あ-ん]))	$2$3う$4
+(([、。？！…「『（]|^|は)(な)あ(に)([、。？！…」』）]))	$2$3$4$5
+(([、。？！…「『（]|^)([な])(ぁ|ー)(に|ん[かてちでだ]))	$2$3$5
+(([、。？！…「『（]|^)(な)あ(に|んだ)([あこそ]の|、))	$2$3$4$5
+(([、。？！…「『（]|^)(ねぇ)([一-龠ア-ヴ]))	$2$3、$4
+(([、。？！…「『（]|^)(ま)([ぁー])([ただ])([^め]))	$2$3$5$6
+(([、。？！…「『（]|^)([さまな])(ぁ|ー)(て))	$2$3$5
+(([、。？！…「『（]|^)([さまな])(ぁ|ー))	$2$3あ
+(([、。？！…「『（]|^)([あ])(ぁ|ー)([^ち]))	$2$3あ$5
+(([、。？！…「『（]|^)([ま])(あ|ー)\3(ぁ|ー))	$2$3あ$3あ
+(([、。？！…「『（]|^)(だけど|しかし|と)(ま)ぁ([、。？！…」』）]))	$2$3$4あ$5
+(([、。？！…「『（]|^)(へ)(ー)\3\4)	$2$3$3
+(([をでは])(ま)[ぁー]([、。？！…」』）]))	$2$3あ$4
+((ま)ぁ([あこそ]の|[あそこ]れ|そう))	$2あ$3
+((らし)ーね([、。？！…」』）]))	$2い$3
+(((い)ー(の|じゃん|から))\2)	$3$3$4$3$3$4
+(い)ー(んじゃん)	$1い$2
+(((い)ー(の)さ)\2)	$3$3$4$3$3$4
+((い)ー(から)([、。？！…」』）]))	$2$2$3$4
+((なくて)(い)ー(の))	$2$3$3$4
+((い)ー(の)([、。？！…」』）]))	$2$2$3$4
+((い)ー(の|です|でしょう|でしょ|だろう|だろ)([かが])([、。？！…」』）]))	$2$2$3$4$5
+((い)ー(の|です|でしょう|でしょ|だろう|だろ|んだ)よ([ー、。？！…」』）]))	$2$2$3$4
+((い)ー(っぱい))	$2$3
+((い)ー(ぱい))	$2っ$3
+(([あそこ]れ)(は)(い)ー(の))	$2$3$4い$5
+(([、。？！…「『（]|^)([い])(ー))	$2$3い
+(([、。？！…「『（]|^)([も])([～ーぉ])([^っう]))	$2$3う$5
+((も)ぅ)	$2う
+(ましょ)([、。？！…」』）])	$1う$2
+(([、。？！…「『（は]|^)([ど])([～ーぉ]))	$2$3う
+*(([^、。？！…「『（])(ね)ぇ([、。？！…」』）]))	$2ない$4
+*((ね)ぇ([、。？！…」』）]))	ない$3
+*placing ねぇ without additional pattern will break either ない or ね
+((それじゃ|[まで]す)ねェ([、。？！…」』）]))	$2$3
+(([一-龠あ-んア-ヴ])ねェ([一-龠あ-んア-ヴ、。？！…」』）]))	$2ない$3
+(([一-龠])([かわた]|やし|まら|しかい)ね([えーぇ])([、。？！…」』）]))	$2$3ない$5
+(([一-龠])(れ)ねえ([一-龠あ-んア-ヴ]))	$2$3ない$4
+(([一-龠])(し)ねえ([、。？！…」』）]))	$2$3ない$4
+(([、。？！…「『（]|^)(ね)(、)\3([？]))	$2$3！
+((が)いねえ(と))	$2いない$3
+((ね)([えーぇ])(じゃ)ね([えーぇ]))	ない$4ない
+(([はが])ね([えーぇ])(けど))	$2ない$4
+(([ね])([えーぇ])([でかしよぞ]|って|んだ|から|の[かに])([ーよぜ、。？！…」』）]))	ない$4$5
+(([ね])([えーぇ])([でかしよぞ]|って|んだ|から|だろう)[な]([、。？！…」』）]))	ない$4$5
+((くれ)ねえ([、。？！…」』）]))	$2ない$3
+((から|かしら)(ね)([えーぇ])([、。？！…」』）]))	$2$5
+((ね)ーっ([、。？！…」』）]))	$2$3
+((いけ|んじゃ|たまん|[はて]いら|られ|なら)([ね])([えーぇ])([ーよぜが、。？！…」』）]))	$2ない$5
+((じゃ)(ね)([ぇッー]+)([のが、。？！…」』）]))	$2ない$5
+(([ばが])([ね])([えーぇ])([、。？！…」』）]))	$2ない$5
+(([りら]|はず|わけ|ありえ)([ね])([えーぇ]))	$2ない
+(([らり])ん([ね])([えーぇ]))	$2ない
+((分か)んね([えーぇ]))	$2らない
+((たく)ね([えーぇ]))	$2ない
+((ね)[えーぇ](と|だろ|だろう|っての)([、。？！…」』）]))	ない$3$4
+((ち)(げ)([えーぇ])([よぞ、。？！…」』）]))	$2がう$5
+(([^の])([せ])([えーぇ])([しよぞ])([、。？！…」』）]))	$2さい$5$6
+(([る])([せ])([えーぇ])([っ、。？！…」』）]))	$2さい$5
+みて([えーぇ])な	みたいな
+((くだ)せえや([っ、。？！…」』）]))	$2さい$3
+((さんせ)ー([、。？！…」』）]))	$2い$3
+(きもちい)([、。？！…」』）])	$1い$2
+(([ど])(ー)(も|ぞ|し[てた]))	$2う$4
+(([では]|ただ)(ま)(ぁ)([、。？！…」』）]))	$2$3あ$5
+([、。？！…「『（]|^)よーし([一-龠ア-ヴ])	$1よし。$2
+((よ)ー(ござい))	$2う$3
+((よ)ーっと([、。？！…」』）]))	$2う$3
+((よ)ー(か)([、。？！…」』）]))	$2う$3$4
+((やろ)ー(よ)([、。？！…」』）]))	$2う$3$4
+((おはよ)ー([、。？！…」』）]))	$2う$3
+((でしょ)ー(が))	$2う$3
+(([目])ぇ)	$2を
+*(([一-龠])ぇ([^っ]))	$2い$3
+*kanji + ぇ, need more additional pattern
+*(([^っこ])(と)(ー)([^っ]))	$2$3う$5
+((てめ)ぇ)	$2え
+*((てめ)ぇ([！]))	$2え$3
+((てえ)(のか)([、。？！…」』）]))	たい$3$4
+((、)(ゆーなー)(！))	$2いうな$4
+((それはま)ぁ)	$2あ、
+((だろ)ー(が)([、。？！…」』）]))	$2う$3$4
+((ちゃ)～(ん)([、。？！…」』）]))	$2$3$4
+((そ)ッス)	$2うです
+((ま)ッス)	$2す
+(([、。？！…「『（]|^)う[ッー][スす])	$2おっす
+(([一-龠あ-ん])ッス)	$2です
+(([、。？！…「『（]|^)(でしょ)\3([、。？！…」』）]))	$2$3$4
+((でしょ|ありがと)～?([、。？！…」』）]))	$2う$3
+((しよ)ーぜい([、。？！…」』）]))	$2う$3
+(([、。？！…「『（]|^)(ま)、(いっか)([、。？！…」』）]))	$2$3$4$5
+*another annoying lazy talk shit
+((む)っ(ちゃくちゃ))	$2$3
+(([、。？！…「『（]|^)(らじゃー)([、。？！…」』）]))	$2了解$4
+(([、。？！…「『（]|^)(め)っ([、。？！…」』）]))	$2だ$3$4
+(([、。？！…「『（]|^)わかんね([、。？！…」』）]))	$2分からない$3
+(([、。？！…「『（]|^)わかんね[えぇー]([よ、。？！…」』）]))	$2分からない$3
+(([^、。？！…「『（]|^)わかんね([えぇー]+)([よ、。？！…」』）]))	$2分からない$4
+(([、。？！…「『（]|^)(ど|そ)(した|だ)([、。？！…」』）]))	$2$3う$4$5
+(([、。？！…「『（]|^)(かわい|せんせ)ー)	$2$3い
+(([、。？！…「『（]|^)(おかし|はげし)っ([、。？！…」』）]))	$2$3い$4
+(([、。？！…「『（]|^)お(は|っは)よ[ー！])	$2おはよう
+(([、。？！…「『（がは]|^)(こ)ー(やって))	$2$3う$4
+(([、。？！…「『（がは]|^)(ど)ー(する))	$2$3う$4
+(([、。？！…「『（]|^)(そ)っ(か)([、。？！…」』）]))	$2$3う$4$5
+(([、。？！…「『（]|^)(カンパ)ー(イ)([、。？！…」』）]))	$2$3$4$5
+(([、。？！…「『（]|^)(なんとも|それにしても|ああ|あ[られ])(ま)([ぁー]))	$2$3$4あ
+(([、。？！…「『（]|^)(またね)([えぇー]+)([、。？！…」』）]))	$2$3$5
+(([、。？！…「『（]|^)(と)ー(ぜん))	$2$3う$4
+(([、。？！…「『（]|^)(すまんな|すまね[えぇー])([、。…？！」』）]))	$2すみません$4
+(([、。？！…「『（]|^)(ええ)ーと([、。…？！」』）]))	$2$3っと$4
+((ど)(ー)(じんし))	$2う$4
+(([いさしなたらろつばこ])ー(なぁ|な)([、。？！…」』）]))	$2い$4
+((わから)ね([えぇー])([、。？！…」』）]))	$2ない$4
+((ちょ)ー(だい|だ[ぁー]))	$2う$3
+((せ)ー(えき)([っ、。？！…」』）]))	$2い$3$4
+(しょーがねー)	仕方ない
+((しょうがね)([えぇー])な([、。？！…」』）]))	仕方ない$4
+((い)っ(つも)\2っ\3)	$2$3$2$3
+((や)ぁ(らかい))	$2わ$3
+((おと)ー(さ)ー(ん))	$2う$3$4
+((かもしれ)ね([えぇー]))	$2ない
+(よな([ぁー])([、。？！…」』）]))	$3
+(あ～だこ～(だ))	ああ$2こう$2
+((す)げ([えーぇ])([よぞ、。？！…」』）]))	$2ごい$4
+(せんせ)ー	$1い
+*mixed hiragana-katakana (hijack mode, otherwise put in westernized section)
+(くださ)イ([、。？！…」』）])	$1い$2
+*sex!
+((んで)(ほひい)([、。？！…」』）]))	$2ほしい$4
+*
+*kawainaatteomotta, remove the "naa"
+*I found that なぁと思 can be translated by Atlas
+*however なぁって思 is not
+*maybe because って is a (coll), that's why it'll break translation
+*note: 
+*んじゃないか + なぁと思 = ok
+*のじゃないか + なぁと思 = ok (however, the meaning will different)
+*んじゃないか + と思 = broken <-- this is our big problem
+*のじゃないか + と思 = ok
+*there is still one problem, the translation is a negative state-of-being :
+*いいんじゃないかなぁと思った = It was thought that it wasn't nice
+*what we expect is = It was thought whether it is nice or not (confirmation)
+*problem lies in かなぁと
+*かなぁと = the first clause is translated as negative state-of-being
+*かと = the first clause is translated as probably/confirmation
+*
+*save
+((んじゃないか)(な[あぁ]と)([思想]|おも))	$2$3x$4
+((んじゃないか)(なって)([思想]|おも))	$2$3x$4
+((んじゃないか)(な[あぁ]って)([思想]|おも))	$2$3x$4
+*
+(な[あぁ]って(い[うわ]|[思想言]|おも))	と$2
+(な[あぁ](って)([、。？！…」』）]))	と思$2$3
+(な[あぁ]([、。？…」』）]))	$2
+((か)な[あぁ](と)([思想]|おも))	$2$3$4
+(なー(って))	$2
+(なー(と)([思想]|おも))	$2$3
+((れば)な(って)([思想]|おも))	$2$3$4
+*restore
+((んじゃないか)(な[あぁ]と)x([思想]|おも))	$2$3$4
+((んじゃないか)(なって)x([思想]|おも))	$2なぁと$4
+((んじゃないか)(な[あぁ]って)x([思想]|おも))	$2なぁと$4
+*
+*useless suffix
+((じぇい|じぇ)([、。？！…」』）]))	$3
+*(([、。？！…「『（]|^)(ね)([？]))	$2^$3$4
+(([一-龠])(い)わ([、。？！…」』）]))	$2$3$4
+*:ksb:
+(([一-龠])([ぁぃぅぇぉ])へん)	$2ない
+(([、。？！…「『（]|^)(ほ)な([？]))	$2$3ら$4
+(やな～([、。？！…」』）]))	だ$2
+((.|^)しゃー(なく|ない))	$2仕方$3
+*(しゃー(ない)や)	仕方$2
+*(([、。？！…「『（]|^)しゃー(なく|ない))	$2仕方$3
+(えーやん([、。？！…」』）]))	いいです$2
+((て)もぉた([、。？！…」』）]))	$2思った$3
+((て)もぉたわ([、。？！…」』）]))	$2思った$3
+(([一-龠])ちゅう(のは))	$2という$3
+((ないか|る)っちゅう([一-龠]))	$2という$3
+((ちゅ)ー(わけ))	という$3
+(っちゅーのんは)	というのは
+(っちゅー([一-龠]))	という$2
+*:senba:
+((い)(ま)っ([、。？！…」』）]))	$2$3す$4
+((で)おまっ([、。？！…」』）]))	$2あります$3
+((わか)っとりまっ([、。？！…」』）]))	$2ります$3
+*westernize
+((な)サーイ([、。？！…」』）]))	$2さい$3
+*removing  ～ん
+*could break conjugation like しませ～ん
+*(([ア-ヴ]|ますか|のよ)～ん([、。？！…」』）]))	$2$3
+((ませ)～(ん)([、。？！…」』）]))	$2$3$4
+(([^、。？！…「『（くさ])～ん([、。？！…」』）]))	$2$3
+*join separated sentence
+*only put specific word that is considered as "trash", otherwise put in section 3.3
+*(([あ-んア-ヴ一-龠』])([、…]+)(だっけ)([、。…？！」』）]))	$2$4$5
+*
+*==============messy part done==================
+*re-check
+((ア){2,})	$2$2
+((ウ){2,})	$2$2
+((エ){2,})	$2$2
+((オ){2,})	$2$2
+((あ){2,})	$2$2
+((う){2,})	$2$2
+((え){2,})	$2$2
+((お){2,})	$2$2
+((い){3,})	$2$2$2
+*re-check done
+*
+*
+*remove symbols :
+*small katakana vowels (ァィゥェォ) shouldn't be removed, because it's used in western terms.
+*firstly, save nickname (optional)
+*logically a nickname only uses either small hiragana or ー, never using both (ex: あぁくん, あーちゃん)
+(([あ-ん])(ぁ)(\2\3)(ちゃん|ちゃま|さん|くん|たん|タン|やん|さま|たち|様|君|姉|達|先生|[をがにへとでのはも]|から|より|まで|だけ|だって|ってば|ったら))	$2a$2a$5
+(([あ-ん])(ぃ)(\2\3)(ちゃん|ちゃま|さん|くん|たん|タン|やん|さま|たち|様|君|姉|達|先生|[をがにへとでのはも]|から|より|まで|だけ|だって|ってば|ったら))	$2i$2i$5
+(([あ-ん])(ぅ)(\2\3)(ちゃん|ちゃま|さん|くん|たん|タン|やん|さま|たち|様|君|姉|達|先生|[をがにへとでのはも]|から|より|まで|だけ|だって|ってば|ったら))	$2u$2u$5
+(([あ-ん])(ぇ)(\2\3)(ちゃん|ちゃま|さん|くん|たん|タン|やん|さま|たち|様|君|姉|達|先生|[をがにへとでのはも]|から|より|まで|だけ|だって|ってば|ったら))	$2e$2e$5
+(([あ-ん])(ぉ)(\2\3)(ちゃん|ちゃま|さん|くん|たん|タン|やん|さま|たち|様|君|姉|達|先生|[をがにへとでのはも]|から|より|まで|だけ|だって|ってば|ったら))	$2o$2o$5
+(([あ-ん])ぁ(ちゃん|ちゃま|さん|くん|たん|タン|やん|さま|たち|様|君|姉|達|先生|[をがにへとでのはも]|から|より|まで|だけ|だって|ってば|ったら))	$2a$3
+(([あ-ん])ぃ(ちゃん|ちゃま|さん|くん|たん|タン|やん|さま|たち|様|君|姉|達|先生|[をがにへとでのはも]|から|より|まで|だけ|だって|ってば|ったら))	$2i$3
+(([あ-ん])ぅ(ちゃん|ちゃま|さん|くん|たん|タン|やん|さま|たち|様|君|姉|達|先生|[をがにへとでのはも]|から|より|まで|だけ|だって|ってば|ったら))	$2u$3
+(([あ-ん])ぇ(ちゃん|ちゃま|さん|くん|たん|タン|やん|さま|たち|様|君|姉|達|先生|[をがにへとでのはも]|から|より|まで|だけ|だって|ってば|ったら))	$2e$3
+(([あ-ん])ぉ(ちゃん|ちゃま|さん|くん|たん|タン|やん|さま|たち|様|君|姉|達|先生|[をがにへとでのはも]|から|より|まで|だけ|だって|ってば|ったら))	$2o$3
+(([０-９])～([０-９]))	$2x$3
+*handling pigs, this might break terms in hiragana
+(([ぷ])([ぅ]+)ー([、。！？…」』）]))	$4
+(([ぷ])([ぅ]+)([、。！？…」』）]))	$4
+(([ア-ヴ一-龠])(だ)(ぷ)([、。！？…」』）]))	$2$3$5
+(([ア-ヴ一-龠])(ぷ)([、。！？…」』）]))	$2$4
+((なる)(ぷ)(う)([、。！？…」』）]))	$2$5
+*
+*VNR ignore ♪ symbol, these pattern might be unsafe
+*handling hiragana + small hiragana vowels + ン, removes the small hiragana vowels and ンs
+(?<=[かがざただなはばやらぱわ])(ぁ+)(ン+)(.+)	$3
+(?<=[きぎじぢひびみりぴにし])(ぃ+)(ン+)(.+)	$3
+(?<=[くぐすずつづぬふぶむるぷ])(ぅ+)(ン+)(.+)	$3
+(?<=[けげせぜてでへべめれぺ])(ぇ+)(ン+)(.+)	$3
+(?<=[こごそぞとどのほぼもろぽをよ])(ぉ+)(ン+)(.+)	$3
+(?<=[きぎじちぢにひびみりぴ]ゃあ)(ぁ+)(ン+)(.+)	$3
+*
+*now remove symbols
+*VNR, try disable this and see what happen overall (maybe test this later...)
+(([゛～ぁぃぅぇぉ]))
+*restore
+(([あ-ん])(a)(\2\3)(ちゃん|ちゃま|さん|くん|たん|タン|やん|さま|たち|様|君|姉|達|先生|[をがにへとでのはも]|から|より|まで|だけ|だって|ってば|ったら))	$2ぁ$2ぁ$5
+(([あ-ん])(i)(\2\3)(ちゃん|ちゃま|さん|くん|たん|タン|やん|さま|たち|様|君|姉|達|先生|[をがにへとでのはも]|から|より|まで|だけ|だって|ってば|ったら))	$2ぃ$2ぃ$5
+(([あ-ん])(u)(\2\3)(ちゃん|ちゃま|さん|くん|たん|タン|やん|さま|たち|様|君|姉|達|先生|[をがにへとでのはも]|から|より|まで|だけ|だって|ってば|ったら))	$2ぅ$2ぅ$5
+(([あ-ん])(e)(\2\3)(ちゃん|ちゃま|さん|くん|たん|タン|やん|さま|たち|様|君|姉|達|先生|[をがにへとでのはも]|から|より|まで|だけ|だって|ってば|ったら))	$2ぇ$2ぇ$5
+(([あ-ん])(o)(\2\3)(ちゃん|ちゃま|さん|くん|たん|タン|やん|さま|たち|様|君|姉|達|先生|[をがにへとでのはも]|から|より|まで|だけ|だって|ってば|ったら))	$2ぉ$2ぉ$5
+(([あ-ん])a(ちゃん|ちゃま|さん|くん|たん|タン|やん|さま|たち|様|君|姉|達|先生|[をがにへとでのはも]|から|より|まで|だけ|だって|ってば|ったら))	$2ぁ$3
+(([あ-ん])i(ちゃん|ちゃま|さん|くん|たん|タン|やん|さま|たち|様|君|姉|達|先生|[をがにへとでのはも]|から|より|まで|だけ|だって|ってば|ったら))	$2ぃ$3
+(([あ-ん])u(ちゃん|ちゃま|さん|くん|たん|タン|やん|さま|たち|様|君|姉|達|先生|[をがにへとでのはも]|から|より|まで|だけ|だって|ってば|ったら))	$2ぅ$3
+(([あ-ん])e(ちゃん|ちゃま|さん|くん|たん|タン|やん|さま|たち|様|君|姉|達|先生|[をがにへとでのはも]|から|より|まで|だけ|だって|ってば|ったら))	$2ぇ$3
+(([あ-ん])o(ちゃん|ちゃま|さん|くん|たん|タン|やん|さま|たち|様|君|姉|達|先生|[をがにへとでのはも]|から|より|まで|だけ|だって|ってば|ったら))	$2ぉ$3
+(([０-９])x([０-９]))	$2～$3
+*
+*remove ん from beginning of sentence (ex: んじゃ, んなことない)
+(([、。！？…　「（『])(ん)(ふ)([、。！？…」』）]))	$2$5
+(([、。！？…　「（『])(ン)(フ)([、。！？…」』）]))	$2$5
+(([、。！？…　「（『])(ん)([^な])([、。！？…」』）]))	$2$5
+(([、。！？…　「（『])(ン)([^ナ])([、。！？…」』）]))	$2$5
+(([、。！？…　「（『])(ん)([^な])([ッっ]+)([、。！？…」』）]))	$2$6
+(([、。！？…　「（『])(ン)([^ナ])([ッっ]+)([、。！？…」』）]))	$2$6
+(([、。！？…　「（『])(ん)([^な]))	$2$4
+(([、。！？…　「（『])(ン)([^ナ]))	$2$4
+^(ん)([^な])	$2
+^(ン)([^ナ])	$2
+(([、。！？…　「（『])(んな))	$2そ$3
+(([、。！？…　「（『])(ンナ))	$2ソ$3
+^(んな)	そ$1
+^(ンナ)	ソ$1
+*small "tu" (っ) can't be removed entirely, otherwise it might break phrases.
+*pattern = っ、 or っ。 or っ！ or っ？ or っ… (replace with right side char)
+((しよ)っ([、。？！…」』）]))	$2う$3
+([っッ]([ 　、。！？…）」』]))	$2
+(([　、。！？…　「『（])っ([^てた]))	$2$3
+*
+*removing partial って from some symbols (replace with left side char)
+*
+((^って)([、。！？…]))
+*if it's at beginning of text or if it's after a symbol
+(([、。！？…　「『（]|^)って(の)([をがにへとでのはも]))	$2という$3$4
+(([、。！？…　「『（]|^)って(か|こと))	$2という$3
+*if it's in the middle of text
+*(([^、。！？…　「『（一-龠])って(こと))	$2という$3
+(([^、。！？…　「『（])って(いうのは))	$2と$3
+*misc :
+((だ)って(の)([をがにへとでのはも]))	$2x$3$4
+((から)って(の)([をがにへとでのはも]))	$2と$3$4
+((.)って(の)([をがにへとでのはも]))	$2という$3$4
+((だ)x(の)([をがにへとでのはも]))	$2って$3$4
+*
+*
+*save っていうか
+(([、。！？…「『（])(っていうか)([^、。！？…」』）]))	$2x、$4
+(([、。！？…「『（])(っていうか)([、。！？…」』）]))	$2x$4
+(([、。！？…「『（])って(言って))	$2$3
+(([、。！？…「『（])って)	$2と
+(([、。！？…「『（])(x)([^、。！？…」』）]))	$2っていうか、$4
+(([、。！？…「『（])(x)([、。！？…」』）]))	$2っていうか$4
+*
+*
+*--- handling partial adverbal/onomatopoeic ---
+*ex: 「にぱー、と彼女は笑い」
+*Atlas translation : "[Nipa-], She smiles solving"
+*"solving" exist because there is "と" coming from partial にぱーと (adv)
+*how to handle that separated text :
+*1. by joining it, this way gives better translation, however without a good detection method it's kinda very unsafe
+*2. by removing "と", so the translation clear enough to understand --> "[Nipa-], She smiles"
+*removing と at the beginning sentence, to avoid "solve" translation from Atlas
+*hiragana part seems inaccurate, but I'll include it anyway
+*also this code might break "join by onomatopoeic" code later...
+*join directly
+*alright, time to deal with it. Put any partial onomatopeic here
+((びゅ|ずん|びゅ|しゅ|ぞく|ゆす|パン|くい)([、…]+)(\2[、…]+)(と))	$2$2$5
+((とくん|こくん|ぱつん|ぶるん|ビクン)([、…]+)(\2[、…]+)(と))	$2$2$5
+(([。、？！…「『（]|^)(ちら|ふう|[きぎ]ゅ|[ぴじぐつ]ん)([、…]+)(と))	$2$3$5
+(([。、？！…「『（]|^)(じょわ|こてん|つぷり|ごくん|びくん|ううむ|ずぶり|ビクッ)([、…]+)(と))	$2$3$5
+(([。、？！…「『（]|^)(にゅるん)([、…]+)(と))	$2$3$5
+((びく|ビク|ずん|ふう)([、…]+)(と))	$2$4
+((びくん|がつん|ぶるん|ぞくり|[きしじ]ゅん|じゅわ)([、…]+)(と))	$2$4
+((ぽんぽん|ポンポン|きゅきゅ|[きぎ]ゅうう)([、…]+)(と))	$2$4
+((ちょんちょん)([、…]+)(と))	$2$4
+*
+(([、。！？…　「」『』（）]|^)と(お[一-龠ア-ヴ]))	$2$3
+(([、。！？…　「」『』（）]|^)と(言いたく))	$2$3
+*save
+(([、。！？…　「」『』（）]|^)と([ー或仮共金言公考思同比来]|[をがにへでのあいおかけきぎくぐこさしすちってとどなはばびべぼまみもやるろりん]|うとう|うぜん|うの昔|れ[るた]|うに|めて|めない|ういう|つぜん))	$2x$3
+*
+(([、。！？…　「」『』（）]|^)と([一-龠ア-ヴあ-ん]))	$2$3
+*
+*restore
+(([、。！？…　「」『』（）]|^)x([ー或仮共金言公考思同比来]|[をがにへでのあいおかけきぎくぐこさしすちってとどなはばびべぼまみもやるろりん]|うとう|うぜん|うの昔|れ[るた]|うに|めて|めない|ういう|つぜん))	$2と$3
+*
+*take the rest with specific word
+(([、。！？…　「」『』（）]|^)と(もしかして|しまった))	$2$3
+*
+*removing any ー from non-katakana chars, might break text
+*sometimes there are western term with hiragana... (ex: げーむおーばー)
+*when this happen, you might need to disable this code
+*VNR, test disable this
+*firstly, save nickname
+(([あ-ん])ー(ちゃん|ちゃま|さん|くん|たん|タン|やん|さま|たち|様|君|姉|達|先生|[をがにへとでのはも]|から|より|まで|だけ|だって|ってば|ったら))	$2x$3
+((が)ー(ん)([と、。！？…」』）]))	$2x$3$4
+(([、。！？…「『（])(じゃ|じゃじゃ)ー(ん)([、。！？…」』）]))	$2$3x$4$5
+*the rest are looking fine :
+(([^ァ-ヶ])ー)	$2
+((「|『|（)ー([^ァ-ヶ]))	$2$3
+(([^ァ-ヶ])ー([、。」』！？）…]))	$2$3
+(([^ァ-ヶ])ー)$	$2
+*restore
+(([あ-ん])x(ちゃん|ちゃま|さん|くん|たん|タン|やん|さま|たち|様|君|姉|達|先生|[をがにへとでのはも]|から|より|まで|だけ|だって|ってば|ったら))	$2ー$3
+((が)x(ん)([と、。！？…」』）]))	$2ー$3$4
+(([、。！？…「『（])(じゃ|じゃじゃ)x(ん)([、。！？…」』）]))	$2$3ー$4$5
+*
+*remove single hiragana at the beginning of text
+(^([あ-んア-ヴ])([、。？！…])(.)){1}	$4
+*remove echo effect after a small katakana vowels (ex: しィいいい)
+(([あ-ん一-龠])([ァ])([あア]+)([、。！？…　）」』]))	$2$5
+(([あ-ん一-龠])([ィ])([いイ]+)([、。！？…　）」』]))	$2$5
+(([あ-ん一-龠])([ゥ])([うウ]+)([、。！？…　）」』]))	$2$5
+(([あ-ん一-龠])([ェ])([えエ]+)([、。！？…　）」』]))	$2$5
+(([あ-ん一-龠])([ォ])([おオ]+)([、。！？…　）」』]))	$2$5
+*remove small katakana vowels (ァィゥェォ) from hiragana chars, like きゃァァァ, ははァァ etc.
+*include kanjis
+(([あ-ん一-龠])([ァィゥェォ]+))	$2
+*replace ッ with っ
+*experimental using global pattern
+*if not working, better use specific rules
+*list: っぷり
+(([あ-ん一-龠])ッ([あ-ん一-龠]))	$2っ$3
+*remove ッ from any non-katakana (ex: はッ、はッ)
+*before removed, let's save separated katakana word. Might screwed h-scene removal...
+(([ア-ヴ])(…+|ー+)(ッ)([ア-ヴ]))	$2$4$5
+(([^ァ-ヶ])(ッ+))+	$2
+*remove ッ from end of sentence
+(([ア-ヴ])ッ([、。！？…　）」』]))	$2$3
+*remove ん from beginning of sentence (2nd try)
+(([、。！？…　「（『])(ん|ン))	$2
+^([んン]+)
+*remove katakana (exp) after hiragana (exp)
+*add on demand
+((よ)ネー([、。？！…）」』]))	$2$3
+*
+*remove "echo" effect (ex : ひいいいい)
+*echo came from (adj) seems rare (ex: 大きいいいい), but will add it when needed
+*save
+(([おて]め)(え)([、。？！…）」』]))	$2x$3$4
+(^|[、。？！…（「『])(へ)(え)([、。？！…）」』])	$1$2x$3$4
+(([一-龠])(き)(い)([、。？！…）」』]))	$2$3x$4$5
+(おっき)い([、。？！…）」』])	$1x$2
+*
+(([かがざただなはばやらぱわヤ])([あア]+)([、。？！…）」』]))	$2$4
+(([カガザタダナハバヤラパワ])([あ]+)([、。？！…）」』]))	$2$4
+(([きぎじぢひびみりぴに])([いイ]+)([、。？！…）」』]))	$2$4
+(([し])(([いイ]){2,})([、。？！…）」』]))	$2$4$5
+(([くぐすずつづぬふぶむるぷ])([うウ]+)([、。？！…）」』]))	$2$4
+(([ク])([う]+)([、。？！…）」』]))	$2$4
+(([けげせぜてでへべめれぺ])([えエ]+)([、。？！…）」』]))	$2$4
+(([メケ])([え]+)([、。？！…）」』]))	$2$4
+(([こごそぞとどのほぼもろぽをよ])([おオ]+)([、。？！…）」』]))	$2$4
+(([ポ])([お]+)([、。？！…）」』]))	$2$4
+(([きぎじちぢにひびみりぴ])(ゃあ)([あア]+)([、。？！…）」』]))	$2$3$5
+*restore
+(([おて]め)x(え)([、。？！…）」』]))	$2$3$4
+(^|[、。？！…（「『])(へ)x(え)([、。？！…）」』])	$1$2$3$4
+(([一-龠])(き)x(い)([、。？！…）」』]))	$2$3$4$5
+(おっき)x([、。？！…）」』])	$1い$2
+*
+*remove "echo" effect in the middle text
+*add on-demand
+*remove vowels + ん
+(([かが]|いや|した|です(が|から)|った|だから)([あア]+)([んン])([、。？！…）」』]))	$2$6
+(([で]|して|まで|ダメ|[一-龠]いて)([えエ]+)([んン])([、。？！…）」』]))	$2$5
+*unsafe: ないで
+((ます)([うウ]+)([んン])([、。？！…）」』]))	$2$5
+(([こごそぞとどのほぼもろぽをょ])([おオ]+)([んン])([、。？！…）」』]))	$2$5
+(([一-龠])([おオ]{2,})([んン])([、。？！…）」』]))	$2$5
+*remove vowels only, but preserve ん (ex : しませえええん)
+(([さざただなはばやらぱわヤ])([あア]+)([んいン])([、。？！…）」』]))	$2$4$5
+(([けげせぜてでへべめれぺ])([えエ]+)([んン])([、。？！…）」』]))	$2$4$5
+*remove "echo" for katakana + hiragana + ん
+(([カガザタダナハバヤラパワヤ])(あ+)([んン])([、。？！…）」』]))	$2$5
+(([キギジヂヒビミリピニシチ])(い+)([んン])([、。？！…）」』]))	$2$5
+(([クグスズツヅヌフブムルプ])(う+)([んン])([、。？！…）」』]))	$2$5
+(([ケゲセゼテデヘベメレペ])(え+)([んン])([、。？！…）」』]))	$2$5
+(([コゴソゾトドノホボモロポヲ])(お+)([んン])([、。？！…）」』]))	$2$5
+*remove "echo" effect after kanji
+*firstly, let's try if it can be grouped, else separate each vowels
+*it seems it can't be grouped, it'll break おう (volitional form)
+*save
+((格好)(いい)([、。？！…）」』]))	$2x$3$4
+*
+(([一-龠])([あ]{2,})([、。？！…）」』]))	$2$4
+(([一-龠])([い]{2,})([、。？！…）」』]))	$2$4
+(([一-龠])([う]{2,})([、。？！…）」』]))	$2$4
+(([一-龠])([え]{2,})([、。？！…）」』]))	$2$4
+(([一-龠])([お]{2,})([、。？！…）」』]))	$2$4
+*restore
+((格好)x(いい)([、。？！…）」』]))	$2$3$4
+*
+*remove ん
+(([いえお])(ん+)([、。？！…）」』]))	$2$4
+(([あ-ん])(ン+)([、。？！…）」』]))	$2$4
+*remove any vowels after small hiragana vowels (ex : ぁぁあああああ, ぃいいいい)
+*should be enabled if ぁぃぅぇぉ aren't removed at initial filter
+*code removed to front
+(([^ァ-ヶー])([ァィゥェォアイウエオ]+)([、。？！…）」』]))	$2$4
+*remove any katakana vowels (ex: ヤツァアアァ)
+*seems break names like クロムウェイ, gonna need better rule
+*(([ァィゥェォ])([ァィゥェォ]+|[アイウエオ])([、。？！…）」』]))	$4
+(([ァィゥェォ])([ァィゥェォ]+|[アイウエオ]{2,})([、。？！…）」』]))	$4
+*
+*remove "stutter" effect
+*あいうえおかがきぎくぐけげこごさざしじすずせぜそぞただちぢっつづてでとどなにぬねのはばぱひびぴふぶぷへべぺほぼぽまみむめもやゆよらりるれろわゐをん
+(([あ-ござ-ぞだぢ-づでど-ばひ-ん])っ(\2))	$2
+*looks fine if followed by kanji
+(([、。？！…])[あ-ん][っッ]([一-龠]))	$2$3
+([。、？！…「『（]|^)(な)、(何|なに)	$1$3
+([。、？！…「『（]|^)(な)\2+、(何|なに)	$1$3
+*remove "stutter" effect based on intonation
+*still, there is no way we can detect whether a text like ああ means "ah", or came from "a stuttering effect"
+*downside of this code is, hiragana names might gone (ex: すももも, ねねね)
+*pattern like あああの, なななんで haven't been done, just let to TA handle it for now
+*save
+((いててて)([、…])([一-龠ア-ヴ]))	$2x$3$4
+*
+(([。、？！…「『（]|^)([あう-ん])(\3{2,})([、…])([一-龠ア-ヴ]|\3))	$2$6
+(([あう-ん])(\2{2,})([一-龠ア-ヴ]))	$4
+(([か-ぢつ-わ])(\2{2,}))	$2$2$2
+((ちょ)(\2{2,}))	$2$2$2
+*
+*restore
+((いててて)x([、…])([一-龠ア-ヴ]))	$2$3$4
+*
+*==============================================================================================================================
+*2. Cleaning up partial chars on text. (Sequence order is : middle --> beginning --> end)
+*I decided to remove those chars because a "はー、はー、はー" doesn't always means a moaning or panting sfx
+*it might not working on text with only partial chars like : 「は、は、は、は！　あー」
+*but we can let TA's substitution handle it.
+*only removing ONE character, otherwise there is a possibility to accidently that a jpn word consist in two or more characters got removed too.
+*
+*Note: some word like ね will be gone too, however it's no problem since you'll never know how to detect whether it means "hey" or "right"
+*
+*2.1. Removing partial characters at middle sentences (mostly in h-scene)
+*a search including a round dots (。) is tricky. The character is ignored if it's on the beginning of a line, but of course in practise there is no way a sentence will firstly started by (。)
+*so don't bother if it looks wrong, because it's working actually.
+*pattern = 、あ、 or 、あ… or 。あ、 or 。あ… or …あ、 or …あ… or 。　あ、 or 。　あ… or 、　あ、 or 、　あ… or …　あ、 or …　あ…
+*or 、あー、 or 、あー… or 。あー、 or 。あー… or …あー、 or …あー… or 。　あー、 or 。　あー… or 、　あー、 or 、　あー… or …　あー、
+*or …　あー… (replace with left side char)
+((、|。|…|。　|、　|…　)([あ-ん]|[ア-ヴ]|(([あ-ん]|[ア-ヴ])ー))(、|…))+	$2
+*pattern = ！あ、 or ！あ。 or ！あ… or ？あ、 or ？あ。 or ？あ… or ！　あ、 or ！　あ… or ？　あ、 or ？　あ…
+*or ！あー、 or ！あー。 or ！あー… or ？あー、 or ？あー。 or ？あー… or ！　あー、 or ！　あー… or ？　あー、 or ？　あー… (replace with left side char)
+((！|？|　)([あ-ん]|[ア-ヴ]|(([あ-ん]|[ア-ヴ])ー))(、|。|…|？|！))+	$2
+*pattern = …あ。 or …あ！ or …あ？ or 、あ。 or 、あ！ or 、あ？
+*or …あー。 or …あー！ or …あー？ or 、あー。 or 、あー！ or 、あー？ (replace with right side char)
+((…|、)([あ-ん]|[ア-ヴ]|(([あ-ん]|[ア-ヴ])ー))(。|！|？))+	$6
+*
+*
+*2.2. Removing partial characters at beginning sentences
+*pattern = （あ、 or （あ。 or （あ！ or （あ？ or （あ… or 「あ、 or 「あ。 or 「あ！ or 「あ？ or 「あ…
+*or （あー、 or （あー。 or （あー！ or （あー？ or （あー… or 「あー、 or 「あー。 or 「あー！ or 「あー？ or 「あー… (replace with left side char)
+((（|「|『|】)([あ-ん]|[ア-ヴ]|(([あ-ん]|[ア-ヴ])ー))(、|。|！|？|…))	$2
+*
+*
+*2.3. Removing partial characters at end of sentences
+*pattern = 、あ） or 。あ） or ！あ） or ？あ） or …あ） or 、あ」 or 。あ」 or ！あ」 or ？あ」 or …あ」 (replace with right side char)
+((、|。|！|？|…)([あ-ん]|[ア-ヴ]|(([あ-ん]|[ア-ヴ])ー))(）|」|』))	$6
+*pattern = 。　あ） or ！　あ） or ？　あ） or …　あ） or 。　あ」 or 。　あ」 or ！　あ」 or ？　あ」 or …　あ」 or 。　あ」
+*or 。　あー） or ！　あー） or ？　あー） or …　あー） or 。　あー」 or 。　あー」 or ！　あー」 or ？　あー」 or …　あー」 or 。　あー」(replace with left side + right side char)
+((。　|！　|？　|…　)([あ-ん]|[ア-ヴ]|(([あ-ん]|[ア-ヴ])ー))(）|」|』))	$2$6
+*
+*Last try. Yes, you can repeat n-times, inefficient way though...
+((、|。|…|。　|、　|…　)([あ-ん]|[ア-ヴ]|(([あ-ん]|[ア-ヴ])ー))(、|…))+	$2
+((！|？|！　|？　)([あ-ん]|[ア-ヴ]|(([あ-ん]|[ア-ヴ])ー))(、|。|…))+	$2
+((…|、)([あ-ん]|[ア-ヴ]|(([あ-ん]|[ア-ヴ])ー))(。|！|？))+	$6
+((（|「|『)([あ-ん]|[ア-ヴ]|(([あ-ん]|[ア-ヴ])ー))(、|。|！|？|…))	$2
+((、|。|！|？|…)([あ-ん]|[ア-ヴ]|(([あ-ん]|[ア-ヴ])ー))(）|」|』))	$6
+((。　|！　|？　|…　)([あ-ん]|[ア-ヴ]|(([あ-ん]|[ア-ヴ])ー))(）|」|』))	$2$6
+((、|。|…|。　|、　|…　)([あ-ん]|[ア-ヴ]|(([あ-ん]|[ア-ヴ])ー))(、|…))+	$2
+((！|？|！　|？　)([あ-ん]|[ア-ヴ]|(([あ-ん]|[ア-ヴ])ー))(、|。|…))+	$2
+((…|、)([あ-ん]|[ア-ヴ]|(([あ-ん]|[ア-ヴ])ー))(。|！|？))+	$6
+((（|「|『)([あ-ん]|[ア-ヴ]|(([あ-ん]|[ア-ヴ])ー))(、|。|！|？|…))	$2
+((、|。|！|？|…)([あ-ん]|[ア-ヴ]|(([あ-ん]|[ア-ヴ])ー))(）|」|』))	$6
+((。　|！　|？　|…　)([あ-ん]|[ア-ヴ]|(([あ-ん]|[ア-ヴ])ー))(）|」|』))	$2$6
+*
+*2.4.1 Removing single hiragana+small hiragana (ex : りょ、ちゅ、きゃ)
+((、|。|…|。　|、　|…　)([あ-なぬ-ん][ゃゅょゎ])(、|…))+	$2
+((！|？|！　|？　)([あ-なぬ-ん][ゃゅょゎ])(、|。|…))+	$2
+((…|、)([あ-なぬ-ん][ゃゅょゎ])(。|！|？))+	$4
+((（|「|『|（　|「　|『　)([あ-なぬ-ん][ゃゅょゎ])(、|。|！|？|…))	$2
+((、|。|！|？|…)([あ-なぬ-ん][ゃゅょゎ])(）|」|』))	$4
+((。　|！　|？　|…　)([あ-なぬ-ん][ゃゅょゎ])(）|」|』))	$2$4
+*
+*2.5 A silly h-scene word detection (lol)
+*ex: you want to remove ちゅるる, so put ちるゅ into brackets, you should see that the code below are the same, only different pattern
+*please be mind these character combination could break text
+*ex: 苦笑しているちに -> 苦笑してい (るちに will gone)
+*save
+((ちん)\2([。、…！）」]))	$2x$3
+(([こそ])(っちに)([。、…！）」]))	$2$3x$4
+*
+(([ぢちりるゅ]{3,})([。、…！）」]))	$3
+(([ぢびどるゅ]{3,})([。、…！）」]))	$3
+(([にちぬるぐっゅ]{3,})([。、…！）」]))	$3
+(([にちぬぱっゅ]{3,})([。、…！）」]))	$3
+(([どぴじるっゅ]{3,})([。、…！）」]))	$3
+*(([あにちばゃゅ]{3,})([。、…！）」]))	$3
+(([ちゅぼ]{3,})([。、…！）」]))	$3
+(([ちぢずぶぷむぐるゅ]{3,})([。、…！）」]))	$3
+(([ちぢゅぱん]{3,})([。、…！）」]))	$3
+(([ぶりゅぱん]{3,})([。、…！）」]))	$3
+(([ばちゅん]{3,})([。、…！）」]))	$3
+(([ぴぺちゃっ]{3,})([。、…！）」]))	$3
+(([ぴぺちゃっ]{4,6})([。、…！）」]))	$3
+(([ぢゅぽ]{3,})([。、…！）」]))	$3
+*test for handling evil-laugh in Umineko
+*disabled, LEC can't use "("+ "words" + ")"
+*(([。、？！…「『（])([くすふはうっ]{3,})([。、…！）」]))	$2クックッ$4
+*
+*restore
+((ちん)x([。、…！）」]))	$2$2$3
+(([こそ])(っちに)x([。、…！）」]))	$2$3$4
+*
+*
+*==============================================================================================================================
+*3. Sentence modification (very experimental)
+*because this part is very very experimental, delete all this part in case sentences become unreadable
+*or just edit the responsible line if you know where the problem is.
+*should only put word that has more than one possibilities here, otherwise let TA handle it
+*
+*"safe" word type codes : (adv), (exp), (prt), (suf)
+*==============================================================================================================================
+*3.1. Remove (and replace)
+*======================================================================================
+*try to handling westernized word
+*sometimes it's written in katakana to make a different feelings
+*must be careful to not break text
+(ex: デス could means "death", スル could means "through", etc)
+*add on demand
+(([一-龠っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(テ)([、。？！…」』）]))	$2て$5
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(マセン)([、。？！…」』）]))	$2$4ません$6
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(イル)([、。？！…」』）]))	$2$4いる$6
+(([めしい]|[あおさら][りれ]|ござい)マス([、。？！…」』）]))	$2ます$3
+([あ-ん])ゴザイマス([、。？！…」』）])	$1ございます$2
+*((め)マシタ([、。？！…」』）]))	$2ました$3
+((デキマス)([、。？！…」』）]))	できます$3
+((デス[カネ])([、。？！…」』）]))	ですか$3
+((マス[カネ])([、。？！…」』）]))	ますか$3
+*((し)マセン([、。？！…」』）]))	$2ません$3
+(アリマセン|アリマセーン)([、。？！…」』）])	ありません$2
+(しょう|ません|です|ます|た)(ネー|ヨネ)([、。？！…」』）])	$1$3
+(しょう|ません|です|ます|た)(カ|カー)([、。？！…」』）])	$1か$3
+(しょう|ません|です|ます|た)カラ([、。？！…」』）])	$1から$2
+(しょう|ません|です|ます|た)ノニ([、。？！…」』）])	$1のに$2
+(しょう|ません|です|ます|た)(ケド|ケドね)([、。？！…」』）])	$1けど$3
+(しょう|ません|です|ます|た)ダケ(です)	$1だけ$2
+(しょう|ません|です|ます|た)シ([、。？！…」』）])	$1し$2
+([でま]し)タ([、。？！…」』）])	$1た$2
+(たの)デ([、。？！…」』）])	$1で$2
+((で)ハー([、。？！…」』）]))	$2は$3
+(([いさしなたらろつばこ]い)ヨー([、。？！…」』）]))	$2$3
+(([いさしなたらろつばこ]い)デースね([、。？！…」』）]))	$2です$3
+(ま)(ショウー)([、。？！…」』）])	$1しょう$3
+((て)ナイネー([、。？！…」』）]))	$2ない$3
+((る)マース([、。？！…」』）]))	$2$3
+((し|あり)マース([、。？！…」』）]))	$2ます$3
+*((れ)ナイ([、。？！…」』）]))	$2ない$3
+((で)ショウカ([、。？！…」』）]))	$2しょうか$3
+((じゃ)ナーイ(で)ショウね([、。？！…」』）]))	$2ない$3しょう$4
+((ない)ジャン([、。？！…」』）]))	$2じゃん$3
+((ない|な)(ワケ)([、。？！…」』）]|で))	$2わけ$4
+([あ-ん])ワケ([あ-ん])	$1わけ$2
+(([一-龠])シテ([、。？！…」』）]))	$2して$3
+(([一-龠])ズ([、。？！…」』）]))	$2ず$3
+(([一-龠])スル([、。？！…」』）]))	$2する$3
+(([一-龠])レタ([”、。？！…」』）]))	$2れた$3
+(([一-龠])(ダナ|ダ)([、。？！…」』）]))	$2だ$4
+(([一-龠])マスガ([、。？！…」』）]))	$2ますが$3
+(([一-龠])マシタ([、。？！…」』）]))	$2ました$3
+(([一-龠]|[あ-ん])マス([、。？！…」』）]))	$2ます$3
+(([一-龠]|[あ-ん])マスガ([、。？！…」』）]))	$2ますが$3
+(([一-龠]|[あ-ん])マス([あ-ん]))	$2ます$3
+(([一-龠]|[あ-ん])ナイ([、。？！…」』）]))	$2ない$4
+(([一-龠]|[あ-ん])ナカッタ([、。？！…」』）]))	$2なかった$4
+(([一-龠]|[あ-ん])デース([、。？！…」』）]))	$2です$3
+(([一-龠]|[あ-ん])(デス|デス[ヨネよね]|デス(よね))([、。？！…」』）]))	$2です$5
+(([一-龠]|[あ-ん])(デス)([かがの]|から|けど)([、。？！…」』）]))	$2です$4$5
+(([一-龠]|[あ-ん])(デス)([か]|から|けど)([ね])([、。？！…」』）]))	$2です$4$6
+(([一-龠]|[あ-ん]|[ア-ヴ])(です)([カ])([、。？！…」』）]))	$2$3か$5
+(([一-龠]|[あ-ん])(デスガ)([、。？！…」』）]))	$2ですが$4
+(([一-龠]|[あ-ん])(デシタ|デシタネ)([、。？！…」』）]))	$2でした$4
+(([一-龠]|[あ-ん])(デショウ|デショウネ)([、。？！…」』）]))	$2でしょう$4
+(([一-龠]|[あ-ん])(シタ)([、。？！…」』）]))	$2した$4
+(([一-龠]|[あ-ん])(マシタ)([、。？！…」』）]))	$2ました$4
+(([一-龠]|[あ-ん])(マシタカ)([、。？！…」』）]))	$2ましたか$4
+(([一-龠]|[あ-ん])(シタカ)([、。？！…」』）]))	$2したか$4
+(([一-龠]|[あ-ん])(マセン)([、。？！…」』）]))	$2ません$4
+(([一-龠]|[あ-ん])(セン)([あ-ん、。？！…」』）]))	$2せん$4
+(([一-龠]|[あ-ん])(シマス)([、。？！…」』）]))	$2します$4
+(([一-龠]|[あ-ん])(イルト)([、。？！…」』）]))	$2いると$4
+(([一-龠]|[あ-ん])(イマス)([、。？！…」』）]))	$2います$4
+(([一-龠]|[あ-ん])(レル)([、。？！…」』）]))	$2れる$4
+(([一-龠]|[あ-ん])(ザマス)([、。？！…」』）]))	$2です$4
+(([一-龠]|[あ-ん])(ザマス)(か)([、。？！…」』）]))	$2です$4$5
+(([一-龠あ-ん])ナイヨ([、。？！…」』）]))	$2ない$3
+(([一-龠あ-ん])ナ([、。？！…」』）]))	$2$3
+(([一-龠あ-ん])ケド([、。？！…」』）]))	$2けど$3
+([一-龠]|[あ-ん])(クン)	$1くん
+(下|くだ)サイ([、。？！…」』）])	$1さい$2
+(なさ)イ([、。？！…」』）])	$1い$2
+(な)サイ([っ、。？！…」』）])	$1さい$2
+(ハマ)ッ(たら)	$1っ$2
+*interweb terms
+(([一-龠あ-んア-ヴ])ｗ{1,3}([、。？！…」』）]))	$2、lol$3
+(([一-龠あ-んア-ヴ])ＴＴ([、。？！…」』）]))	$2、T_T$3
+*((.+)www)	$2,lol
+*misc :
+*for the sake of c-u-m
+*on katakana-ized verbs, "ッ" must be converted into "っ", so it can connect with conjugations.
+((イ)ッ([てたく]|ちゃ|ちま[ういえ]))	$2っ$3
+((イ)キ(ま(す|し[たて]|しょ)|た[くいろ]|ちゃ|そう|やすい))	$2き$3
+((イ)ケ([てるん、。…！」』）]|ま(す|し[たて])|た[くいろとのん、。…！」』）]|ちゃ|な[いく]|そう))	$2け$3
+((イ)カ(ない|せて|ずに))	$2か$3
+((イ)ク([ぞぜわ]|わよ|んだ|んだぞ))	$2く$3
+((イイ)([わよ])([よね、。…！」』）]))	$2$4
+(([でも])(イ)ク([、。…！」』）]))	$2$3く$4
+*try to fix gibberish (usually in h-scene)
+((イって)りう([、。…！」』）]))	$2る$3
+((イき)しゅ(ぎて))	$2す$3
+((イキ)、(たい))	イき$3
+*
+*======================================================================================
+*
+*misc :
+*(([^いすおやょ])っぱい)	$2
+(([、。？！…])(っていうのは))	$2
+(([てで])へ(！))	$2$3
+((.)(っつの|っつーの)([、。…？！」』）]))	$2$4
+*
+*--- のこと + を ---
+*just a test, because :
+*1. almost have no meaning except "about"　which is safe to be removed
+*2. on a long sentence this word sometimes broken the translation.
+*ex: 私のことを心配するな -> 私を心配するな
+*optimization test
+(?<![あこそをがにへとでのはもな])のこと(?=を)
+*
+*save
+*((.|^)([あこそをがにへとでのはもな]のこと)(を))	$2$3x$4
+*
+*(のこと(を))	$2
+*restore
+*((.|^)([あこそをがにへとでのはもな]のこと)x(を))	$2$3$4
+*
+*handling おっ, a counter humble form
+((お)っ([一-龠])(て))	$2$3$4
+*
+*--- っす ---
+*remove "っ" from っす (male speech)
+((ま)っ(す)([、。？！…」』）]))	$2$3$4
+((ま)ッ(ス)([、。？！…」』）]))	$2す$4
+*replace っす if in the middle text, not remove because we'll use it for breaking sentence
+(([、。…？！「『（])(なん)(すか))	$2$3で$4
+(([、。…？！「『（])([ちうよ]|おい)([っー])(す)([、。？！…」』）]))	$2おっ$5$6
+(([^で])(っす|んす|っス)(よ|か))	$2です$4
+*
+*---よ imperative ---
+*LEC, change ですよ？ to ですか？
+(です)よ(？)	$1か$2
+*
+(([（「『、。…？！]|^)(おう)よ([、。！？…）」』]))	$2$3$4
+*save
+*なよ could be a replacement from imperative form, better save it
+((なよ)([、。…！」』）]))	$2x$3
+(([（「『、。…？！]|^)(あばよ)([、。！？…）」』]))	$2$3x$4
+*
+*よ+！=imperative
+*disabled : break on LEC
+*((う|な|る|て|す)(よ)([、。…！」』）]))	$2$3！$4
+*
+((ない|です)よ([、。…！」』）]))	$2$3
+((の)よん([、。…？！」』）]))	$2$3
+*
+*restore
+((なよ)x([、。…！」』）]))	$2$3
+(([（「『、。…？！]|^)(あばよ)x([、。！？…）」』]))	$2$3$4
+*
+*--- みたい + (exp) ---
+((みたい)(ね|よ[ねな]|わよ|わよ[ねな])([、。！？…）」』]))	$2です$4
+*save single (exp) first
+*LEC can't handle this, try remove?
+*try join first
+[、…](だ|わ|です)(わ|よ|よね|よな|ね|な)([、。？！…」』）])	$1$3
+*remove it
+(([（「『、。…？！])(だ|わ|です)(わ|よ|よね|よな|ね|な)([、。？！…」』）]))	$2$5
+*
+*---の---
+*add か before ？
+*theoritically it has the same function, but in fact Atlas treat it differently
+*of course, might break any hiragana words.
+*disabled : LEC
+*(([。、？！…「『（]|^)(あの)(？))	$2Umm$4
+*((の)(？))	$2か$3
+*remove の, because in some case it break translation
+((なら|から|より|まで|らしい|じゃない)の([、。！？…）」』]))	$2$3
+*
+*---のよ---
+((ます)のよ([、。！？…）」』]))	$2$3
+*
+*---な---
+*handling な, because Atlas always translate it into negative imperative form
+*
+*join splitted word, this should rarely happened
+((ごめんな)、(さい)([、。？…）」』]))	$2$3$4
+*
+*save, another discovery, するんだな
+((るん)(だ)(な)([、。？…）」』]))	$2$3$4x$5
+((呼ぶ)(な)([、。？…）」』]))	$2x$4
+*save みたい
+((みたい)な([、。？…）」』]))	$2x$3
+*save adv
+((く)な([、。？…）」』]))	$2x$3
+*save names
+(りなりな)([、。？…）」』])	$1x$2
+*for Kanto-ben
+((べな)([、。！？…）」』]))	$3
+*
+*for :ksb:
+((んは|んはや)な([、。！？…）」』]))	の$3
+(([。、？！…「『（]|^)(ほ)な([。、？！…）」』]))	$2$3x$4
+*
+*様, try without obj-prt
+((様)(な)([、。！？…）」』]))	よう$3$4
+*
+*try to remove な for non-imperative
+*as you know :
+*verb + な = "don't" (ex: 来るな)
+*non-verb + な = suffix (ex: きれいな)
+*verb + な + ？ = suffix
+([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)([てたる])な(？)	$1$3$4
+(する)な(？)	$1$2
+(たら|なら|んだら|から|より|まで)な([、。！？…）」』])	$1$2
+*もんな seems safe to replaced directly with から
+(だ)もんな([、。？…）」』])	$1から$2
+(んだ|のだ)な([、。？…）」』])	$1$2
+([いしなたらろつばこ]い)だな([、。！？…）」』])	$1$2
+*
+*sentence ended with (ろう, こう) is an "invitation" form, it's different with u-verb
+*ex: 「がんばろうな」
+*it should be translated into "Let's try our best", not "Let's don't try our best"
+((もう|ろう|こう|ぼう)な([、。！？…）」』]))	$2$3
+*ような is unsafe, it collide with ような (adj) "like". We try only remove when followed by a (！) assumed it is an imperative form.
+((よう)な([！]))	$2$3
+((しよう)な([、。！？…）」』]))	$2$3
+*
+*notes :
+*everything ended by なぁ = (exp)
+*everything ended by なあ = imperative
+*but since those ぁ and あ removed by previous code, so there is no other way to handle it
+(([^うかこそみるらん])(な)([、。？…）」』]))	$2$4
+(([^せすくぐぶつむるぬうこそみ])(ん)(な)(！))	$2$5
+(([せすくぐぶつむるぬうこ])(ん)(な)(！))	$2る$4$5
+*disabled: み --> みんな
+(([^すくぐぶつむるぬうん])(な)(！))	$2$4
+*restore
+(りなりな)x([、。？…）」』])	$1$2
+((るん)(だ)(な)x([、。？…）」』]))	$2$3$4$5
+((呼ぶ)x([、。？…）」』]))	$2な$3
+((みたい)x([、。？…）」』]))	$2な$3
+((く)x([、。？…）」』]))	$2な$3
+(([。、？！…「『（]|^)(ほ)x([。、？！…）」』]))	$2$3な$4
+*
+*---ね---
+*try to remove ね from end of sentence (those are sequenced order of わよね, shouldn't included in one line)
+((んで)(って|て)ね([、。？！…」』）]))	$2やれ$4
+*pre-save
+(だろう)しね([、。？！…」』）])	$1$2
+*save hiragana names, put troubling names/words here
+((あやね|るみね|をこね|しね)([、。？！…」』）]))	$2x$3
+((あの|なめこ|舐めこ|なんて)ね([、。？！…」』）]))	$2x$3
+*save
+((ようなま)ね([、。？！…」』）]))	$2x$3
+*note: why てね must be saved? I forgot
+(([、。？！…「『（]|^)(また)(ね)([、。？！…」』）]))	$2$3x$4$5
+*
+(([あ-ん])(ね|さあ|ネ|ネェ)([、。？！…」』）]))	$2$4
+(([ア-ヴ])(ね|さあ)([、。？！…」』）]))	$2$4
+*restore
+((ようなま)x([、。？！…」』）]))	$2ね$3
+(([、。？！…「『（]|^)(また)x(ね)([、。？！…」』）]))	$2$3$4$5
+*restore hiragana names/words
+((あやね|るみね|をこね|しね)x([、。？！…」』）]))	$2$3
+((あの|なめこ|舐めこ|なんて)x([、。？！…」』）]))	$2ね$3
+*
+*---さ---
+*for Kanto-ben
+((べさ)([、。？！…」』）]))	$3
+*
+*partial onomatopoeic
+((ゆさ)、(ゆさ)(っと))	$2$3$4
+(ゆさゆさ)、\1(と)	$1$2
+*
+*try to remove さ from end of sentence
+*might remove -ness meaning from (adj) suffix
+*save
+((げ)さ([、。？！…」』）]))	$2x$3
+(ゆさゆさ)([、。？！…」』）])	$1x$2
+*
+((だ|ある|いる|ない|する|てる|[一-龠]い)(し)(さ)([、。？！…」』）]))	$2$3$5
+((ことなら|ないなら|たら|から|より|まで|ければ)(さ)([、。？！…」』）]))	$2$4
+(([^っ一-龠いさしなたらろつば])(さ)([、。？！…」』）]))	$2$4
+*restore
+((げ)x([、。？！…」』）]))	$2さ$3
+(ゆさゆさ)x([、。？！…」』）])	$1$2
+*
+*---よ---
+*VNR, try disable all
+*try to remove よ from end of sentence
+*save
+*なよ could be a replacement from imperative form, better save it
+*((なよ)([、。…！」』）]))	$2x$3
+*(([（「『、。…？！]|^)(あばよ)([、。！？…）」』]))	$2$3x$4
+*
+*firstly convert よ into ぞ (ちゃう+よ = "will", suffix that used by female only, unfortunately Atlas only recognize ぞ)
+*however, ぞ always translated in first person point-of-view
+*((ちゃう|しまう)よ([、。？！…」』）]))	$2ぞ$3
+*な + よ + ！ is a complicated sentence because :
+*1. it means "don't/to not" + verb (ex : 来るなよ！)
+*2. it means incomplete of "ない" (ex: が来るないよ！)
+*3. double suffix of "な" and "よ" (ex: って来るなよ！)
+*(([^うすくぐぶつむるぬん])(な)(よ)(！))	$2$5
+*--- -te form + よ ---
+*disabled : doesn't work on 冗談言うやめてやれ！
+*imperative form, やれ looks good
+**ててよ=-te form + て(col) + よ
+*save
+**((なくって)よ([、。？！…」』）]))	$2x$3
+*
+**(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(て)(よ)([、。？！…」』）]))	$2$4やれ$7
+**(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(よ)([、。？！…」』）]))	$2$4やれ$6
+*restore
+**((なくって)x([、。？！…」』）]))	$2よ$3
+*
+*don't include (！), because よ+(！)=imperative
+*and のよ !== の, because :
+*のよ at end of text = (suf)
+*の at end of text = (prt)
+*((らっしゃい)(よ|よん|よっと)([、。？…」』）]))	$2$4
+*(([^せえはのしい])(よ|よん|よっと)([、。？…」』）]))	$2$4
+*masu stem + よ = imperative
+*pattern found so far: え+よ
+*remove よ from non-verbal + よ + ！
+*(([^うすくぐぶつむるぬせめ])(よ|よん|よっと)([！]))	$2$4
+*(([^ア-ヴ])(ヨ)([、。？！…」』）]))	$2$4
+*misc :
+*((なさい|[一-龠]い)よ([、。？！…」』）]))	$2$3
+*(よの([、。？！…」』）]))	$2
+*
+*restore
+*((なよ)x([、。…！」』）]))	$2$3
+*(([（「『、。…？！]|^)(あばよ)x([、。！？…）」』]))	$2$3$4
+*
+*--- なよ ---
+*(([一-龠])([さかがばたまらなわ])(せ)(なよ)([、。？！…」』）]))	$2$3$4る$5$6
+*
+*---わ---
+*remove わ, looks safe after verb
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ|す)(る)(わ|ワ)([、。？！…」』）]))	$2$4$6
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ|す)(た)(わ|ワ)([、。？！…」』）]))	$2$4$6
+((ない|ちゃう)(わ|ワ)([、。？！…」』）]))	$2$4
+(([ア-ヴ])わ([、。？！…」』）]))	$2$3
+(([一-龠]う)わ([、。？！…」』）]))	$2$3
+(([きいさしなたらろつばこ]い)(わ|わの)([、。？！…」』）]))	$2$4
+((ええ)わ([、。？！…」』）]))	いい$3
+(([まで]す|ません)わ([、。？！…」』）]))	$2$3
+((こと)(だ)わ([、。？！…」』）]))	$2$3$4
+*--- past form + すわ ---
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(た)すわ([、。？！…」』）]))	$2$4$5
+*
+*---ぜ---
+*remove ぜ, boyish accent
+(([あ-どに-ん])(ぜ)([、。？！…」』）]))	$2$4
+*
+*---ぞ---
+*remove ぞ after (adj)
+*to prevent future form
+(([いさしなたらろつばこ]い)ぞ([、。？！…」』）]))	$2$3
+*(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(る)ぞ([、。？！…」』）]))	$2$4$5
+*
+*---や---
+*remove や in a volitional form (manlish talk)
+*ex: 待ってろや
+*in theory volitional comes after a -te form or masu stem
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(ろ)や([、。？！…」』）]))	$2$4$5$6
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(ろ)や([、。？！…」』）]))	$2$4$5
+*
+*---なの---
+*IMO this functioned as a suffix, however must be specific to avoid breaking text
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)な(の)([、。？！…」』）]))	$2$4$5$6
+((ないで)なの([、。？！…」』）]))	$2$3
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)なの([、。？！…」』）]))	$2$4
+*--- ちゃ + なの ---
+((ちゃ)なの([、。？！…」』）]))	$2$3
+*
+*--- ん ---
+*be careful, んだ could be a part of -te form
+(([一-龠])ん(の)ん([、。？！…」』）]))	$2る$3$4
+(([一-龠])(する|る)ん([、。？！…」』）]))	$2$3の$4
+(([一-龠])(る)ん(か)([、。？！…」』）]))	$2$3の$4$5
+(([ア-ヴ])(や)ん(の)([、。？！…」』）]))	$2$3る$4$5
+((す)(ん)(の)([、。？！…」』）]))	$2る$4$5
+((す)ん(な)([、。？！…」』）]))	$2る$3$4
+((する)ん(は)([、。？！…」』）]))	$2の$3$4
+*((す)(んだ)([、。？！…」』）]))	$2る$3$4
+*すんだ can break 出す
+((す)ん(な)(と|って)(言|いっ[てた]|いう))	$2る$3$4$5
+([言い]って)ん(ですか)	$1るの$2
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)([てた])ん([、。？！…」』）]))	$2$4の$5
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(んじゃない|んじゃん))	$2$4る$5
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(る)ん(は))	$2$4の$5
+((てた)ん(ですか)([、。？！…」』）]))	$2の$3$4
+((んな)ん([、。？！…」』）]))	$2の$3
+((いて|んで)ん(の)([、。…？！」』）]))	$2る$3$4
+(([ア-ヴ])ん(だ))	$2のです
+*
+*===========================================
+*handling kansai/osaka-ben etc
+*notes :
+*hard to do :
+*1. はる = polite "to-do", it's hard to detect verb + はる using regex
+*2. reversing って, in kansai-ben "っ" is not used, instead the word is shortened (ex: 思って become 思て, 言ったら become 言うたら)
+*3. や = だ. But since や means "and", so we can't replace any や with だ
+*4. やる = する, this should be no problem, however it'll collide with や for plain copula. (ex: やって -> だって for no.3 isn't good for no. 4)
+*5. やろ = confirmation form, we could replace it with another (exp), but (again) be mind that やろ could means やる (to do)
+*6. ちゃう = じゃない, must be careful to not screw てしまう meaning
+*7. っちゅ = not just a plain って (read --- って --- section for detail)
+*8. はよ、よう、and another simple (adj)/(adv) words
+*9. ksb + delinquent talks = nice combo, complicated...
+*currently, the best method to handle it is to put each specific words into dictionary, it's gonna be a big work!
+*
+*save
+((も)(かまへん)([、。…？！」』）]))	$2x$4
+*
+*--- ええ ---
+((な)ええ)	$2いい
+(ええんとちゃう(か))	いいんじゃない$2
+(ええ(の|ですし)([、。…？！」』）]))	いい$2$3
+(ええん(か|やで)([、。…？！」』）]))	いいの$2$3
+(ええ(んで)っ(か)([、。…？！」』）]))	いい$2す$3$4
+(ええ(んですか)([、。…？！」』）]))	いい$2$3
+(ええ(ん)ちゃうのん([、。…？！」』）]))	いい$2じゃない$3
+(ええんちゃうん([、。…？！」』）]))	いいんじゃないの$2
+(ええんちゃう([、。…？！」』）]))	いいんじゃない$2
+(ええんちゃい)	いいんじゃない
+(ええんや(ない))	いいんじゃ$2
+(ええ([一-龠]))	いい$2
+(ええもん(が))	いいもの$2
+((が)ええ([、。…？！」』）]))	$2いい$3
+(([にが])ええよ([、。…？！」』）]))	$2いい$3
+((えば|[でが])ええ([かわ]|ような))	$2いい$3
+((も)ろてもええ(か)な([、。…？！」』）]))	$2いい$3$4
+(ええやろ(って))	いいんじゃないか$2
+*((やな|やん|さかい|さかいな)([、。…？！」』）]))	$3
+*
+*--- ねん ---
+*ねん=の, however sometimes it's not good adding の.
+(おまんねんで([、。…？！」』）]))	ありますので$2
+((いか)へんねん([、。…？！」』）]))	$2ないの$3
+((くれ)とんねん([、。…？！」』）]))	$2てるの$3
+((あんねん)([、。…？！」』）]))	あるの$3
+((す)んねん([、。…？！」』）]))	$2るの$3
+((て)んねん([、。…？！」』）]))	$2るの$3
+((で)んねん([、。…？！」』）]))	$2すの$3
+((て)んねん(から)([、。…？！」』）]))	$2る$3$4
+((て)んねんや(ったら)([、。…？！」』）]))	$2るのだ$3$4
+((な)のやねん([、。…？！」』）]))	$2んだ$3
+((やねん)([、。…？！」』）]))	だ$3
+((わねん)([、。…？！」』）]))	$3
+((ねん)([、。…？！」』）]))	$3
+((ねん)な([、。…？！」』）]))	$3
+((やねん)(で)([、。…？！」』）]))	の$3$4
+((ねん)(で)([、。…？！」』）]))	の$3$4
+((ねん)(って)([、。…？！」』）]))	とい$3$4
+((やねん)(て)([、。…？！」』）]))	ですといっ$3$4
+(や(ねん)(けど|から))	だ$3
+((おまへんねん)(けど|から|より|まで)([、。…？！」』）]))	がいません$3$4
+((ねん)(けど|から|より|まで)([、。…？！」』）]))	$3$4
+((たい|ない)(ねん)(けど|から))	$2です$4
+(([いしなたらろつばこ]い)ねんもん([、。…？！」』）]))	$2から$3
+*
+*--- なん ---
+*means なの
+(([一-龠])(し)(な)ん([、。…？！」』）]))	$2$3$4の$5
+(([ア-ヴ])(な)ん([、。…？！」』）]))	$2$3の$4
+*
+*--- へん = ない or せん ---
+*save
+((たい|えっ)(へん)([、。…？！」』）]))	$2$3x$4
+(([。、？！…「『（]|^)(え)(へん)([、。…？！」』）]))	$2$3$4x$5
+*
+(せぇへん([、。…？！」』）]))	しない$2
+(せぇへんわ([、。…？！」』）]))	しない$2
+(せーへん(かった))	しな$2
+(せーへん(から)([、。…？！」』）]))	しない$2$3
+((せーへん)(や))	ありません$3
+((も)せへん([、。…？！」』）]))	$2ありません$3
+((も)せへん(し)([、。…？！」』）]))	$2ありません$3$4
+((なら)へんわ([、。…？！」』）]))	$2ない$3
+(とらへんやん([、。…？！」』）]))	てないの$2
+(へんかん(った))	なか$2
+((へん)(かった))	な$3
+(([れら])へんねん)	$2ないの
+((あらへん)([、。…？！」』）]))	ありません$3
+((あらへんもん)([、。…？！」』）]))	ありませんから$3
+(やあらへ(ん))	でありませ$2
+((べら)へ(ん))	$2せ$3
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)へん(わ)([、。？！…」』）]))	$2$4ない$6
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)へん(の))	$2$4ない$5
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(せん)で)	$2$4いま$5
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)へん(の))	$2ない$4
+(([一-龠])(へん)(くない))	$2な$4
+(([一-龠])(へん))	$2ない
+(([一-龠])(わ|わら)(へん))	$2ってない
+(([一-龠])(あらへん))	$2ありません
+(([一-龠])([てかべせら])(へん))	$2$3ない
+*(([一-龠])(れま)(へん))	$2$3せん
+*まへん seems already supported by Atlas
+((て)まへん)	$2ません
+((しか)おまへん)	$2ありません
+(おまへん([、。…？！」』）]))	がありません$2
+((おまへん)(でした))	がありません$3
+((すんまへん))	すみません
+(([まらさ]れ|ありえ|して)へん)	$2ない
+((で)けへん)	$2きない
+*((へん)([、。…？！」』）]))	ない$3
+*へん only is not safe
+((へん)(し)([、。…？！」』）]))	ない$3$4
+((へん)(で)([、。…？！」』）]))	ないんだ$4
+(へん(よう)や([、。…？！」』）]))	ない$2だ$3
+(へんもん([、。…？！」』）]))	ないから$2
+(た(げ)へん(から))	てあ$2ない$3
+((へん)ねや([、。…？！」』）]))	$2ですか$3
+(へんやん([、。…？！」』）]))	ないです$2
+*restore
+((たい|えっ)(へん)x([、。…？！」』）]))	$2$3$4
+(([。、？！…「『（]|^)(え)(へん)x([、。…？！」』）]))	$2$3$4$5
+*
+*--- ひん ---
+*means ない
+((でき)ひん)	$2ない
+*
+*--- やん ---
+*や=です/だ, ん=の
+*but depend on context it could be a confirmation form, so it could be replaced by ですか
+((です)やん([、。…？！」』）]))	$2$3
+(んやんな([、。…？！」』）]))	です$2
+(やん(か)([、。…？！」』）]))	です$2$3
+((て(る|いる)|とる)やん([、。…？！」』）]))	$2です$4
+(([一-龠])(おります)やん([、。…？！」』）]))	$2$3の$4
+(([一-龠])([み])やん([、。…？！」』）]))	$2$3ですの$4
+(([一-龠をがにへとでのはも])やん([、。…？！」』）]))	$2です$3
+((ええ)やん([、。…？！」』）]))	いいんじゃない$3
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(た)やん([、。…？！」』）]))	$2$4です$5
+((せん)やん([、。…？！」』）]))	$2です$3
+((す)ん(の)[やん]([、。…？！」』）]))	$2る$3$4
+*
+*--- や = だ ---
+*(([さま]れて|[いえくけしじせれめべな]て|あって|させて|なくて|せられて)や(ったら)([、。？！…」』）]))	$2あ$3$4
+*(([一-龠])(って|[えべれ]て|[いえくけしじせれめべな]て|[さま]れて|なくて|せられて)や(ったら)([、。？！…」』）]))	$2$3あ$4$5
+*(([っせべげけめねれて来きしくえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)や([、。？！…」』）]))	$2$4います$5
+(([っせべげけめねれて来きしくえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)や([、。？！…」』）]))	$2$4$5
+(([一-龠])(んで)や([、。…？！」』）]))	$2$3います$4
+(([一-龠])や([わの])([、。…？！」』）]))	$2だ$4
+(([一-龠ア-ヴ])やて([、。…？！」』）]))	$2だといって$3
+(([一-龠ア-ヴ])やろ([、。…？！」』）]))	$2ですか$3
+(([一-龠][り])やろ([、。…？！」』）]))	$2ですか$3
+(([一-龠])や(ったか)([、。…？！」』）]))	$2だ$3$4
+*(([一-龠ア-ヴ])や(し)([、。…？！」』）]))	$2だ$3$4
+*unsafe: 癒やし
+(([一-龠])や(けど|から|より|まで))	$2だ$3
+(([一-龠])や(と)(思))	$2だ$3$4
+(([一-龠])や(った(ら|から|りして)))	$2だ$3
+(([一-龠][あ-ん])や(けど|から|より|まで))	$2だ$3
+(([一-龠])や(ない))	$2じゃ$3
+(([一-龠])(そう)や(から))	$2$3だ$4
+((こと|のため)や(けど|から))	$2だ$3
+((な)(ん|んで)(や|やの)([、。…？！」』）]))	$2$3だ$5
+((もんや)([、。…？！」』）]))	ものだ$3
+((も)んや(ない)([、。…？！」』）]))	$2のでは$3$4
+(([^さゃわ])(ん)や([、。…？！」』）]))	$2$3だ$4
+((ん)や(けど|から|より|まで)([、。…？！」』）]))	$2だ$3$4
+((なん|わけ)や([しな])([、。…？！」』）]))	$2だ$3$4
+((も|かて)(そう)や(し)([、。…？！」』）]))	$2$3だ$4$5
+((こい|どう)や([、。…？！」』）]))	$2$3
+(([、。？！…「『（])(せや|せやせや)([、。…？！」』）]))	$2そうだ$4
+(([、。？！…「『（])(せやかて)([、。…？！」』）]))	$2そうだが$4
+(([、。？！…「『（])(せやろ)([、。…？！」』）]))	$2そうですか$4
+(せや(で)([、。…？！」』）]))	そうだ$3
+(せや(し|けど|から)([、。…？！」』）]))	そうだ$2$3
+((いかん)やろ([、。…？！」』）]))	$2ですか$3
+*((やで)([、。…？！」』）]))	です$3
+*notes; あやふやで
+((たん)や(て)([、。…？！」』）]))	$2だっ$3$4
+((はどう)や([、。…？！」』）]))	$2だ$3
+((なし|の)や(ったら)([、。…？！」』）]))	$2だ$3$4
+((ま)んのや([、。…？！」』）]))	$2すの$3
+(([、。？！…「『（])(ど)や([、。…？！」』）]))	$2$3う$4
+*
+*--- やろ ---
+*is やろか safe?
+*possible meaning :
+*1. だろう (confirmation)
+*2. する (to do)
+*3. "bastard", must be careful with text like このやろ！
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)([るた])やろ([、。…？！」』）]))	$2$4ですか$5
+(([すいさしなたらろつばこ]い)やろ([、。…？！」』）]))	$2ですか$3
+(([一-龠]|ん|ヘン|さん|なの|なん|から|より|まで|[おあなぎ]る|べき)(やろ|やろか)([、。…？！」』）]))	$2ですか$4
+(や(ろうし)([、。…？！」』）]))	だ$2$3
+(([一-龠])([るうすげぎ])やろ([、。…？！」』）]))	$2$3ですか$4
+*
+*--- はる ---
+*the same as を + renyoukei (v-i-stem) + する/なさる
+*ex: お米炊いてはるんやったら -> お米を炊きするんだったら
+*-te form + はる
+*changing -te form + はる into renyoukei + する is a pain, I'm gonna do a lazy way, -te form + る
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)は(る)(ん)(や))	$2$4$5$6$7
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)は(る)(って))	$2$4$5$6
+*past form
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(くれ)はっ(た))	$2$4$5$6
+*-te form + はらへん
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)はらへん(かった))	$2$4な$5
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)はらへん)	$2$4ない
+*misc
+(([一-龠])(き)は(る)([んの])(で))	$2$3す$4$5$6
+((にな)は(れ)([、。…？！」』）]))	$2$3$4
+*
+*--- ちゅう ---
+*from 言う
+(([一-龠]|ええ)っちゅ([一-龠]))	$2という$3
+(([一-龠])っちゅう([^かの]))	$2という$3
+(([一-龠])(く)っちゅ(の))	$2$3といって$4
+((な)っちゅ(の))	$2といって$3
+(っちゅー(のは))	という$2
+((っ)(ちゅう)([とか]|のを|わけ))	という$4
+(っちゅう事)	いうこと
+(([一-龠])(う)っちゅ(こと))	$2$3という$4
+((る)っちゅ(こと))	$2という$3
+(([一-龠])(やっ)ちゅ(うのに))	$2$3てい$4
+((言う)(こ)っちゃ(ない))	$2$3とは$4
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(た)っちゅ([一-龠]))	$2$4という$5
+*
+*--- ちゃう ---
+*ちゃう = confirmation form, not accidentally form
+*in Kansai-ben it was used as replacement for じゃない
+*so word like ちゃいますか is the same as じゃないか
+*another mean is as a negative form, which can be replaced with 違う
+*save
+(([来出])(ちゃう)([、。…？！」』）]))	$2x$3$4
+(([来出])(ちゃう)(もん|し|から)([、。…？！」』）]))	$2x$3$4$5
+*
+(([、。…？！（「『]|^)(ちゃ)(います))	$2違$4
+(([一-龠])(き)ちゃう(し)([、。…？！」』）]))	$2$3じゃない$4$5
+(([一-龠])(と)ちゃう(んだ)([、。…？！」』）]))	$2$3じゃない$4$5
+(([一-龠])ちゃう(もん|し)([、。…？！」』）]))	$2じゃない$3$4
+(([一-龠])([あ-ん])っちゅ(こと))	$2$3という$4
+(([一-龠])ちゃう(から|[、。…？！」』）]))	$2じゃない$3
+(([一-龠])ちゃうん([、。…？！」』）]))	$2ですか$3
+((と)ちゃう([、。…？！」』）]))	$2じゃない$3
+((と)ちゃう([ぞよ])([、。…？！」』）]))	$2じゃない$3$4
+((と)ちゃうん([、。…？！」』）]))	$2じゃない$3
+((いん)ちゃう([、。…？！」』）]))	$2じゃない$3
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)んちゃう([、。…？！」』）]))	$2$4るんじゃないか$5
+((ん)ちゃ(い)ます(か))	$2じゃな$3$4
+((が)ちゃ(います)(か))	$2違$3$4
+((ちゃい)まんのん([、。…？！」』）]))	$2ますの$3
+((ちゃい)まんが([、。…？！」』）]))	$2ますが$3
+(([のん])ちゃいます([、。…？！」』）]))	$2じゃないか$3
+*((の)とちゃうん)	$2じゃない
+((ん)ちゃう([ぞんの])([、。…？！」』）]))	$2じゃない$4
+((と)ちゃう(か))	$2じゃない$3
+(ちゃうやろ(か))	じゃない$2
+(ちゃうやろ([、。…？！」』）]))	じゃないか$2
+(([んと])ちゃうん(か))	$2じゃないの$3
+(ええ(ん)ちゃう(か)([、。…？！」』）]))	いい$2じゃない$3$4
+((き)ちゃう(かった))	$2じゃな$3
+((思)わん(かった))	$2ってな$3
+((だけ)(ちゃう)(の)([、。…？！」』）]))	$2じゃない$4$5
+*
+*restore
+(([来出])x(ちゃう)([、。…？！」』）]))	$2$3$4
+(([来出])x(ちゃう)(もん|し|から)([、。…？！」』）]))	$2$3$4$5
+*
+*--- はん ---
+*same as さん
+*will it break text? dunno
+(([一-龠])(はん)([をがにへとでのはも]|なんちゃう))	$2さん$4
+*
+*--- て, verb followed by て or た ---
+*seems very unsafe...
+*what's confusing is verb and adj is treated the same
+*ex: 
+*1. kanji + うて = -te form
+*2. kanji + うて = adj + といって
+*my guess is, because both kanjis are originally followed by い, that's why they are replaced by う
+*however うて itself could means "hit", so be careful to not break it
+*unsafe: おどろいて
+*save
+((おどろい|つい|ひらい)て([、。…？！」』）]))	$2x$3
+*
+(([言い])う(て)ん)	$2っ$3る
+(([言い])う(て)([もた]|みる|しも|[、。…？！」』）]))	$2っ$3$4
+(([言い])うと(った))	$2$3
+((言)う(て))	$2っ$3
+((事)(いって))	$2を$3
+((思)(てた|[てた]))	$2っ$3
+((出)え([、。…？！」』）]))	$2て$3
+(([一-龠])う(てもうた)([、。…？！」』）]))	$2いと思った$4
+(([一-龠])う(てる))	$2っ$3
+(([一-龠])う(て)や([、。…？！」』）]))	$2っ$3$4
+(([いしなたらろつばこ]い)(て)([、。…？！」』）]))	$2といっ$3$4
+(([ア-ヴ])(て)([、。…？！」』）]))	$2といっ$3$4
+(([ア-ヴ])て([言]))	$2と$3
+*restore
+((おどろい|つい|ひらい)x([、。…？！」』）]))	$2て$3
+*
+*--- しゅう ---
+*The same as above, originally it was an (adj) followed by しい
+*however, for hiragana (adj) it looks unsafe
+(([一-龠])(し)ゅう)	$2$3い
+*
+*--- とる ---
+*おる -> いる
+*とる -> ている, or just て for -te form
+*general pattern is verb + とる
+*ex: 
+*1. past form, ex: 聞いた become 聞いとった
+*2. present form, ex: 使う become 使こうとる
+*first try, let's see if we can replace it without checking the verb type
+*if failed, we must handle it specifically
+*とった	-->た
+*っとった	-->った
+*
+*save
+(([一-龠])(とっても))	$2x$3
+((奪)(いとる))	$2x$3
+(([をがにへとでのはも])と(る)([をがにへとでのはも])([、。…？！」』）]))	$2t$3$4$5
+*
+(([一-龠])っと(った))	$2$3
+(([一-龠])っと(って))	$2$3
+(([一-龠])っといた)	$2った
+(([一-龠])っと(ります))	$2ってお$3
+(([一-龠])った(れ|れや)([、。…？！」』）]))	$2ってやれ$4
+(([一-龠])([めきいえ])とっ(た))	$2$3$4
+(([一-龠])(し)(ん)どっ(た))	$2$3$4で$5
+(([一-龠])(ん)どっ(た))	$2$3で$4
+(([一-龠])(ん)ど(いたら))	$2$3で$4
+(([一-龠ア-ヴ])([し])とっ(た))	$2$3$4
+(([一-龠])([れ])とっ(て))	$2$3$4
+(([一-龠])([ま])っと(った))	$2$3$4
+(([一-龠])([ま])っと(る))	$2$3ってい$4
+(([一-龠])([か])っと(る))	$2$3ってい$4
+(([一-龠])([ま])っと(んだ|んや))	$2$3っている$4
+(([一-龠])こ(う)とる)	$2$3
+(([一-龠])いと(る))	$2け$3
+(([一-龠])けと(る)んや)	$2かってい$3のだ
+*(([一-龠])と(る))	$2てい$3
+*unsafe: お金とるんですか
+(([一-龠])([めれ])と(る)(し))	$2$3てい$4$5
+(([一-龠])(え)と(る)(ん))	$2$3てい$4$5
+(([一-龠])とっ(た)(ん))	$2っ$3$4
+*(([一-龠])とっ(た))	$2$3
+*unsafe: 結果とった
+*(([一-龠])とっ(て))	$2$3
+*unsafe: 写真とって
+*(([一-龠])う(た))	$2っ$3
+*unsafe: 補うため
+(([一-龠])(ん)ど(る))	$2$3で$4
+(([一-龠])うとる)	$2っている
+(([一-龠])(っ)と(る)ん([、。…？！」』）]))	$2$3てい$4の$5
+(([一-龠])([っし])と(る))	$2$3てい$4
+(([一-龠ア-ヴ])(も)([っ])と(る))	$2$3$4てい$5
+*(([一-龠])お(った))	$2$3
+*unsafe: おった itself
+(([一-龠])(に)お(った))	$2$3あ$4
+(([一-龠])ゆーと(った))	$2とい$3
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)とっ(たし))	$2$4
+(とっ(たら)([、。…？！」』）]))	$2$3
+(と(る)もん([、。…？！」』）]))	てい$2から$3
+(と(る)([をがにへとでのはも])([、。…？！」』）]))	てい$2$3$4
+((され)と(る))	$2てい$3
+((し)と(る)(から|[、。…？！」』）]))	$2てい$3$4
+((し)と(る)ん(か|[、。…？！」』）]))	$2てい$3の$4
+((し)と(るん)や(し)([、。…？！」』）]))	$2てい$3だ$4$5
+(([いさしなたらろつばこ]い)(し)と(る))	$2$3てい$4
+(ゆうとるん([、。…？！」』）]))	いっての$2
+((い)ゆ(う)とる)	$2って
+((にな)っと(る))	$2ってい$3
+((やっ)と(る)わ([、。…？！」』）]))	$2てい$3$4
+((や)っと(った))	$2$3
+*
+*restore
+(([一-龠])x(とっても))	$2$3
+((奪)x(いとる))	$2$3
+(([をがにへとでのはも])t(る)([をがにへとでのはも])([、。…？！」』）]))	$2と$3$4$5
+*
+*
+*--- よる ---
+*the same as とる
+(([一-龠])([え])よっ(た))	$2$3$4
+*
+*--- とら & とらん ---
+*from -te form + negative 
+(([一-龠し])とらへん)	$2てない
+(([一-龠])([い])とら(へん|ない))	$2$3てない
+(([一-龠])[うっ]とらん)	$2っていない
+*
+*--- てん ---
+*past tense
+*there are various てん, たん, とん. Epsecially とん we gonna confused with it...
+*てん = たんだ
+*てんえん = てるの
+*
+*--- とん ---
+*present progressive
+(([一-龠])(う)とん(の)([、。…？！」』）]))	$2ってる$4$5
+(([一-龠])([しえ])とん([、。…？！」』）]))	$2$3てる$4
+(([一-龠])(し)とん(の)や)	$2$3てる$4だ
+(([一-龠])(し)とん(の))	$2$3てる$4
+(([一-龠])(し)とん(だから))	$2$3てるん$4
+(([一-龠])([をがにへとでのはもか])(し)とん(の))	$2$3$4てる$5
+((し)とん([、。…？！」』）]))	$2てるの$3
+((し)とんちゃう([、。…？！」』）]))	$2てるんじゃない$3
+*
+*--- もうて or もうた ---
+*comes from 思って or 思った
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)もう([てた]))	$2$4思っ$5
+*
+*--- もらお ---
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(もら)お(か))	$2$4$5う$6
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(も)ろ(た))	$2$4$5らっ$6
+*
+*--- たって ---
+*-te form + あげて
+*ゴミをほかしたって
+*
+*--- たり or たれ ---
+*-te form + やり/やる
+*を貸したり
+*
+*--- たる or たろ---
+*-te form + やる
+*ex: 宿題をゆったるで
+*save
+((た)(るもの))	$2x$3
+*
+*(([一-龠])た(る))	$2てや$3
+(([一-龠])([べし])た(る))	$2$3てや$4
+(([一-龠])(し)(し)た(る))	$2$3$4てや$5
+(([一-龠])(い)た(ろ))	$2$3てやる
+((やっ)た(る)わ([、。…？！」』）]))	$2てや$3$4
+((し)た(る)わ([、。…？！」』）]))	$2てや$3$4
+((し)た(ろ)(か)([、。…？！」』）]))	$2てやる$4$5
+(た(る)さかい([、。…？！」』）]))	てや$2$3
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)たる([、。…？！」』）]))	$2てやる$4
+*
+*restore
+((た)x(るもの))	$2$3
+*
+*--- みい ---
+*same as してみて
+*
+*---misc verb---
+(([一-龠])(ん)どらん(で))	$2$3でない$4
+(([一-龠])(え)(た)ん(か))	$2$3$4の$5
+(([一-龠])(し)と(き)や([、。…？！」』）]))	$2$3てお$4だ$5
+((んで)(も)ろ(てる))	$2$3っ$4
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(て)ん([、。…？！」』）]))	$2$4$5$6
+*
+*--- かて ---
+*same as ても, でも, も, でさえ
+(([、。？！…「『（])(ウチ|うち)かて)	$2$3も
+(([一-龠])かて([一-龠]))	$2も$3
+((ちゃん)かて)	$2も
+*
+*--- (accidentally/finish completely) conjugations (ksb: version) ---
+(([一-龠])(んで)(まい)(そう))	$2$3し$4$5
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(まう))	$2$4し$5
+*
+*--- しもて (-te accidentally/finish completely form) ---
+*pattern: -te form + しもて
+*change into: -masu stem + ちゃって/しまって
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(し)も(て))	$2$4$5まっ$6
+*
+*--- しもた (past accidentally/finish completely form) ---
+*pattern: -te form + しもた
+*change into: -masu stem + ちゃった/しまった
+*ex: 署名してしもた -> 署名しちゃった -> 署名してしまった
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(し)も(た))	$2$4$5まっ$6
+*しもうた, this could be another variant, dunno, let's try it.
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(し)もう(た))	$2$4$5まっ$6
+*
+*--- んといて ---
+*negative imperative form
+*means: ないで
+*ex: せんといて -> はしないで
+*join incomplete sentence
+((、)(せんといて))	$3
+*
+(んといて(ください))	ないで$2
+(せんといて([、。…？！」』）]))	はしないで$2
+((さ)んといて([、。…？！」』）]))	$2ないで$3
+(([一-龠])(ら)んといて([、。…？！」』）]))	$2$3ないで$4
+((言わ)んといて)	$2ないで
+*
+*--- いとい ---
+*this conjugation more like a casual than from ksb
+*means: negative -te form verb
+*ex: 置いといて -> 置かないで
+*however, it's hard to converting it
+*1. must check last /u/, then replace with /a/, ex: 置く changed into 置か
+*2. add with ないで
+([一-龠])いといて	$1かないで
+*
+*--- Kanji + っといて ---
+*ex: 撮っといて
+*not related with ksb, but I put here to make it easy to find
+*this word could means :
+*1. -te form
+*2. -te form + おく, because といて => とく => で/て+おく
+*however we can't use general pattern, because a -te form could ended by て or (ん)で
+*misplacing that て or (ん)で will break translation.
+*as a test, let's trying to use general pattern
+(([一-龠])(っ)といて([、。…？！」』）]))	$2$3ておけ$4
+((っていっ)(といて)([、。…？！」』）]))	$2ておけ$4
+*
+*--- さかい ----
+*さ + かい, which is safe to be removed
+((もんやさかい)([、。…？！」』）]))	から$3
+*
+*---　はよ ---
+*はやく, this could be very unsafe!
+(([（「『、。…？！])はよ)	$2はやく
+*
+*misc:
+(([（「『、。…？！])(むっちゃ))	$2
+((むっちゃ)([^、。…？！」』）う]))	$3
+(しゃ(ない)([、。…？！」』）]))	仕方$2$3
+*((ま)ん(が)([、。…？！」』）]))	$2す$3$4
+*broke 肉まん, need more specific pattern
+(([、。？！…「『（])([あこそ])ない(な))	$2$3ん$4
+(([」』）])(ゆうん)(は))	$2いうの$4
+(([、。？！…「『（])(なん)や(て)([、。…？！」』）]))	$2$3だっ$4$5
+(([、。？！…「『（]|^)(ホンマ)([^かに、。…？！」』）]))	$2$3に$4
+(ほんまよう)	本当によく
+*
+*restore
+((も)(x)([、。…？！」』）]))	$2かまへん$4
+*================================================
+*--- Senba dialect ---
+*unsolved words:
+*やさかい, maybe や=だ, さかい=ですか
+*おまへんねんから
+*おまへんで
+*what does "omahen" means? "omae" or "oru" ? @_@
+*
+*--- おまへん ---
+((や)おまへん(か)([、。…？！」』）]))	$2りません$3$4
+*
+*--- なはれ ---
+*means なさい
+(なはれや([、。…？！」』）]))	なさい$2
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)なはれ([、。…？！」』）]))	$2なさい$4
+(([しめり]|[一-龠])なはれ([、。…？！」』）]))	$2なさい$3
+(とくんなはれ([、。…？！」』）]))	ておけ$2
+*
+*--- まんな ---
+*means ますねえ
+*however it could be まないねえ too (まんなあ)
+*
+(([^、。？！…「『（])(ま)んな([、。…？！」』）]))	$2$3す$4
+*
+*--- さかい ---
+*means さ+か, or ですか
+(([まで])っさかい([、。…？！」』）]))	$2すか$3
+(やさかい([、。…？！」』）]))	ですか$2
+*
+*--- さかいに ---
+*means から or ので
+(([で])っさかいに([、。…？！」』）]))	$2すから$3
+((ま)っさかいに([、。…？！」』）]))	$2すから$3
+*
+*--- でんな ---
+((で)んな([、。…？！」』）]))	$2す$3
+*
+*--- でっせ ---
+((で)っせ([、。…？！」』）]))	$2す$3
+*
+*--- だっせ ---
+((だ)っせ([、。…？！」』）]))	です$3
+*
+*--- まっせ ---
+((ま)っせ([、。…？！」』）]))	$2すよ$3
+*
+*--- まっけど and others ---
+(([でま])っ(けど)([、。…？！」』）]))	$2す$3$4
+*
+*--- まっか ---
+((ない)(ま)っか([、。…？！」』）]))	$2か$4
+*
+*--- ま at end of text ---
+*means す, because Senba dialect not using す, however must be careful...
+((ちゃい)(ま)([、。…？！」』）]))	$2$3す$4
+*
+*--- やと ---
+*means だと
+(([一-龠])やと([一-龠、。…？！」』）]))	$2だと$3
+*
+*misc
+((が)お(ますん))	$2あり$3
+((ま)ひょ(か)([、。…？！」』）]))	$2しょう$3$4
+(([えめ])まひょ([、。…？！」』）]))	$2ましょう$3
+(げひょ([、。…？！」』）]))	でしょう$2
+(([。、？！…「『（]|^)そら(ちゃい))	$2それは$3
+((ま)っしゃろ([、。…？！」』）]))	$2すだろう$3
+*
+*================================================
+*--- Satsuma-ben ---
+*
+((で)(ごわす|やす)([、。？！…」』）]))	$2す$4
+*
+*================================================
+*--- Kanto-ben ---
+*
+((ない|やる)(べ)([、。？！…」』）]))	$2$4
+((ない|やる)(べ)(か)([、。？！…」』）]))	$2$4$5
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(た)べ([、。？！…」』）]))	$2$4$5
+*
+*================================================
+*
+*---handling archaic & elder dialect---
+*おろう = future form in Atlas. Just like ぞ, but when used in archaic or elder language, its (mostly) only used as a "pun"
+*so we don't need it, let's change it back into おる
+*and be careful to not breaking じゃ from (col) of でしまう
+*save here :
+*んでない almost the same as のではない, but in archaic dialect, speaker always use の than ん、so we'll let んで as it is
+(([、。…？！「『（])(それ)(じゃ)([、。…？！」』）]))	$2$3x$5
+((んで)(な)(い)([、。？！…」』）]))	x$3$4$5
+((んで)(な)(い)(ぞ)([、。？！…」』）]))	x$3$4$5$6
+((じゃ)(がいも))	$2x$3
+((肉じゃ)(が))	$2x$3
+(こん)じゃ(った)	$1x$2
+*hijacking splitted じゃない, so it won't incorrectly replaced with だない
+((じゃ)([、…]+)(ない|ありません))	$2$4
+((じゃ)ー([、…]+)(ない|ありません))	$2$4
+((そんなんじゃ)([、。？！…」』）]))	$2ない$3
+*put じゃ for では here
+((ながら|それ)じゃ([、。…？！」』）]))	$2では$3
+*
+((や)(じゃ)\2\3([、。？！…」』）]))	$2だ$2だ$4
+((どう)じゃ([、。…？！」』）]))	$2$3
+((っ|し)と(ろう)(が|のじゃ)([、。…？！」』）]))	$2ておる$4$5
+((っ|し)と(る)(が|のじゃ)([、。…？！」』）]))	$2てお$3$4$5
+((っ|し)と(ろう)([、。…？！」』）]))	$2ておる$4
+((っ|し)と(る)([、。…？！」』）]))	$2てお$3$4
+((し)(おった)([、。…？！」』）]))	$2て$3$4
+((のう)([、。…？！」』）]))	$3
+*(([^、。…？！「『（])(なの)(じゃ)(から))	$2$3だ$4
+((います)じゃ([、。…？！」』）]))	$2$3
+(([^、。…？！「『（])(じゃ)([、。…？！」』）]))	$2だ$4
+(([^、。…？！「『（])(じゃ)([がろ]|から|これ)([^、。…？！」』）をがにへとではも]))	$2だ$4$5
+(([一-龠])(ん)じゃ(った)([、。…？！」』）]))	$2$3でしま$4$5
+*
+*(([^、。…？！「『（])(じゃ)([とながぞろ]|から|ろうか|った)([、。…？！」』）]))	$2だ$4$5
+(([、。…？！「『（])(じゃ)([がろ]|から)([^、。…？！」』）をがにへとではも]))	$2だ$4$5
+(([、。…？！「『（])(じゃ)([がろ]|から|ろうか|ろか|ったら)([、。…？！」』）]))	$2だ$4$5
+(([一-龠])じゃ(の)([、。？！…」』）]))	$2だ$3$4
+((で)(な)(い)([、。？！…」』）]))	$2は$3$4$5
+((で)(な)(い)(ぞ)([、。？！…」』）]))	$2は$3$4$2$6
+((ん)じゃ(ろ)([、。？！…」』）]))	$2だ$3う$4
+((よう)じゃ(し)([、。？！…」』）]))	$2だ$3$4
+((そう)じゃ(の)([、。？！…」』）]))	$2だ$3$4
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(る)(よの)([、。？！…」』）]))	$2$4$6
+((どうするの)だ([、。？！…」』）]))	$2$3
+((なか)ろ([、。？！…」』）]))	$2$3
+(([一-龠])(じゃ)(ろ)([、。？！…」』）]))	$2だろう$5
+(([一-龠])(る)(で)(の)([、。？！…」』）]))	$2$3$4す$5$6
+*
+*--- おる ---
+(おろう([、。？！…」』）]))	なさい$2
+((は)おらん(だ))	$2いない$3
+*
+*--- -te form + おる ---
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(おろ)([、。？！…」』）]))	$2$4$5う$6
+*
+*--- masu stem + おる ---
+*this is hard to. Way to fix are:
+*1. fix specifically in TA replacement (ex: 奪いおった become 奪った), or
+*2. add new compound verb into dictionary (ex: 奪いおる = deprive, vt)
+*I recommend use option 2, because option no. 1 gonna need additional pattern
+*
+*--- ざる ---
+*ざる is an archaic version for ない
+((なら)ざる)	$2ない
+*
+*--- masu stem + ざる ---
+(([^がにへとでのはも、。？！…「『（])([さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ|づけ)(ざる))	$2$3ない
+*
+*restore what's been saved
+(([、。…？！「『（])(それ)(x)([、。…？！」』）]))	$2$3じゃ$5
+((x)(な)(い)([、。？！…」』）]))	んで$3$4$5
+((x)(な)(い)(ぞ)([、。？！…」』）]))	んで$3$4$5$6
+((じゃ)x(がいも))	$2$3
+((肉じゃ)x(が))	$2$3
+(こん)x(った)	$1じゃ$2
+*
+*だい & かい suffix
+*usually used by elder and such
+((まだ|だけ)(かい)([、。？！…」』）]))	$2$4
+((たん|何)(だ)い([、。？！…」』）]))	$2$3$4
+*
+*replace first person pronoun
+(([、。…？！「『（　をがにへとでのはも]|から|より|まで|^)(余|ぼく|ぼっち|わっち)([をがにへとでのはも]|から|より|まで))	$2私$4
+((余)(だ)([、。？！…」』）]))	私$3$4
+*
+*================================================
+*handling male speech, delinquent, etc
+((アレ|ソレ)や)	$2
+*ぞ might need to disabled, because always translated into first person point-of-view
+(([あ-ん一-龠])ゾ([、。…？！」』）]))	$2ぞ$3
+(([あ-ん])ン([あ-ん]))	$2ん$3
+((る|な)(んだ)い([、。…？！」』）]))	$2$3$4
+((そ|こ)りゃ([、。…？！」』）]))	$2れは$3
+((なけ)りゃあ(なら))	$2れば$3
+((なけ)りゃ([^、。…？！」』）]))	$2れば$3
+((のか)い([、。…？！」』）]))	$2$3
+(([一-龠])(す)ん(な)([一-龠]))	$2$3る$4、$5
+(([一-龠])(す)ん(な)([、。…？！」』）]))	$2$3る$4$5
+((れてく)ん(な)([、。…？！」』）]))	$2る$3$4
+(([あこそ]んな)ん([一-龠]))	$2の$3
+*(([こそ]ういう)ん)	$2の <--- too simple
+(([^で])(っ)(ス)([、。…？！」』）]))	$2です$5
+((ん)ス([あ-ん]))	$2です$3
+*de+su, is this safe?
+(で)ス([、。…？！」』）])	$1す$2
+(てきま)ス([、。…？！」』）])	$1す$2
+(([一-龠あ-ん])ス([、。…？！」』）]))	$2です$3
+(([一-龠あ-ん])ス([かをがにへとでのはも])([、。…？！」』）]))	$2です$3$4
+((ない|た)ん(すけど)([、。…？！」』）]))	$2で$3$4
+((て)(ん)(だろ|だろう)([、。…？！」』）]))	$2る$3$4$5
+(([すみ]|くれ)りゃ([一-龠ア-ヴ、。…？！」』）]))	$2ると$3
+(([いさしなたらろつばこ]い|いう)(こ)った([、。…？！」』）]))	$2$3とだ$4
+(([一-龠])ん(ところ))	$2の$3
+((あっ)(か)([、。…？！」』）]))	$2た$3$4
+*
+*--- ksb: ---
+(([一-龠])(め)んなや([、。…？！」』）]))	$2$3ない$4
+*
+*---じゃ---
+((じゃ)(ねえ))	$2ない
+((じゃ)(ね))	$2ない
+*is じゃあ = じゃない or じゃう or では ? I'm not sure...
+*obviously it means では, but we are dealing with casual language here, so it's uncertain
+*
+(([そこ]んなん)(じゃ)(ありません))	$2では$4
+(([そこ]んなん)(じゃ)あ)	$2$3ない
+((じゃ)あ([、。…？！」』）]))	では$3
+((じゃ)ん(か)([、。…？！」』）]))	$2ない$3$4
+*
+*---ねえ、せえ、てえ---
+*ねえ has three possible meanings : ない or ね or -nee (elder sister suffix)
+*save
+((ねえ)\2)	$2x
+*
+(([^よ、。…？！」』）])(ねえ)(！))	$2ない$4
+((ねえ)([、。？…」』）]))	$3
+*selfnotes: is it safe without kanji?
+*(([一-龠])([からの])ねえ([一-龠あ-ん]))	$2$3ない$4
+*(([一-龠])([く])せえ([一-龠あ-ん]))	$2$3さい$4
+*exclude hiragana (死ねええ…)
+(([一-龠])ねえ([一-龠]))	$2ない$3
+(([えかもしくけがらたのん])ね(え+)([一-龠あ-ん、。！？…」』）]))	$2ない$4
+(([く])せえ([一-龠あ-ん]))	$2さい$3
+(([み])てえ([一-龠あ-ん]))	$2たい$3
+*restore
+((ねえ)x)	$2$2
+*fix う
+(([おそ])ー)	$2う
+*
+*---past form + ろ---
+*when at the end of text, it should be a confirmation form (だろう)
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(た)(ろ)([、。？！…」』）]))	$2$4$5う$6
+(([一-龠])(た)(ろ)([、。？！…」』）]))	$2$3$4う$5
+*
+*--- -te form + ろ ---
+*an imperative form, however can't be translated by Atlas
+*let's replace it with やれ
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(ろ)([、。？！…」』）]))	$2$4やれ$6
+((んで)ろ([、。？！…」』）]))	$2やれ$3
+*
+*--- imperative + (exp) ---
+*to prevent "furnace", let's change it into normal verb form
+*save
+((いろいろ)([だで]))	$2x$3
+*
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)ろ([だで]))	$2る$4
+((んで)ろ([だで]))	$2る$3
+*
+*restore
+((いろいろ)x([だで]))	$2$3
+*
+*--- masu stem + っぞ ---
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)っ(ぞ)([、。？！…」』）]))	$2$4$5
+*
+*---もん---
+*because もん means giving a reason, we could replace it with から
+((ない|し[てた]|[きてすくぐぶつむるぬ]る|[まで]す|んだ|てた)(もん)([、。？！…」』）]))	$2から$4
+([一-龠]だ)もん([、。？！…」』）])	$1から$2
+*(([一-龠いさしなたらろつばこ]い)もん([一-龠]))	$2から$3
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)も(んだ)([、。？！…」』）]))	$2$4る$5$6
+(([一-龠いさしなたらろつばこ]い)もん([、。？！…」』）]))	$2ですから$3
+(([一-龠いさしなたらろつばこ]い)もん([一-龠をがにへとでのはもかよま]))	$2もの$3
+((やすい)もんで)	$2もので
+((いる)もんで)	$2からで
+((もんだ)([、。？！…」』）]))	ものだ$3
+((なんて)(もん)(じゃない))	$2$4
+(([一-龠]た)(もん)(じゃない|だろ|でしょ))	$2もの$4
+(([一-龠])([う])(もん)(です|だろ))	$2$3から$5
+(([一-龠])もん(なん))	$2もの$3
+(([一-龠っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(る)(も)ん(なんだ|だと))	$2$4の$6
+(([一-龠ア-ヴ])(も)ん([、。？！…」』）]))	$2$3の$4
+(([一-龠ア-ヴ])もん(だが)([、。？！…」』）]))	$2の$3$4
+((って)もん(じゃない|です|だろ|でしょ))	$2るの$3
+(([そこあ]んな)もん([一-龠ア-ヴ]))	$2の$3
+((する)もん(だから))	$2の$3
+(ばかり|ばっかり)(だ)もん([、。？！…」』）])	$1$2から$3
+*
+*--- だと ---
+*confirmation form, like だぞ
+*however I tried to change it into "it is said"
+*save
+((ことで)(だと)([、。？！…」』）]))	$2x$3$4
+([、。？！…「『（]|^)(何|なん)(だとう?)([、。？！…」』）])	$1$2x$3$4
+*
+*join separated sentence
+、(だと)([。？！…」』）])	$1$2
+*LEC, make it a question form by adding ですか？
+([ア-ヴ一-龠])だと([、。？！…」』）])	$1ですか？$2
+([をがにへとでのはも]|ない)だと([、。？！…」』）])	$1ですか？$2
+([すな]る)だと([、。？！…」』）])	$1ですか？$2
+*
+((なん|みたい)(だと)(？))	$2$4
+*(([一-龠])だと([、。？！…」』）]))	$2だといって$3
+*(([をがにへとでのはも])だと([、。？！…」』）]))	$2だといって$3
+*(([すな]る)だと([、。？！…」』）]))	$2だといって$3
+*
+*restore
+((ことで)x(だと)([、。？！…」』）]))	$2$3$4
+([、。？！…「『（]|^)(何|なん)x(だとう?)([、。？！…」』）])	$1$2$3$4
+*
+*================================================
+*handling misc dialect
+((何す)(んだ))	$2る$3
+*
+*--- ですちゃん ---
+*desu here is used to make the speaker looks cute, or something like that
+*which in some case is actually useless
+(([ア-ヴ])([をがにへとでのはも]|から|より|まで)(です)([、。？！…」』）]))	$2$3$5
+((どうぞ|なさい|ければ|なきゃ|ませ|ました|しまった|とにかく|ながら|おはよう)(です)([、。？！…」』）]))	$2$4
+((どうして)ですの([、。？！…」』）]))	$2$3
+*
+*--- やす ---
+*((が)(で)(やす)([、。？！…」』）]))	$2$3す$5
+(([でい])(やす)([、。？！…」』）]|から))	$2す$4
+((き|あり|どうし|され|になり)(やす)([、。？！…」』）]|から))	$2ます$4
+((し|なり)(やすか)([、。？！…」』）]))	$2ますか$4
+((き|あり|しれ|かまい)(やせん)([、。？！…」』）]|が|から))	$2ません$4
+((しまい)(やす)([、。？！…」』）]))	$2$4
+((や)(した)([、。？！…」』）]|か))	ま$3$4
+(([一-龠])(で)や(した)([、。？！…」』）]))	$2$3ま$4$5
+(([一-龠])(け)(やす)([、。？！…」』）]))	$2$3る$5
+(([一-龠])(り)(やす)([、。？！…」』）]))	$2$3ます$5
+(([一-龠])(い)(やす)([、。？！…」』）]|から))	$2$3ます$5
+((や)(しょう)([、。？！…」』）]|か))	ま$3$4
+((み)(やす)(よ)([、。？！…」』）]))	$2ます$4$5
+*
+*--- や (suf) ---
+((ください)や([、。？！…」』）]))	$2$3
+*
+*--- じょ (suf) ---
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)([たて])じょ([、。？！…」』）]))	$2$4$5
+(([あすて]る)じょ([、。？！…」』）]))	$2ぞ$3
+(([いさしなたらろつばこ]い)じょ([、。？！…」』）]))	$2です$3
+((じゃ)(にゃいじょ)([、。？！…」』）]))	$2ない、にゃ$4
+*
+*verb
+(([一-龠])([ぶるく])じょ([、。？！…」』）]))	$2$3ぞ$4
+*
+*(adj)
+(([一-龠])([い])じょ([、。？！…」』）]))	$2$3ぞ$4
+*
+*--- わよう ---
+((る|ない|そう|さい)わよう([、。？！…」』）]))	$2$3
+((る|ない|そう|さい)よう([、。？！…」』）]))	$2$3
+*
+*--- cats ---
+*remove repetition
+(にゃ|にゃあ|にゃん|にょ|にょん|にょお)\1{2,}	$1
+*
+(([一-龠])(く)にゃ(い))	$2$3な$4
+((では)にゃ(いか))	$2な$3
+(ない)(にゃ|にゃあ|にゃん|にょ|にょん|にょお)([、。？！…」』）])	$1$3
+(([^、。…？！「『（])(にゃ|にゃあ|にゃん|にょ|にょん|にょお)([、。…？！」』）]))	$2$4
+*(([^、。…？！「『（])(にゃ|にゃあ|にゃん|にょ|にょん|にょお)(\x5E\3))	$2^$3
+*(([、。…？！「『（])(にゃ|にゃあ|にゃん|にょ|にょん|にょお)([、。…？！」』）]))	$2^$3$4
+*
+*--- tanuki ---
+(なん)(すけど)	$1で$2
+*
+*--- nosebleed/asthma/when blowjobbing ---
+*--- let's put all gibberish here ---
+((しまいま)ひたひ([、。？！…」』）]))	$2したし$3
+(((て|んで)いる)ろ(も)([、。？！…」』）]))	$2の$4$5
+(([一-龠])(い)ろ(も)([、。？！…」』）]))	$2$3の$4$5
+(([一-龠])(ひ)(なさい|ちゃ|て)([、。？！…」』）]|あげ))	$2し$4$5
+(([一-龠])(ひて)(くだ))	$2して$4
+(([一-龠])ひい([、。？！…」』）オ]))	$2しい$3
+(([いさしなたらろつばこ]い)ろ(も)([、。？！…」』）]))	$2の$3$4
+(([いさしなたらろつばこ]い|ん)れ([すふ])([、。？！…」』）]))	$2です$4
+(([いさしなたらろつばこ]い|ん)れ([すふ])よ([、。？！…」』）]))	$2です$4
+(((な|る|ない)の)れ([すふ])([、。？！…」』）]))	$2です$5
+(((な|る)の)れ([すふ])よ([、。？！…」』）]))	$2です$5
+((の|なん)れ(す[かが])([、。？！…」』）]))	$2で$3$4
+((の|なん)れふ([かが])([、。？！…」』）]))	$2です$3$4
+((の|なん)れ([すふ])よ([、。？！…」』）]))	$2です$4
+((んで|て)(く)ら(さい|はい)([、。？！…」』）]))	$2$3ださい$5
+((ん)れ(きますが)([、。？！…」』）]))	$2で$3$4
+(((れる|ない)の)れ(すが))	$2で$4
+((して)ひ(まうか))	$2し$3
+((り)(ま)しゅ([、。？！…」』）]))	$2$3す$4
+((い)(で)ふ([、。？！…」』）]))	$2$3す$4
+((で)ふ(から)([、。？！…」』）]))	$2す$3$4
+((で)ひょ([、。？！…」』）]))	$2しょう$3
+(([、。？！…「『（])(わた)ひ(の))	$2$3し$4
+(([、。？！…「『（])れ(したら)([、。？！…」』）]))	$2で$3$4
+(([、。？！…「『（])れ(す|す[かがの])([、。？！…」』）]))	$2で$3$4
+(([、。？！…「『（])れふ([かがの])([、。？！…」』）]))	$2です$3$4
+(([、。？！…「『（])しょ(れは))	$2そ$3
+(([、。？！…「『（])ろ(うしましょう))	$2ど$3
+(([、。？！…「『（])ろ(うして)([、。？！…」』）]))	$2ど$3$4
+(([、。？！…「『（])ろ(うひて)([、。？！…」』）]))	$2どうして$4
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(た)れ(しょう))	$2$4で$5
+((ひ)(ません)([、。？！…」』）]))	し$3$4
+((ひゃま)([、。？！…」』）]))	様$3
+((ひゃま)(も|ったら)([、。？！…」』）一-龠]))	様$3$4
+(([あ-んア-ヴ一-龠』])ひゃま(の|に))	$2様$3
+(([一-龠][まで]|てま|ちゃいま|ございま|あげま)(ふ)([、。？！…」』）]))	$2す$4
+(([一-龠][まで]|てま|ちゃいま|ございま|あげま)(ひた)([、。？！…」』）]))	$2した$4
+(([一-龠]ま)へ(て)([、。？！…」』）]))	$2せ$3$4
+(([一-龠])(り)(ま)ふ([、。？！…」』）]))	$2$3$4す$5
+((出)ひ(にな|て))	$2し$3
+((ひてくだはい)([、。？！…」』）]))	してください$3
+((くだ)(ひゃい|はい)([、。？！…」』）]))	$2さい$4
+((イ)(ッひゃえ))	$2っちゃえ
+((させ)ひ(ゃっ[てた])([、。？！…」』）]))	$2ち$3$4
+((させ)ひ(ゃう))	$2ち$3
+((イ)ッひゃ([いう]))	$2っちゃ$3
+*remove ん
+(([一-龠])([んン])([、。？！…」』）]))	$2$4
+*
+*======================================================================================
+*---どう---
+*in order to make a proper "questioning" form by どう, 
+*we have to replace incorrect (exp) or "question mark (？)"
+*note: don't confusedly mixing plain copula (だ、です、だろう、でしょう) with to-do (する、しよう、でしよう)
+*when following たら, どうでしょう is not the same as どうでしよう
+*ですか or just か gives different translation, however the meaning still the same way
+*は +　どう  + ですか = how about (note: たら can't joined with は)
+*たら + どう = why don't (note: mustn't ended by "？")
+*たら + どうか = another alternative translation
+*
+*jyanai + たら + どう will result error (じゃなかった or らではなかったら)
+(じゃな|ではな)(かったらどう)([、。？！…」』）])	$1$2する$3
+*
+*たら + どう + だ、だい、だろう = not working
+*たら + どう + でしょう = working, but IMO better using どう。
+((たら|んだら)(どう)(だ|だい|だろう|だろ|でしょ|でしょう|です)か([、。？！…」』）]))	$2$3。$5
+((たら|んだら)(どう)(だ|だい|だろう|だろ|でしょ|でしょう|です)([のか、。？！…」』）]))	$2$3$5
+((たら|んだら)(どう)？)	$2$3。
+((たら|んだら)(どう)(かな|かしら)([、。？！…」』）]))	$2$3。$5
+*
+*(obj-prt) + どう + だ、だい = not working
+*(obj-prt) + どう + だろう = working, but must be ended by か or ？
+*(obj-prt) + どう + でしょう = working
+*(([はが])(どう)(だ|だい|だろう|だろ|でしょ|でしょう|です)か([、。？！…」』）]))	$2$3。$5
+(([はが])(どう)(だ|だい|だろう|だろ|でしょ)([のか、。？！…」』）]))	$2$3でしょう$5
+(([はが])(どう)([、。？！…」』）]))	$2$3ですか$4
+*note: when as clause, the translation still not good enough
+*
+*
+*save
+((たら|[はが])(どう)(でしょ))	$2$3x$4
+*
+*handling どうする (What do we do?)
+*disabled : LEC doesn't need change
+*((たら|んだら)(どう)(する)([のか、。？！…」』）]))	$2$3しょう$5
+*(([はが])(どう)(する)([のか、。？！…」』）]))	$2$3しょう$5
+*must be ended by か or ？
+((どうする)([、。！…」』）]))	$2？$3
+*どうする alone can't be translated, let's change it into どうしょう
+*disabled : LEC
+*(([、。…？！「『（])(どう)(する|するの|するのか)([、。？！…」』）]))	$2$3しよう$5
+*((どう)(する|やる)(の|んだ)([、。？！…」』）]))	$2しよう？$5
+*long どうする seems not safe
+*
+*handling どうして
+(([、。…？！「『（])(どう)(して)(です)(か)([、。？！…」』）]))	$2$3$4$7
+*
+*handling どうでしょう (What shall we make it?)
+*どうでしょう won't work, but another alternative どうでしよう is working
+*disabled : LEC
+*どうでしよう not working for LEC
+*((どう)(でしょう|でしょ)([のか、。？！…」』）]))	$2でしよう$4
+*
+*handling どうしましょう
+*IMO どうしましよう not used, but we'll add it if happening
+((どうしましょう)([、。？！…」』）]))	$2？$3
+*
+*handling どうしょう (What will we do?)
+*どうしょう won't work, but another alternative どうしよう is working
+*disabled : LEC
+*it seem LEC can't translate はどうしようのか
+*((どう)(しょう|しょ)([のか、。？！…」』）]))	$2しよう$4
+*どうしよう alone can be translated, this is good
+*
+*everything must be ended by か or ？
+((どうしよう|どうでしよう)([、。！…」』）]))	$2？$3
+*
+*restore
+((たら|[はが])(どう)x(でしょ))	$2$3$4
+*
+*replace っしょ with です or でしょう
+((.)(い)(っしょ)([、。？！…」』）]))	$2$3でしょうか$5
+(([^いで])(っしょ)([、。？！…」』）]))	$2でしょうか$4
+*
+*handling どうしたん (what's wrong)
+((どうしたん)(だろう)([、。？！…」』）]))	$2だ$4
+*
+*======================================================================================
+*---masu stem + つ---
+*I'm not sure, but this つ is a classical helper verb for completion, which is similar to て (-te form)
+*luckily this form is rarely used
+*I put here before processed by another codes
+((いつ)(もの|の))	$2x$3
+(([^、。？！…「『（])([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(つ)(の)([、。？！…」』）]))	$2$3て$5$6
+(([^、。？！…「『（])([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(っ)つ(の)([、。？！…」』）]))	$2$3$4て$5$6
+*might break sentence when it's an improper word
+*ex: べっつに --> べってに, to correct べっつに become べつに is another matter...
+*disabled: い
+*unsafe : いつも、いつの
+*(([^、。？！…「『（]|[一-龠]っ|[一-龠])([せべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(つ))	$2$3て
+*(([^、。？！…「『（]|[一-龠]っ|[一-龠])([せべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(っ)つ)	$2$3$4て
+*restore
+((いつ)x(もの|の))	$2$3
+*
+*======================================================================================
+*try to fix (exp) from end of sentence
+*
+*save 何 + (exp)
+*((何)([^、。？！…」』）]+)(だろう|でしょう)([、。？！…」』）]))	$2$3$4x$5
+*
+*save suffix ended by ん
+*((ませ|ちゃ|さ|く)(ん)(だ))	$2$3x$4
+*((ませ|ちゃ|さ|く)(ん)(で))	$2$3x$4
+*save はなんです
+*((は|が|そう)(なんです)([か、。？！…」』）]))	$2$3x$4
+*
+*handling ってん
+((って)(ん)(だ))	$2る$3$4
+((って)(ん)(の))	$2る$4
+*
+*--- -te form vs "ん + (exp)" ---
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(ん)(だ)([。、？！…」』）]))	$2$4る$5$6$7
+*
+*---main code---
+*I've tried with comma and か, now trying with ですか
+*the reason I changed darou/deshou into desuka is because sentence ended by just darou/deshou is ambiguous
+*moreover, "might" translation is kinda have a special pattern in Atlas
+*if the sentence is incorrect then translation will screwed.
+*if you still want the original darou/deshou translation, just disable this part
+*disabled partial, LEC
+*let's see if LEC can handle deshou & darou or not
+*だろ & でしょ = だ
+*だろう & でしょう = will be (polite version?)
+*困るだろ = can't be translated
+*困るだろう = good, 困るでしょ = good, 困るでしょう = good
+*
+*handling repetition
+(([『「（、。？！…]|^)(そう)(だろう|だろ|でしょう|でしょ)(、)\3\4([、。？！…」』）]))	$2$3$5$3$6
+*
+*save for じゃない/ではない
+*((じゃない|ではない)(だろう|でしょう)([、。？！…」』）]))	$2x$3$4
+*((じゃない|ではない)(だろ|でしょ)([、。？！…」』）]))	$2x$3$4
+*save for どう
+*((どう)(だろう|でしょう)([、。？！…」』）]))	$2x$3$4
+*((どう)(だろ|でしょ)([、。？！…」』）]))	$2x$3$4
+*
+*disabled, LEC
+*(([『「（、。？！…]|^)(そう)(だろう|でしょう)([、。？！…」』）]))	$2$4$5
+*fix improper darou only
+(だろ)([、。？！…」』）])	$1う$2
+*fix improper darou & deshou
+*(([『「（、。？！…]|^)(そう)(だろ|でしょ)([、。？！…」』）]))	$2$3$4う$5
+*start
+*(([^x『「（、。？！…]|^)(だろう|でしょう)([、。？！…」』）]))	$2ですか$4
+*(([^x『「（、。？！…]|^)(だろ|でしょ)([、。？！…」』）]))	$2ですか$4
+**(([^x『「（、。？！…]|^)(だろ|でしょ|だろう|でしょう)([かが])([、。？！…」』）]))	$2です$4$5
+*end
+*disabled, LEC
+*((ん)(だろう|だろ|でしょう|でしょ)(かと))	$2です$4
+*restore
+*((じゃない|ではない)x(だろう|でしょう)([、。？！…」』）]))	$2$3$4
+*((じゃない|ではない)x(だろ|でしょ)([、。？！…」』）]))	$2$3$4
+*((どう)x(だろう|でしょう)([、。？！…」』）]))	$2$3$4
+*((どう)x(だろ|でしょ)([、。？！…」』）]))	$2$3$4
+*
+*handling "confirmation" dialogue
+(([一-龠])(ん)(だ)(な|ぜ|ぞ)([。、？！…」』）]))	$2$3$4$6
+(([一-龠])(ん)(で)(ぜ)([。、？！…」』）]))	$2$3$4$6
+((まら)(ん)(だ)(な|ぜ|ぞ)([。、？！…」』）]))	$2ない、$4$5$6
+((まら)(ん)(で)(ぜ)([。、？！…」』）]))	$2ない、$4$5$6
+((て)(ん)(だ)(ぞ)([。、？！…」』）]))	$2の、$4$5$6
+(?<!さ)(ん)(だ)([なぜぞ])([。、？！…」』）])	の$2$4
+(?<!さ)(ん)(で)(ぜ)([。、？！…」』）])	の、$2$3$4
+*((ん)(で)(す)([。、？！…」』）]))	の$3$4$5
+*んです can break 肉まん, たいへん etc, gonna need better pattern
+(([^。、？！…「『（])(な)ん(です)([。、？！…」』）]))	$2$3の$4$5
+*LEC
+*(([^x])(だ)(な|ぜ|ぞ)([。、？！…」』）]))	$2、$3$4$5
+*(([^x])(で)(ぜ)([。、？！…」』）]))	$2、$3$4$5
+*take the rest
+*
+*restore what's been saved
+*((でしょう|でしょ|だろう|だろ)([^、。？！…」』）]+)(なんて|なんと)([、。？！…」』）]))	$4$3$2$5
+*((何)([^、。？！…」』）]+)(だろう|でしょう)x([、。？！…」』）]))	$2$3$4$5
+*((ませ|ちゃ|さ|く)(ん)x(だ))	$2$3$4
+*((ませ|ちゃ|さ|く)(ん)x(で))	$2$3$4
+*((は|が|そう)(なんです)x([か、。？！…」』）]))	$2$3$4
+*
+*--- だ ---
+*remove だ, or fix with です
+*since it's a very basic like です, it's actually not wise to remove it
+*what's important, dont remove だ from んだ because it's a part of -te form verb
+(([をがにへとではもる]|から|より|まで|なく|かく|ったく|して|した|って|する|です|します|こそ|けど|れば|たら)(だ)([、。？！…」』）]))	$2$4
+(([いしなたらろつばこ]い)だ([、。？！…」』）]))	$2$3
+((てた)(ん)(だ)([、。？！…」』）]))	$2の$4$5
+(([一-龠])([っせべげけめねれて来きしくういえ])だ(とか))	$2$3です$4
+((ません)だ([、。？！…」』）]))	$2です$3
+((がない|なきゃ|なおさら)だ([、。？！…」』）]))	$2$3
+((後退|無論|嘘|退却|お願い)だ([、。？！…」』）]))	$2$3
+((が)(好き)だ([、。？！…」』）]))	$2$3です$4
+((なの|思う)だ(けど|けれど)([、。？！…」』）]))	$2です$3$4
+*
+*--- っす ---
+*fix っす, last check after (exp) removal
+(([あ-えか-てと-んア-ヴ])っ(す)([、。？！…」』）]))	$2で$3$4
+(([^ア-ヴ])(っス)([、。？！…」』）]))	$2$4
+*is it safe to include kanji?
+(([一-龠])っ(す)([、。？！…」』）]))	$2で$3$4
+*
+*=========================================================
+*---try to remove verb suffix---
+*dealing with verb suffix like たまえ, ちまえ, やがれ is kinda hard
+*it's supposed to be translated like verb + a cursing word (ex: "Take this!", "Eat that!", "Die bitch!")
+*possible replacements are ある(to do), あれ(that) 
+*except って & った, because this will translated as あう "each other"
+((っ)つ(の)([、。…？！」』）]))	$2て$3$4
+((たまへ)([、。…？！」』）]))	あれ$3
+((たま)(る)([、。…？！」』）]))	あ$3$4
+((たま)(る)(か)([、。…？！」』）]))	あ$3$4$5
+*((さ|く|ちゃ)(ん)(な|だ)(もの)([、。…？！」』）]))	$2$3$5$4$6
+*(([^っ])(とけ)([、。…？！」』）]))	$2$4
+*
+*--- ちまえ ---
+*not sure if this is verb suffix or accidental form
+((ち)(まえ)([、。…？！」』）]))	てし$3$4
+*
+*---たまえ---
+*the same as ください
+((たまえ)([、。…？！」』）]))	なさい$3
+*
+*---やがる---
+*verb suffix for -te form & masu stem
+*beside as verb suffix, also やがる could means "to-do"
+*
+*-te from vs やがる
+*selfnotes: いやがる
+*save
+((いやが)(る|っ[てた]))	$2x$3
+*
+(([一-龠])やが(る))	$2$3
+(([一-龠])やが(っ[たて]))	$2$3
+*
+(([^い])([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)やが(る|った))	$2$3$5$6
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)やがっ([てた]))	$2$4
+*if verb + やがる is in the middle of text
+(([^い])(にな)(り)(やが)(る)([^、。…？！」』）]))	$2$3$6$7
+((やが)(る)([^、。…？！」』）]))	す$3$4
+*if verb suffix is in the end of text
+((で)(やが)(っ[てた])([、。？！…」』）]|の))	$2あ$4$5
+((やがっ)([てた])([、。？！…」』）]|の))	し$3$4
+((やが)(る)([、。？！…」』）]|の))	す$3$4
+*
+*---やがり+ます---
+*やがる polite version
+*notes: masu + やがって + ください = ?, seems a present form
+((やがり)(なさい))	$3
+((で)(やが)(り)(ま(す|すの|し[てた]|せん))([がかのわ、。…？！」』）]|です))	$2あ$4$5$7
+((やがり)(ま(す|すの|し[てた]|せん))([がかのわ、。…？！」』）]))	$3$5
+((やがれ)([、。…？！」』）]))	なさい$3
+((やがれ)(です)([、。…？！」』）]))	なさい$4
+((やがっ)([た])(ですか)([、。…？！」』）]))	$3$4$5
+((やがって)(ください))	$3
+*
+*restore
+((いやが)x(る|っ[てた]))	$2$3
+*
+*
+*---まかり---
+*polite verb prefix
+((まかり)(ません))	あり$3
+*
+*---まくる---
+*looks very very unsafe, because this word could means "turn up"
+*disabled, seems not working. So it's better to add each word specifically to dictionary.
+*unsafe -masu list: き
+(([っせべげけめねれて来しくうえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(まくる))	$2てる
+(([っせべげけめねれて来しくうえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)まくっ([てた]))	$2$4
+(([っせべげけめねれて来しくうえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(まくろう))	$2よう
+(([っせべげけめねれて来しくうえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(まくれ))	$2てやれ
+((に)まくり(ます))	$2$3
+*
+*---ですもの/だもの ---
+*disabled, try add prt-preposition in Atlas (ex: it is certainly)
+*alright, since adding as (prt) didn't always working, so let's replace with だから, because だもの means "giving a reason" too
+((だ|です)(もの)([、。…？！」』）]))	$2から$4
+*
+*--- ください ---
+*add ください after ないで, to fix negative imperative "don't", otherwise it just become a negative form, another Atlas miracle
+*firstly join separated sentence
+*disabled : LEC, let's see if it doesn't need this or not
+*((ないで)([、…]+)(ください))	$2$4
+*
+*save
+*((から)([^、。？！…」』）]+)(ないで)([、。？！…」』）]))	$2$3$4x$5
+*
+*((ないで)(くれ|あげて)([、。？！…」』）]))	$2ください$4
+*((ないで)([、。？！…」』）]))	$2ください$3
+*((ないで)(って|と[言思]))	$2ください$3
+*
+*restore
+*((から)([^、。？！…」』）]+)(ないで)x([、。？！…」』）]))	$2$3$4$5
+*
+*--- fix ないで + ちょうだい or 頂戴 or 下さる ---
+*Atlas reading : ない + で + ちょうだい, and the result is : negative form + give to me
+*so let's change it into ください to get proper translation
+((ないで)(ちょうだい|頂戴|下さる|ござる)([、。？！…」』）]))	$2ください！$4
+((ないで)(ちょうだい|頂戴|下さる|ござる)ね([、。？！…」』）]))	$2ください！$4
+((で)(ござる)([、。？！…」』）]))	$2す$4
+((で)(ござる)(か)([、。？！…」』）]))	$2す$4$5
+((で)(ござる)([なよ])([、。？！…」』）]))	$2す$5
+((に)(ござる)([、。？！…」』）]))	$2$4
+((で)(ござる)(からして))	$2す$4
+*
+*===================================================================
+*handling honorific
+*notes: it seems to remove ございます must be specific
+*((ござい|御座い)(ます)([、。？！…」』）]))	$4
+*
+*--- になさい --- (test)
+((に)(なさい)([、。？！…」』）]))	$2し$3$4
+*
+*---なさい---
+*problem occured when a -te form verb meets honorific like ました, なさい, らっさい
+*-te form + いました = "had"
+*-te form + しました = "did" + verb-ing (formal)
+*-te form + した = "did" + verb-ing (casual)
+*-te form + た = "did" + verb-s
+*([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)
+((なさい)ませです([、。？！…」』）]))	$2$3
+*
+*--- ください + まし/ませ ---
+*it's different with まして or ました
+*((ないで)(くださいまし)([、。？！…」』）]))	$2$3x$4
+*why ないでくださいまし must be saved? I forgot....
+*
+((ください|下さい)(まし)([、。？！…」』）]))	$2$4
+*
+*((ないで)(くださいまし)x([、。？！…」』）]))	$2$3$4
+*
+*--- ください + まして ---
+*used for negative form, however when ended by [！？。], it is translated not as negative form...
+*ex: 喜ばないでくださいまして
+((ください)(まして)([！。]))	$2$3、
+((ください)(まして)(？))	$2$3か$4
+*
+*--- -te form + ました/まして---
+*ました : change to normal verb
+*まして : remove it
+*save
+(([勝立])て(ました)([、。？！…」』）]))	$2x$3$4
+*
+(([じっせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)まし(た))	$2$4$5
+(([じっせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)まして)	$2$4
+((んで)まし(た))	$2$3
+((んで)まして)	$2
+(([一-龠])て(ました)([、。？！…」』）]))	$2$3$4
+(([一-龠])([び])て(ました)([、。？！…」』）]))	$2$3$4$5
+(([一-龠])て(ました)(けど|から)([、。？！…」』）]))	$2$3$4$5
+*(([さま]れて|[いえくけしじせれめべな]て|あって|させて|なくて|せられて)まし(た))	$2$3
+*(([一-龠])(って|[えべれ]て|[いえくけしじせれめべな]て|[さま]れて|なくて|せられて)まし(た))	$2$3$4
+*
+*restore
+(([勝立])x(ました)([、。？！…」』）]))	$2て$3$4
+*
+*--- -te form + ます ---
+*notes: should only applied if it's at the end of text, because sometimes it is needed to connecting with (conj) or (prt)
+*ex: -te form+ます+けど, ます in here is absolutely needed
+*however, -te form ended with で seems not working with ます
+*LEC, try disable this
+*(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(ます|ますの)([、。？！…」』）]))	$2$4$6
+*((んで|[一-龠]で)(ます|ますの)([、。？！…」』）]|から))	$2$4
+*((んで|[一-龠]で)(ます|ますの)(か)([、。？！…」』）]))	$2い$3$4$5
+*(([いん]で|[一-龠]で)(ます)(けど))	$2い$3$4
+*
+*--- -te form + ましょう ---
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(ましょう))	$2$4い$5
+((んで)(ましょう))	$2い$3
+*(([さま]れて|[いえくけしじせれめべな]て|あって|させて|なくて|せられて)(ましょう))	$2い$3
+*(([一-龠])(って|[えべれ]て|[いえくけしじせれめべな]て|[さま]れて|なくて|せられて)(ましょう))	$2$3い$4
+*((んで|て)な(さい)([っわよね、。？！…」』）]))	$2くだ$3$4
+*
+*--- -te form + なさい ---
+((んで|て)な(さい))	$2くだ$3
+*selfnotes: is it safe in the middle?
+*
+*--- -te form + 頂戴 ---
+*to prevent "give to me", let's replace with the usual ください
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(頂戴|ちょうだい|ちょだい)([、。？！…」』）]))	$2$4ください$6
+((んで)(頂戴|ちょうだい|ちょだい)([、。？！…」』）]))	$2ください$4
+*
+*--- u-verb + らっしゃい ---
+(([一-龠])らっしゃ(い)([、。？！…」』）]))	$2しなさ$3$4
+*
+*--- -te form + らっしゃい ---
+*save
+((いって)(らっしゃい))	$2x$3
+*
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(らっしゃ)(い)([、。？！…」』）]))	$2$4くださ$6$7
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(らっしゃ)(います)([、。？！…」』）]))	$2$4$6$7
+(([一-龠])(て)らっしゃ(い)([、。？！…」』）]))	$2$3くださ$4$5
+(([一-龠])([び])(て)らっしゃ(い)([、。？！…」』）]))	$2$3$4くださ$5$6
+(([一-龠])([しい]て|[いん]で|[し]んで)らっしゃ(い)([、。？！…」』）]))	$2$3くださ$4$5
+*((かって)(らっしゃ)(い)([、。？！…」』）]))	$2くださ$4$5
+*restore
+((いって)x(らっしゃい))	$2$3
+*
+*--- -te form + らっしゃる ---
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(らっしゃ)(る))	$2$4$6
+*
+*--- -te form + らした ---
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(らし)(た))	$2$4$6
+*
+*--- -te form + いらっしゃい ---
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)い(らっしゃ)(い)([、。？！…」』）]))	$2$4くださ$6$7
+((んで)(いらっしゃい|いらっしゃいませ)([、。？！…」』）]))	$2ください$4
+(([一-龠])(て)(いらっしゃい)([、。？！…」』）]))	$2ください$5
+*
+*--- -te form + いらっしゃる ---
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(いらっしゃ)(る))	$2$4$6
+*
+*--- でいらっしゃいます ---
+((で)いらっしゃいま(す))	$2$3
+*
+*--- ござる ---
+*ninja
+((もう)(よう)(ござる)([、。？！…」』）]))	$2よい$5
+((多)う(ござる|ございます)([、。？！…」』）]))	$2い$4
+*
+*--- でございます ---
+*replace with normal form
+(ありが)たいことで(ございま(す|した))	$1とう$2
+*
+((で)ございま(す|した|しょう)([、。？！…」』）]))	$2$3$4
+((で)ございま(す|した)(ね)([、。？！…」』）]))	$2$3$5
+((で)ございま(す|した)(か)([、。？！…」』）]))	$2$3$4$5
+((で)ございましょう(か)([、。？！…」』）]))	$2す$3$4
+*
+*--- ございません ---
+((御座)(いません)([、。？！…」』）]))	ござ$3$4
+*
+*--- は + ごさいません---
+*gosaimasen maybe another form of gozaimasen
+((は)ごさ(いません)([、。？！…」』）]))	$2$3$4
+*
+*--- は + なりません ---
+(は(なりません)([、。？！…」』）]))	$2$3
+*
+*--- なさい + ！---
+*surprisingly Atlas translation will break, or maybe TA, whatever.
+*disabled : LEC
+*((なさい)[！。])	$2、
+*
+*---っか---
+*verb + っか should be translated into "let's", not a volitional, or a probably
+*ろっか when changed into ろうか, the confirmation form is gone
+*ex: 
+*帰ろっか when replaced with 帰ろうか
+*expected translation : "Shall we return?"
+*current translation : "Let's return"
+*the problem is because 帰る is u-verb, 
+*so the proper one should be 帰りましょうか
+*however, because we don't have subject here, Atlas will translate it as "Shall I return?"
+*logically ろっか only means polite volitional form
+*there should be no word like 消えろっか, well... if that's really happened we need to change the code...
+((ろ)っ(か)([、。？！…」』）]))	りましょう$3$4
+(([れみ])っ(か)([、。？！…」』）]))	$2ましょう$3$4
+*
+((よ)っ(か)([、。？！…」』）]))	$2う$3$4
+*((み)っ(か)([、。？！…」』）]))	$2よう$3$4
+(([一-龠])(ご)っ(か)([、。？！…」』）]))	$2$3う$4$5
+(([一-龠])(が)(ろ)([、。？！…」』）]))	$2$3$4う$5
+*っか in ksb-delinquents dialect = ですか
+((で)っ(か)([、。？！…」』）]))	$2す$3$4
+*
+*--- おいで ---
+*not sure how to make this work
+*however the meaning should be translated like an imperative form
+*usually used by female to asking someone to come and do something with a dignified manner (mother to child, princess/queen to her subordinate, goddess to human)
+((て|んで)(おいで|お出で)([、。…？！」』）]))	$2くる$4
+((に)(おいで)([、。…？！」』）]))	$2行く$4
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(おいで))	$2$4行く
+*
+*================================================================================================
+*
+*--- っけ ---
+*since this (prt) like a question, maybe it can be replaced with か
+(([、。？！…「『（]|^)(だっけ)([、。？！…」』）]))	$2$4
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(た)っけ([、。？！…」』）]))	$2$4か$5
+((る)っけ([、。？！…」』）]))	$2$3
+(([をがにへとでのはも]|から|より|まで)(だ)っけ([、。？！…」』）]))	$2か$4
+((だ)っけ([、。？！…」』）]))	$2$3
+((だ)っけ(か)([、。？！…」』）]))	$2$3$4
+*
+*---けれど---
+*disabled, LEC
+*(^(け)れ(ど)も([、。？！…」』）]))	$2$3$4
+*(^(け)れ(ど))	$2$3
+*(([、。？！…「『（])(け)れ(ど)([^も]))	$2$3$4$5
+*((け)れ(ど)([、。？！…」』）]))	$2$3$4
+*
+*---とも---
+*this (prt) can't be added to Atlas, dunno why...
+((だ|です)(とも)([、。？！…」』）]))	$2$4
+*
+*--- past form + とて ---
+*even
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(た)と(て)([、。？！…」』）]))	$2$4っ$5$6
+*
+*---なのか---
+(([^も])の(なのか)([、。？！…」』）]))	$2$3$4
+*
+*---なのだ---
+(([一-龠])(い)な(のだ)([、。？！…」』）]))	$2$3$4$5
+((どう)なの(だ)([、。？！…」』）]))	$2$3$4
+*
+*---なのを---
+*not sure....
+(([あそこ])(んなの)を)	$2$3
+*
+*---when -te form meets なのか---
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)な(のか)([、。？！…」』）]))	$2$4$5$6
+*(([さま]れて|[いえくけしじせれめべな]て|あって|させて|なくて|せられて)な(のか)([、。？！…」』）]))	$2$3$4
+*(([一-龠])(って|[えべれ]て|[いえくけしじせれめべな]て|[さま]れて|なくて|せられて)な(のか)([、。？！…」』）]))	$2$3$4$5
+*
+*---ない + は---
+((ない)(は)([^ず]))	$2の$3$4
+*
+*--- は at end sentence ---
+*means it's in the middle of talking, then separated by "、" or "…"
+*seems unsafe: をがにへとでのはも
+*disabled, this might not needed anymore since "、" separation implemented
+*save
+*(いうより)は([、…])	$1x$2
+*
+*((から|より|まで|られる)(は)([、…]))	$2の$3$4
+*restore
+*(いうより)x([、…])	$1は$2
+*
+*---なら---
+*"Japanese oak" translation occured because word before なら is expected as noun
+*so you might need to add new word into dic, either as noun or adverb.
+*also we can change なら into ならば
+*((世が世)(なら))	$2x
+((ながら)(なら)([、。？！…」』）]))	$2の$3$4
+((と|って|そう)(いうなら)([^ば]))	$2$3ば$4
+((と|って|そう)(いうなら)([、。？！…」』）]))	$2$3ば$4
+((くらい)(なら)([^ば]))	$2$3ば$4
+(([ア-ヴー])(なら)([、。？！…」』）]))	$2$3ば$4
+((ない)の(なら))	$2$3
+*(([一-龠])(なら)([、。？！…」』）]))	$2$3ば$4
+*unsafe : 世が世なら
+*((世が世)(x))	$2なら
+*
+*--- stem + から + と ---
+((し)(から)と([、。？！…」』）]))	$2$3$4
+(([いさしなたらろつばこ]い)(から)と([、。？！…」』）]))	$2$3$4
+*
+*---　のに ---
+((った)った(のに)([、。？！…」』）]))	$2$3$4
+*
+*---んで---
+(([ア-ヴ])ん(で))	$2の$3
+*LEC
+([一-龠][う])ん(で)	$1の$2
+*
+*---んだ---
+(([ア-ヴ])ん(だ)([、。？！…」』）]))	$2の$3$4
+*
+*---ても---
+*ても = でも
+((って|して)て(も))	$2で$3
+*(([一-龠])([いき]て)て(も)([^、。？！…」』）]))	$2$3で$4$5
+*when it's in the middle, it's better using specific replacement
+(([一-龠])([いき]て)て(も)([、。？！…」』）]))	$2$3で$4$5
+*
+*--- てもいい ---
+*verb (ren'youkei) + てもいい, that means -te form + もいい
+((んで)て(もいい))	$2$3
+*
+*--- せずともいい　---
+*just like above, we only need to change it into -te form + もいい
+*せず = negative, so replace with なくて
+((せず)と(も)(いい|よい|良い))	なくて$3$4
+*
+*---けども---
+*けども=けど
+(([^（「『、。…？！]|^)(けど)も([、。？！…」』）]))	$2$3$4
+*
+*---てて---
+*-te form + て could means :
+*1. imperative, we can replace it with ください (polite) or やれ (casual)
+*2. state-of-being, we can replace it with います
+*3. clause particle, see って section for detail
+*
+((って)(て)(くれ))	$2い$3$4
+((って)(て)([、。？！…」』）]))	$2やれ$4
+((って)(て)(いう|言[いうわ]|言っ[てた]|[思想]っ[てた]|[思想][いう]))	$2やれと$4
+((.って)て([一-龠]))	$2$3
+((て)(て)(もう|いい|よい|良い|ほしい|欲しい))	$2は$4
+((いで|んで)(て)([、。？！…」』）]))	$2います$4
+(([一-龠])(まえて)(て)([、。？！…」』）]))	$2$3やれ$5
+((して)(て)([^、。？！…」』）]))	$2いて$4
+((して)(て)([、。？！…」』）]))	$2やれ$4
+*replace with といって or いて? Is it save to replace it anywhere?
+*(([一-龠])([いしせきけげめべじれ]て|[さまわ]れて|なくて)(て)([^、。？！…」』）]))	$2$3いて$5
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(ては)([、。？！…」』）]))	$2$4い$5$6
+(([一-龠])([いしせきけげめべじれ]て|[さまわ]れて|なくて)(て)([、。？！…」』）]))	$2$3やれ$5
+(([一-龠])([いしせきけげめべじれ]て|[さまわ]れて|なくて)(て)ね([、。？！…」』）]))	$2$3やれ$5
+*based on what word following it we can decide what's the best replacement
+(([出看]て)(て)([一-龠]))	$2いっ$3$4
+(([出看]て)(て)(あげ[るてた]))	$2やれ$4
+(([出看]て)(て)(くれ[るてた]))	$2$4
+*unsafe examples : kanji+てて
+*
+*---みたい---
+*fix "-like", might break "looking" meaning
+*afterall, it's hard to fix this, because like another casual language, they just put the word as they pleases...
+*or replace with らしい or 様, since it has the same meaning
+((みたい)な([、。？！…」』]))	$2に$3
+((みたい)な(とか)([、。？！…」』]))	$2$3$4
+(([^、。？！…「『（])みた(く)([、。？！…」』]))	$2らし$3$4
+(([^。、？！…「『（])(みたい)([、。？！…」』]))	$2$3です$4
+(([。、？！…「『（])(みたい)([、。？！…」』]))	$2$3だ$4
+*((みたい)じゃない([、。？！…」』]))	$2です$3
+*fix -te form + みたい, should be translated to "I want to...", not "seems like..."
+(([一-龠]|[っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)み(たい)([、。？！…」』]))	$2$4$5$6
+*
+*--- らしい ---
+*dunno how to handle this, if らしい is followed by e.g, a (prt), it will screw the translation
+((らしい)(んだけど)([、。？！…」』）]))	$2$4
+*
+*--- ような ---
+*just like those two above
+*could be replaced by : みたいに, ようだ
+*みたいに = as...
+*ようだ = seems...
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)([たる])ような([、。？！…」』]))	$2$4みたいに$5
+*is it safe to replace anything ended by ような ?
+*LEC, disabled
+*((よう)な([、。？！…」』]))	$2だ$3
+*
+*---なんて---
+*fix "how + (adj)" sentence
+(([（「『、。…？！])(なん|何)(と|て)([^、。？！…」』）]+)(だ)([、。？！…」』）]))	$2$3$4$5$6ろう$7
+(([（「『、。…？！])(なん|何)(と|て)([^、。？！…」』）]+)(で)([、。？！…」』）]))	$2$3$4$5$6しょう$7
+(([（「『、。…？！])(なん|何)(と|て)([^、。？！…」』）]+)(だろ|でしょ)([、。？！…」』）]))	$2$3$4$5$6う$7
+*
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(た)(だ)(なんて)([、。？！…」』）]))	$2$4$7
+*save
+((なんて)(したら))	x$3
+((た|ん)(だ)(なんて)([^、。？！…」』）]))	$2x$4$5
+((た|ん)(だ)(なんて)([、。？！…」』）]))	$2x$4$5
+*
+((だ)(なんて)([^、。？！…」』）]))	とは$3$4
+((だ)(なんて)([、。？！…」』）]))	$3$4
+*(([ア-ヴ])(なんて))	$2は$3
+*restore
+((x)(したら))	なんて$3
+((た|ん)(x)(なんて)([^、。？！…」』）]))	$2だ$4$5
+((た|ん)(x)(なんて)([、。？！…」』）]))	$2だ$4$5
+*
+*--- なんか ---
+*possible means :
+*1. something, usually typed 何か (ex: 「何か食べる？」 = "Do you eat (something) ?")
+*2. like = usually used as a "filler", which "like" here doesn't means anything
+*(ex: 「なんか幸せ」
+*Atlas seems can translate it, but without exact translation...
+*so when used as "something", you wouldn't see word "something" is displayed
+*the same as "like", it wouldn't displayed
+*so, you shouldn't add new word into Atlas, otherwise it'll break it's internal function
+*
+*なんかいない might can be replaced with 何かない? Let's try it
+((なんか)(いない|いないよ|ない)([、。？！…」』）]))	何かない$4
+*
+*--- なんで ---
+*I still don't get how なんで works in Atlas, for the time being let's try なぜ
+*must be careful to not break words like なんでもない, なんですか etc
+*backup_(([（「『、。…？！]|^)(なんで|何で)([一-龠ア-ヴ]|[こそ]んな))	$2なぜ$4
+*disabled on LEC
+*(([（「『、。…？！]|^)(なんで|何で)([一-龠ア-ヴ]))	$2なぜが$4
+*(([（「『、。…？！]|^)(なんで|何で)([こそ]んな))	$2なぜ$4
+*(([（「『、。…？！]|^)(何で)([、。？！…」』）]))	$2なぜ$4
+*
+*--- なに ---
+*replace なに with なぜ
+(([（「『、。…？！]|^)(なに)(いきなり))	$2なぜ$4
+*
+*--- どうして ---
+*replace with なぜが
+*disabled : LEC
+*LEC can recognize どうして and なぜ , however with additional of が not checked yet
+*(([（「『、。…？！]|^)(どうして)([一-龠ア-ヴ]|[こそ]んな))	$2なぜが$4
+*
+*--- ながら ---
+*sometimes it's not working if followed by specific (prt)
+((ながら)(に)([一-龠]))	$2$4
+*
+*---ばかり---
+((ば)っ(かり))	$2$3
+((ば)っ(か)(なのに)([、。？！…」』）]))	$2$3り$4$5
+((ばかり)(か)([、。？！…」』）]))	$2です$3$4
+*LEC
+(ばかり)(です)、	$1$2。
+*
+*--- -te form + ばかり---
+*possible way to fix :
+*1. masu stem + ばかり (unsafe ex: 気にしてばかり if converted into masu will break ) 
+*2. -te form + の + ばかり
+(([せべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ))(て)(ばかり)([^、。？！…」』）]))	$2$4の$5$6
+(([っ]|あっ)(て)(ばかり))	$2$3の$4
+*(([一-龠])([さまら]れて|[えれしけめ]て)(ばかり)([^、。？！…」』）]))	$2$3の$4$5
+*(([一-龠])([さまら]れて|[えれしけめ]て)(ばかり)([、。？！…」』）]))	$2$3の$4$5
+*(([さまら]れて|[しけめ]て|[しけめ]た|なくて|あって)(ばかり)([^、。？！…」』）]))	$2の$3$4
+*(([さまら]れて|[しけめ]て|[しけめ]た|なくて|あって)(ばかり)([、。？！…」』）]))	$2の$3$4
+*
+*--- 置く ---
+*still, not sure with this
+*it seems a conversion of u-verb into -te form
+((置)いといて)	$2き
+*
+*--- ぐらい ---
+((なぐらい)(だ)(が)([、。？！…」』）]))	$2です$4$5
+((ぐらい)(なのに)([、。？！…」』）]))	$2です$3$4
+*
+*--- あんま ---
+(([、。…？！（「『]|^)(あんま)([一-龠]))	$2$3り$4
+(([、。…？！（「『はが]|^)(あんまり)([一-龠]))	$2$3に$4
+*
+*--- の禁止 ---
+*not sure...
+((の)(禁止)(！))	$2は$3$4
+*
+*--- せず ---
+((たり)(は)(せず)([、。？！…」』）]))	$2$4$5
+*
+*--- し ---
+*verbalizing suffix, however when meets negative form, the negative statement is gone...
+((ない)し([、。？！…」』）]))	$2$3
+*
+*--- 割に ---
+*comparatively, I think this (adv) can't be literally translated, it's contextual
+((割に)([、。？！…」』）]))	$3
+((だった)(わりに)([、。？！…」』）]))	$2$4
+*
+*--- を ---
+*when at the end of text, indicated a partial dialogue
+*must be careful
+*disabled due to "no break sentences" codes
+*if still broken, maybe change only (、)
+*((こと|なもの)を([、。？！…」』）]))	$2$3
+*
+*--- と ---
+((から)と([、。？！…」』）]))	$2$3
+*
+*--- ハズ ---
+*はず
+((る)ハズ([、。？！…」』）]|なん))	$2はず$3
+*
+*--- fixing counter ---
+*IMO this is another Atlas bug
+*ex:
+*傘が一本 -> One. Umbrellaone. umbrella
+*pattern: text + が + counter
+*counter example = numbers + 人
+(([をがにへとでのはも]|から|より|まで)([０-９0-9一二三四五六七八九十数]+)([人本匹つ枚名機])([、。？！…」』）]))	$2$3$4です$5
+*disabled: 何一つ
+*(([０-９0-9一二三四五六七八九十数]+)([人本匹つ枚名機])([、。？！…」』）]))	$2$3です$4
+*
+*--- そう + [にで] ---
+*fix "it seems to..." by removing に
+*if break, then use specific way
+((そう)[にで]([、。？！…」』）]))	$2$3
+*
+*--- 用事 + question ---
+((用事)(です|でしょう|だろう|だろ|でしょ)(か)([、。？！…」』）]))	$2がいる$3$4$5
+*
+*--- (exp) + に at the end text ---
+((だろう|でしょう|です)に([、。？！…」』）]))	$2$3
+*
+*--- なもの ---
+*when following な, it'll break if the clause is not (adj), but by adding だ it'll work
+*disabled, LEC
+*the opposite, it'll break on LEC
+*((な)(もの)([、。？！…」』）]))	$2$3だ$4
+*
+*--- ものなんで ---
+*replace with ものだから
+((もの)なんで([、。？！…」』）]))	$2だから$3
+*
+*--- かも ---
+*save
+(([。、？！…「『（]|^)(しかも)([、。？！…」』）]))	$2$3x$4
+((言う通り)(かも)([、。？！…」』）]))	$2$3x$4
+*
+*safe list: から
+かもしらん([！、。？」…])	かもしらない$1
+(かも)(しれなかった)	$1知れなかった
+(かも)(しれへん|しれん|しんない)	$1知れない
+(かも)(しれません)	$1知れません
+(かも)(しんないし)	$1しれないし
+かもしんないぜ([！、。？」…])	かもしない$1
+かもしんねし	かも知れないし
+かもしんねぞ([！、。？」…])	かもしらない$1
+かもな([！、。？」…])	かも$1
+(かも)、(しれない|しれません|しれん|知れない)	$1$2
+((かも)([、。？！…」』）]))	かもしれない$3
+(([一-龠いしなたらろつばこ])(い)(かもしれない)([、。？！…」』）]))	$2$3の$4$5
+(べきか)も[知し]れない	$1
+*
+*restore
+(([。、？！…「『（]|^)(しかも)x([、。？！…」』）]))	$2$3$4
+((言う通り)(かも)x([、。？！…」』）]))	$2$3$4
+*
+*--- 様 (appearance) ---
+*another test
+*actually we just need ように, however let's try with every obj-prt
+*must be careful to not break names
+*save
+((疲れ|お互い)(様))	$2x$3
+*
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(る)様([をがにへとでのはも]|から|より|まで))	$2$4よう$5
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(る)様([、。？！…」』）]))	$2$4よう$5
+(([一-龠])([あ-ん])様([をがにへとでのはも]|から|より|まで))	$2$3よう$4
+(([一-龠][が]る|ない)様([、。？！…」』）]))	$2よう$3
+((の|しまう)様(な))	$2よう$3
+*supposedly only for は and が for どのように
+(([をがにへとでのはも]|から|より|まで)(どの)様([をがにへとでのはも]|から|より|まで))	$2$3よう$4
+*
+*restore
+((疲れ|お互い)x(様))	$2$3
+*
+*--- 訳 and わけ ---
+*use 訳 as noun, and わけ as "reasoning"
+((な)(訳))	$2わけ
+(([。、？！…「『（]|^)(わけ)([をがにへとでのはも、。？！…」』）]|から|より|まで))	$2訳$4
+(([^。、？！…「『（])(って)訳([、。？！…」』）]))	$2$3わけ$4
+*
+*--- だけで ---
+(([^、。？！…「『（])(だけ)(で)([一-龠]))	$2$3$4は$5
+*
+*--- pluralism ---
+*It's seems Atlas can't translate some of it
+*俺達 can't joined with (prt) like しか
+*
+((俺達)(しか))	私達$3
+*
+*--- 誰 ---
+*who's that?
+((は)(誰|誰だ)([。、！…）」』]))	$2$3？$4
+(([^。、？！…「『（は])(誰|誰だ)([。、？！…」』]))	$2、$3？$4
+*
+*--- こそ ---
+((だった)(からこそ))	$2だ$3
+(([^だ])(からこそ)([。、？！…」』]))	$2だ$3$4
+*
+*--- たり + と ---
+*たり is used for representative actions listing, the verb construction have the same method with て (and た) form
+*just like with -te form problem, Atlas can't translate it if たり is connected directly with と
+*we can solve this by converting it into -te form, then add る before と
+*but the problem is, how to convert たり into -te form safely?
+*ex:
+*頷いたりと -> 頷いてると
+*追ったりと -> 追ってると
+*might break word ending with たり too, but let's try it first
+*save
+((べったり|[ふあ]たり)([とで]))	$2x$3
+*
+(([っあいうえおか-ぢつ-もやゆよら-りれろわ])たり([とで])([。、？！…」』]))	$2てる$3$4
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)たり(とか)([。、？！…」』]))	$2$4る$5$6
+*
+*restore
+((べったり|[ふあ]たり)x([とで]))	$2$3
+*
+*--- ごとく ---
+*what does "gotoku" means, especially after (obj-prt)
+((する|[一-龠]す)(が)(ごとく|如く)([。、？！…」』]))	$2$4$5
+*
+*--- そうそう ---
+*depend on its position we can determine it as (adv) or (int)
+*disabled, try LEC can handle it or not
+*save
+*([、。？！…「『（]|^)(そうそう)(たる)	$1$2x$3
+*
+*(([、。？！…「『（]|^)(そうそう)([^x。、？！…」』]))	$2$3、$4
+*
+*restore
+*([、。？！…「『（]|^)(そうそう)x(たる)	$1$2$3
+*
+*--- 無い or 無し or 無く ---
+*sometimes we need to change it into hiragana
+*might break phrases
+*I'm confused, is there really a difference between "none" and "without" in real grammar?
+*も無しに seems not safe
+*save
+((も)(無し)(に))	$2x$3$4
+*
+((無い)(から)([。、？！…」』]))	$2だ$3$4
+(([をがにへとでのはも]|から|より|まで)無([いし])(か)([。、？！…」』]))	$2な$3$4$5
+(([をがにへとでのはも]|から|より|まで)無([いし])([をがにへとでのはも]|から|より|まで))	$2な$3$4
+*無い is translated as "doesn't exist" or "without", we don't want this
+((も)無(い)(んだ))	$2な$3$4
+*無くても can caused a infinite looping translation
+((無)(くても))	な$3
+*なし
+(([一-龠])(なし)です([。、？！…」』]))	$2$3$4
+*
+*restore
+((も)x(無し)(に))	$2$3$4
+*
+*--- ある or いる or おる---
+*Seems very unsafe, could change the meaning...
+(([がで])(いる)(んで(す|しょ)|んだ|かも))	$2ある$4
+*
+*--- ぐらい ---
+*the problem is when な meets ぐらい, assuming the first clause is an adjective clause
+*the translation might be wrong, but at least no broken translation
+((そうな)(ぐらい))	$2の$3
+*
+*--- しかない ---
+*means: no choice, nothing but, only
+*no prob after verbs, but not with obj-prt. So could it be replaced with 仕方ない ?
+(([をがにへとでのはも]|から|より|まで)しか(ない|なかった)([。、？！…」』]))	$2仕方$3$4
+*
+*--- しか ---
+*prevent mistranslation, might break phrase
+*save
+((の)(こと|事)(しか))	$2$3x$4
+*
+((こと|事)(しか))	$3
+*restore
+((の)(こと|事)x(しか))	$2$3$4
+*
+*--- やしない ---
+*means は + しない
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)や(しない)([、。？！…」』）]))	$2は$4$5
+*
+*--- その ---
+*disabled : LEC seems don't need this
+*In Atlas, it's already defined that:
+*その = the
+*この = this
+*あの = that
+*translation with "the" sometimes seems unnatural (specially followed by name), we can change it into "that"
+*might break hiragana names, so we exclude it
+*also might break counter/numbering, better preserve it
+*save
+*(([。、？！…「『（]|^)(その)([一二三四五六七八九十数為割気儀筋後時実手上場折節他代通都道内日反物分癖辺方途]))	$2$3x$4
+*
+*(([。、？！…「『（]|^)(その)([一-龠ア-ヴ]))	$2あの$4
+*restore
+*(([。、？！…「『（]|^)(その)x([一二三四五六七八九十数為割気儀筋後時実手上場折節他代通都道内日反物分癖辺方途]))	$2$3$4
+*
+*--- 始めて and はじめて ---
+*in Atlas:
+*始めて = ru-verb, this is used for verb conjunction
+*初めて/はじめて = adv, this is used for "first time" translation
+(([のはが])(始)(めて)(だ))	$2はじ$4$5
+*
+*--- が + adverbal ---
+*replace が with は so the adverbal working
+(([一-龠ア-ヴ])(が)(小さく|ぎこちなく))	$2は$4
+*
+*--- たくもない, たくがない ---
+*remove "filler", "filler" could be a obj-prt, exp, suffic, etc
+*known "filler" : も, が, なんか, など
+*pattern: たく + "filler" + ない
+*reason? what's the different between 死にたくもない and 死にたくない ?
+((たく)も(ない)([、。？！…」』）]))	$2$3$4
+((に)(たく)(も|なんか|など)(ない|なかった))	$2$3$5
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(たく)(が|なんか|など)(ない|なかった))	$2$4$6
+*
+*--- adverbal + filler + ない ---
+*when translated it should be like a negation form
+*ex: "(clause), it didn't do something like that"
+((く)なんか(ない))	$2$3
+*
+*--- 欲しい ---
+((に)いたい([の、。？！…」』）]|です))	$2欲しい$3
+(([一-龠])([しい]て|[いん]で)いたい([の、。？！…」』）]|です))	$2$3欲しい$4
+*
+*--- 下 or 上 ---
+*for incomplete adverbal, hopefully not breaking phrases
+((の)([下上])([、。？！…」』）]))	$2$3に$4
+*
+*--- ごめん ---
+*prevent "noodle" translation
+(([、。？！…「『（】]|^)(ごめんなさい)\3+([、。？！…」』）]))	$2$3。$3$5
+((ごめん)(だ)([、。？！…」』）]))	すみません$4
+((ごめんなさい)([、。？！…」』）]))	すみません$3
+*
+*--- 禁止 ---
+*prohibit
+((の)(禁止)([、。？！…」』）]))	$2は$3$4
+*
+*--- たまらず ---
+(([、。？！…「『（]|^)(たまらず)([^に]))	$2$3に$4
+*
+*--- とする ---
+*when the verb before とする is a u-verb, wrong translation will add a "assume" word
+*correct translation should be a "to do"
+(([一-龠])([る])(としよう)([、。？！…」』）]))	$2りましょう$5
+*
+*--- とするか ---
+*just like above, the translation should be like "shall we do -something- ?"
+(([一-龠]|や)([る])(とする)(か)([、。？！…」』）]))	$2りましょう$5$6
+((る)(とする)(か))	ましょう$4
+
+*--- よければ ---
+*良い, another meaning (to avoid) should be not used often
+((よければ)(、))	良ければ$3
+((よければ)(だが|が)(、))	良ければ$4
+*
+*--- ば ---
+*"If", must be specific because its pattern is to simple
+(なりたく)(ば)([。、？！…）」』])	$1なら$2$3
+*
+*--- fixing clauses ---
+*put everything here?
+((こうか)(話し|言[っいうわ]|思[っいう]|想[っいう]|事))	$2と$3
+*
+*--- から ---
+*prevent "squid" translation
+*test disabled on LEC
+*unsafe : いいからいいから
+*((らしい)(から)([。、？！…）」』]))	$2$4
+*((いい)(から)([。、？！…）」』]))	$2です$3$4
+*
+*--- ですから ---
+*replace ですから with だから
+*reason : ですから+か (questioning sentence) isn't working
+*also finalizing previous codes
+*trying with rough replacement, otherwise with specific condition later
+*edit: not working with adj, let's exclude it
+*save
+((い)(です)(から))	$2$3x$4
+*
+(です(から))	だ$2
+*restore
+((い)(です)x(から))	$2$3$4
+*
+*==============================================================================================================================
+*3.2. Add with a comma
+*3.2.1. Started by a comma
+*
+*(そろそろ|どうして|どうしたら)	、$1
+*((ですから)([。、？！…）」』]))	、$2$3
+*
+*---ごめん---
+(([。、？！…「『（]|^)(ごめん)(下))	$2$3x$4
+(([。、？！…「『（]|^)(ごめん)([一-龠]))	$2$3、$4
+(([。、？！…「『（]|^)x(ごめん)(下))	$2$3$4
+*
+*---かな---
+*かな means "I wonder", but in Atlas we can't do anything with it.
+*the proper word type is particle-preposition (not noun), but somehow Atlas can't recognize it
+*so there are 2 ways to handle this :
+*1. Convert it into a statement form by breaking かな and replace it directly with english "I wonder"
+*2. Convert it into a questioning form by treating か as question (prt) + な as (exp), which な in here can be removed
+*
+((たら|ない)(かな)([。、？！…）」』]))	$2x$4
+(([^。、？！…「『（])(か)な([。、？！…）」』]))	$2$3$4
+((たら|ない)(x)([。、？！…）」』]))	$2かな$4
+*
+*---かしら---
+*かしら is another "I wonder" too, it has the same problem as かな
+((どうしようか)しら([。、？！…）」』]))	$2$3
+((たら|よう)(かしら)([。、？！…）」』]))	$2x$4
+((か)しら([。、？！…）」』]))	$2$3
+((たら|よう)(x)([。、？！…）」』]))	$2かしら$4
+*
+*
+*---じゃない---
+*sentence ended by じゃない is ambiguous
+*ex: 「あら？アリスちゃんじゃない」
+*literal (Atlas) translation : "It's not Alice" --- negative state-of-being
+*interpretative translation : "Isn't it Alice?" --- confirmation, notice the translation become a question even the original doesn't
+*while the first translation is correct (by grammar), but we expecting the second translation.
+*you will find this "confusing" sentence often
+*
+*if "janai" followed by "darou" or "deshou", "ja" must be replaced with "deha"
+*replace "darou" with "deshou", because "deshou" have less problem than "darou"
+*after "deshou", whether followed by "ka" or punctuation, it doesn't matter
+*
+*words not yet solved:
+*つもりじゃない？ --- need to solve つもり first
+*
+*pre-mod
+*LEC can't handle いいじゃんいいじゃん, make it 1x
+((いいじゃん)\2([、。？！…」』）]))	$2$3
+*
+*---さんじゃない---
+*LEC internally changed じゃない to ではない and んじゃない to のではない
+*but when meet さん it wrongly changed it to さのではない
+*it's supposedly さんのではない
+(さん)(じゃない)	$1のではない
+*
+*---なんじゃない---
+*adding か, so なんじゃない as (prt) work properly
+*disabled: breaking そんなんじゃない
+*((なんじゃない)([、。？！…」』）]))	$2か$3
+*
+*--- なんかじゃない ---
+*"It is not..." vs "There is no..."
+*"It's not an angel" vs "There is no angel", which one is better?
+*disable this if you want the original
+*disabled: breaking 日本人なんかじゃない
+*((なんか)じゃ(ない))	$2$3
+*
+*---fix そんな + じゃない---
+(([あそこ]んな)(じゃない))	$2ん$3
+*
+*--- そうじゃない ---
+((そう)(じゃない)(？))	$2$3か$4
+*
+*--- main code ---
+*disabled, LEC
+*let's if LEC can handle it or not
+*
+*LEC can't handle じゃなかった
+*disabled, removed to VNR
+*([一-龠]め)(た)んじゃ(なかった)	$1$2のでは$3
+*じゃ(なかった)	では$1
+*
+*じゃなかった haven't added yet, will be added when needed
+*inserting ん　between ない and でしょう sometimes working sometimes not,
+*gonna need to find the reason why it happened.
+*good with ん :
+*1. たん (past form)
+*not good with ん :
+*
+*((じゃ)(ない)(だろう|でしょう))	では$3んでしょう
+*((じゃ)(ない)([んの])(だろう|でしょう))	では$3$4でしょう
+*for だろ and でしょ
+*((じゃ)(ない)(だろ|でしょ)([か、。？！…」』）]))	では$3んでしょう$5
+*((じゃ)(ない)([んの])(だろ|でしょ)([か、。？！…」』）]))	では$3$4でしょう$6
+*--- main code end ---
+*
+*--- そう + ではない + ん + だろう/でしょう ---
+*it seems not working
+*((そう)(じゃ|では)(ない)ん(だろう|でしょう))	$2$3$4$5
+*((そう)(じゃ|では)(ない)ん(だろ|でしょ)([か、。？！…」』）]))	$2$3$4$5う$6
+*
+*change だろう or another (exp) into です if you want more literal translation
+*however you might be confused with negative-negative-negative sentence like "Are not you not..."
+*
+*---じゃ only---
+*sometimes it is needed to replace with では
+*(([一-龠])じゃ([^っんあなねとがぶ、。？！…」』）]))	$2では$3
+*じゃが=might word for potato
+*じゃぶじゃぶ
+*
+*---fix じゃん---
+*sentence is ambiguous, but IMO じゃん will always a confirmation form
+((じゃ)ん([、。？！…」』）]))	$2ないか$3
+*
+*-te form verb + じゃない = negative state-of-being
+*note:
+*-te form verb + ない = negative state-of-being
+*-te form verb + ではない = negative imperative
+*don't make a mistake here
+*(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)じゃ(ない))	$2$4では$5
+*(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)んじゃ(ない))	$2$4では$5
+*((んで)じゃ(ない))	$2では$3
+*((んで)んじゃ(ない))	$2では$3
+*
+*past form verb + じゃない
+*add ん to connect verb with じゃない
+*(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(た)(じゃない)([、。？！…」』）]))	$2$4ん$5か$6
+*(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(た)(じゃないか)([、。？！…」』）]))	$2$4ん$5$6
+*((んだ)(じゃない)([、。？！…」』）]))	$2ん$3か$4
+*((んだ)(じゃないか)([、。？！…」』）]))	$2ん$3$4
+*
+*normal verb + じゃない
+*(([せべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あ)(る)(じゃない))	$2$4ん$5
+*
+*---ない + じゃない---
+*to prevent mis-translation of "without", we replace it with another word but still have the same function
+*text ended with "！" is not included, assuming it's a denial proclamation
+*((ない)(じゃない)([、。…？」』）]))	$2ですか$4
+*
+*---(adj) + じゃない---
+*added ん gives different translation...
+*need more accurate detection
+*because some verb could ended by those pattern too, ex: 食らい (eat)
+*likely unsafe word, need more sample:
+*わけない
+*
+*save
+*((みたい|わけない)(じゃない))	$2x$3
+*
+*(([いさしなたらろつばこ]い)(じゃない|ではない))	$2ん$3
+*
+*(([^、。？！…「『（])([いさしなたらろつばこ]い)(じゃない)([、。？！…」』）]))	$2$3です$5
+*(([^、。？！…「『（])([いさしなたらろつばこ]い)(ん)(じゃない)([、。？！…」』）]))	$2$3$4です$6
+*((ちゃう|だめ|ダメ|駄目)(じゃない)([、。？！…」』）]))	$2です$4
+*
+*restore
+*((みたい|わけない)x(じゃない))	$2$3
+*
+*--- じゃないか + って or と ---
+*it seems Atlas can't translating it properly when the first clause is ended by じゃないか
+*save なん firstly
+*((なん)(じゃ)(ないか)(って|と))	$2x$4$5
+*
+*((じゃ)(ないか)(って|と))	では$3$4
+*
+*restore
+*((なん)(x)(ないか)(って|と))	$2じゃ$4$5
+*
+*--- じゃなくて ---
+*save
+*((るん|ないん)(じゃなくて)([、。…？！」』）]))	$2$3x$4
+*
+*(じゃ(なくて)([、。…？！」』）]))	では$2$3
+(なった)ん(じゃなくて)	$1の$2
+*restore
+*((るん|ないん)(じゃなくて)x([、。…？！」』）]))	$2$3$4
+*
+*==============================================================================================================================
+*3.2.2. Followed by a comma
+*might break hiragana names and other hiragana word (ex: さやか)
+*
+*				___I'm DEAD___				щ(´D`щ)ﾟ∀ﾟ☜)							orz
+*
+*misc
+(([^をがにへとでのはも])(どうぞ)([。、？！…）」』]))	$2、$3$4
+(([^。、？！…「『（])(そ|こ)(んな)([。、？！…）」』]))	$2、$3$4$5
+((など)、(は))	$2$3、
+((それじゃ|ちゃん)(おはよう|おやすみ|おめでと|いってきます))	$2、$3
+(([。、？！…「『（]|^)(けど)([一-龠]))	$2$3、$4
+(([。、？！…「『（]|^)(ああん)(もう)([。、？！…）」』]))	$2$3、$4$5
+*-------------------------------------------------------------------------
+*separating (conj) if it's at the beginning of text
+(([。、？！…「『（]|^)(にも拘らず)([^。、？！…）」』]))	$2$3、$4
+(([。、？！…「『（]|^)(なんていうか|というか|と言うことは|と言うか|と言っても|という訳で)([^ら。、？！…）」』]))	$2$3、$4
+*replace various of というか
+(([。、？！…「『（]|^)(と言うか|という)([。、？！…）」』]))	$2というか$4
+*others (uk)
+(([。、？！…「『（]|^)(かといって)([^。、？！…）」』]))	$2$3、$4
+(([。、？！…「『（]|^)か(と思))	$2$3
+*
+*-------------------------------------------------------------------------
+*trying to remove (prt) and join the clauses
+*pattern : clause 1 + (prt) + clause 2
+*ex: どうするよなって思って
+*here we can see the clauses is separated by (prt) よ and な
+(([すや]る|った|って|いい|ええ|いわ|くれ|した|にいて|します|すぎる|するな|ちがう|てる|ない|なさい|れた|れて|ですわ|です|よせ|るわ|んの|そうなの|ちゃう|だめ|良い|駄目|ダメ|出す|違う|違う[んの])(よな)(って|と)(思(っ[てた]|う)))	$2と$5
+*
+*breaking (suf) in the middle of text
+*よ、ね、わ
+*save
+*notes: さよなら, よそよそしく
+(されてた)わ(んでいる)	$1w$2
+(([^、。？！…「『（])(よね)([っーうく]))	$2yne$4
+(([^、。？！…「『（])(わよ)([っーうくりか]))	$2wy$4
+(([^、。？！…「『（])([てただ])(よ)([っーういくりろるしかきさ]))	$2$3$4x$5
+(([^、。？！…「『（])(よな)([っーうくんらよりど]))	$2yna$4
+(([^、。？！…「『（])(よ)([っーそうくりかなど]))	$2$3x$4
+(([^、。？！…「『（])([てただ])(わ)([っーうくりけたよせかしざるずなきみむ]|だかまり|らわ))	$2$3$4x$5
+(([^、。？！…「『（])(わね)([っーうく]))	$2wne$4
+(([^、。？！…「『（])(わ)([っーうくりけたよゆせかしずなれい]))	$2$3x$4
+(([^、。？！…「『（])(ます)(よ)(ろしい))	$2$3yo$5
+*
+((わ[よね]|わよ[なね]|よ[ねな]|んなよ|んだよ|るのよ)([一-龠ア-ヴ]))	$2、$3
+(([せべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(ろ)([やよわ])([一-龠お]))	$2$4、$6
+((だ|こと|いいん|そう|[たてさるなす][んの]|んの|そうなの|ちゃう|です|だめ|良い|駄目|ダメ|出す|違う|違う[んの])(よね)([^x、。…？！」）』をがにへとでのはも]))	$2、$4
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)([てた])(わよ)([^x、。…？！」）』をがにへとでのはも]))	$2$4、$6
+(([すや]る|いい|ええ|いわ|くれ|します|すぎる|するな|ちがう|てる|ない|なさい|です|よせ|んの|そうなの|ちゃう|だめ|良い|駄目|ダメ|出す|違う|違う[んの])(わよ)([^x、。…？！」）』をがにへとでのはも]))	$2$3、$4
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)([てた])(よ)([^x、。…？！」）』をがにへとでのはも]))	$2$4、$6
+(([すや]る|いい|ええ|いわ|くれ|します|すぎる|するな|ちがう|てる|ない|なさい|ですわ|です|よせ|るわ|んの|そうなの|ちゃう|だめ|良い|駄目|ダメ|出す|違う|違う[んの])(よな)([^x、。…？！」）』をかがにへとでのはも]))	$2$3、$4
+((どう(する|した)の|[すや]る|いい|ええ|いわ|くれ|します|すぎる|するな|ちがう|てる|ない|なさい|ですわ|です|よせ|るわ|んの|そうなの|ちゃう|してんな|だめ|良い|駄目|ダメ|出す|違う|違う[んの])(よ)([^x、。…？！」）』をがにへとでのはも]))	$2$4、$5
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)([てた])(わね)([^x、。…？！」）』をがにへとでのはも]))	$2$4、$6
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)([てた])(わ)([^x、。…？！」）』をがにへとでのはも]))	$2$4、$6
+(([すや]る|いい|ええ|いわ|くれ|します|すぎる|するな|ちがう|てる|ない|なさい|です|よせ|るわ|んの|そうなの|ちゃう|だめ|良い|駄目|ダメ|出す|違う|違う[んの])(わ)([^x、。…？！」）』をがにへとでのはも]))	$2、$4
+((こと|いいん|そう|[たてさるなす][んの]|んの|そうなの|ちゃう|です|だめ|良い|駄目|ダメ|出す|違う|違う[んの])(だ)(よな)([^x、。…？！」）』をがにへとでのはも]))	$2$3、$5
+((こと|いいん|そう|[たてさるなす][んの]|んの|そうなの|ちゃう|です|だめ|良い|駄目|ダメ|出す|違う|違う[んの])(だ)(よ)([^x、。…？！」）』をがにへとでのはも]))	$2$3、$5
+((んだ)(よ)([^x、。…？！」）』をがにへとでのはも]))	$2、$4
+((こと|いいん|そう|[たてさるなす][んの]|んの|そうなの|ちゃう|です|だめ|良い|駄目|ダメ|出す|違う|違う[んの])(だ)(わ)([^x、。…？！」）』をがにへとでのはも]))	$2$3、$5
+(([一-龠])([すくぐぶつむるぬう][んの])(だ)(よ)([^x、。…？！」）』をがにへとでのはも]))	$2$3$4$5、$6
+(([一-龠])([すくぐぶつむるぬう][んの])(だ)(わ)([^x、。…？！」）』をがにへとでのはも]))	$2$3$4$5、$6
+(([一-龠])(だ)(よ)([^x、。…？！」）』をがにへとでのはも]))	$2$3$4、$5
+(([一-龠])(だ)(わ)([^x、。…？！」）』をがにへとでのはも]))	$2$3$4、$5
+(([一-龠]|[いさしなたらろつばどこ])(い)(わよ)([^x、。…？！」）』をがにへとでのはも]))	$2$3$4、$5
+(([一-龠]|[いさしなたらろつばどこ])(い)(よ)([^x、。…？！」）』をがにへとでのはも]))	$2$3$4、$5
+(([一-龠]|[いさしなたらろつばどこ])(い)(わ)([^x、。…？！」）』をがにへとでのはも]))	$2$3$4、$5
+*restore
+(されてた)w(んでいる)	$1わ$2
+(([^、。？！…「『（])(yne)([っーうく]))	$2よね$4
+(([^、。？！…「『（])(wy)([っーうくりか]|だかまり))	$2わよ$4
+(([^、。？！…「『（])([てただ])(よ)x([っーういくりろるしかきさ]))	$2$3$4$5
+(([^、。？！…「『（])(よ)x([っーそうくりかなど]))	$2$3$4
+(([^、。？！…「『（])(yna)([っーうくんらよりど]))	$2よな$4
+(([^、。？！…「『（])([てただ])(わ)x([っーうくりけたよせかしざるずなきみむ]|だかまり|らわ))	$2$3$4$5
+(([^、。？！…「『（])(wne)([っーうく]))	$2わね$4
+(([^、。？！…「『（])(わ)x([っーうくりけたよゆせかしずなれい]))	$2$3$4
+(([、])(わ)x([た]))	$2$3$4
+(([^、。？！…「『（])(ます)(yo)(ろしい))	$2$3、よ$5
+*
+*だ
+(([いてたるさるなす][んの]|こと|そう|だめ|駄目|ダメ|誰|違う|違う[んの]|ダメ)(だ)(ぜ)([^っ、。…？！」）』いをがにへとでのはもしぞよぶ]))	$2$3、$5
+(([いてたるさるなす][んの]|こと|そう|だめ|駄目|ダメ|誰|違う|違う[んの]|ダメ)(だ)(い)([^っ、。…？！」）』いをがにへとでのはもしぞよぶき]))	$2$3、$5
+(([いてたるさるなす][んの]|こと|そう|だめ|駄目|ダメ|誰|違う|違う[んの]|ダメ)(だ)([^っめけろらり、。…？！」）』いをかがにへとでのはもしぞよなぜい]))	$2$3、$4
+(([一-龠])(だ)([そあこ]の))	$2$3、$4
+*な、よ
+(をつけ)なよ([！。？」…])	$1て$2
+(をくくり)なよ([！。？」…])	$1$2
+((すんな)(よ)([^っ、。…？！」）』うをがにへとでのはもくり]))	$2$3、$4
+(([んの]だ|[くぐぶつむてずすけめ]る|る[んの]だ|そうだ)(な)([^っ、。…？！」）』をかがにへとでのはもんらよりどだぁ]))	$2$3、$4
+((すごい)よ([一-龠]))	$2、$3
+*ね
+((です|だよ|なる)(ね)([^っ、。…？！」）』をがにへとでのはもんて]))	$2、$4
+((った)ね([一-龠ア-ヴ]))	$2、$3
+*ぞ
+(([っい]てる|してやる|ない|[いげれ]る|すぎる|ちゃう|駄目|誰|違う|ダメ|そうだ)(ぞ)([一-龠]))	$2$3、$4
+(([っい]てる|してやる|ない|[いげれ]る|すぎる|ちゃう|駄目|誰|違う|ダメ|そうだ)(ぞ)([^っ、。…？！」）』をがにへとでのはもん]))	$2$3、$4
+(([一-龠]|[いさしなたらろつばどこ])(い)(ぞ)([^、。…？！」）』]))	$2$3$4、$5
+*さ
+((あの)(さりげな[いく]))	$2x$3
+((あの|だって|ている)(さ)([^っ、。…？！」）』をがにへとでのはもん]))	$2、$4
+((あの)x(さりげな[いく]))	$2$3
+*ぜ
+((いい|[てす]る|だ)(ぜ)([^っ、。…？！」）』をがにへとでのはもん]))	$2、$4
+*で
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(ないで)([^すなくかよまし]))	$2$4$5ください、$6
+*ば
+*((ければ|すれば|になれば|とけば)([^をがにへとでのはも]))	$2、$3
+*
+*misc
+((どう(する|した)の)([^っ、。…？！」）』をかがにへとでのはもん]))	$2、$4
+((どう(する|した))([一-龠ア-ヴ]))	$2、$4
+((くださいませ|おはよう|なさい|なさいませ)([一-龠ア-ヴ]))	$2、$3
+((くださいませ|おはよう|なさい|なさいませ)(おまえ|お前|オマエ|あなた|あんた|アナタ|アンタ|きさま|キサマ|貴様|てめえ|テメエ|貴方))	$2、$3
+((らっしゃい)([一-龠ア-ヴ]))	$2、$3
+*
+(([（「『、。…？！])(ああ)(しろ|ん|だこうだ|やって|する|はなる|いう))	$2x$4
+(([（「『、。…？！])(ああ)([^も、。…？！）」』]))	$2$3、$4
+(([（「『、。…？！])(なあ)([^、。…？！）」』]))	$2$3、$4
+(([（「『、。…？！])(はい)([^っら、。…？！）」』]))	$2$3、$4
+(([（「『、。…？！])(ええ)([^っかことい、。…？！）」』]))	$2$3、$4
+*(([（「『、。…？！])(ねえ)([^ね、。…？！）」』]))	$2$3、$4
+(([（「『、。…？！])(x)(しろ|ん|だこうだ|やって|する|はなる|いう))	$2ああ$4
+*
+*Umm...anooo....ettooooo...
+(([をがにへとでのはもか]|だって|だから|たら|ただ|それなら|まあ|いや|から|まで|より|[そこあ]れじゃ)([あそこ]の)([、。…？！」』）]))	$2、$3$4
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)([あそこ]の)([、。…？！」』）]))	$2$4、$5$6
+((えば)([あそこ]の)([、。…？！」』）]))	$2、$3$4
+(([（「『、。…？！])(あの)(ですから))	$2$3、$4
+*notes : えと, えっと
+*((それに)(あの|その|この)([、。…？！」』）]))	$2、$3$4
+*
+*Un + ...
+(([（「『、。…？！])(うん|ううん)([一-龠ア-ヴ]|[あそこ]れ|[あそこ]の|[あそこ]んな|でも|まあ|まだ|そう))	$2$3、$4
+*
+*Iie + ...
+(([（「『、。…？！])(いえ|いいえ)([一-龠ア-ヴ]|[あそこ]れ|[あそこ]の|[あそこ]んな|でも|まあ|まだ|そう))	$2$3、$4
+*
+*Iya + ...
+(([（「『、。…？！])(いや)([一-龠ア-ヴ]|[あそこ]れ|[あそこ]の|[あそこ]んな|でも|まあ|まだ|そう))	$2$3、$4
+*
+*Etto + ...
+(([（「『、。…？！])(ええと|えっと)([一-龠ア-ヴ]|[あそこ]れ|[あそこ]の|[あそこ]んな|でも|まあ|まだ|そう))	$2$3、$4
+*
+*Ara + ...
+(([（「『、。…？！])(あら)([一-龠ア-ヴ]|[あそこ]れ|[あそこ]の|[あそこ]んな|でも|まあ|まだ|そう))	$2$3、$4
+*
+*Maa + ...
+(([（「『、。…？！])(まあ)([一-龠ア-ヴ]|[あそこ]れ|[あそこ]の|[あそこ]んな|でも|まだ|そう))	$2$3、$4
+*
+*Uwa + ...
+(([（「『、。…？！])(うわ)([一-龠ア-ヴ]|[あそこ]れ|[あそこ]の|[あそこ]んな|でも|まだ|そう))	$2$3、$4
+*
+*Ou + ...
+(([（「『、。…？！])(おう)([一-龠ア-ヴ]|[あそこ]れ|[あそこ]の|[あそこ]んな|でも|まあ|まだ|そう))	$2$3、$4
+*
+*すみません + ...
+(([（「『、。…？！])(すみません)([一-龠ア-ヴ]|[あそこ]れ|[あそこ]の|[あそこ]んな|でも|まあ|まだ|そう))	$2$3、$4
+*
+*==============================================================================================================================
+*3.2.3. If there is a broken sentence after modifying phrase, we try to fix it here
+*usually if followed by (obj-prt) : をがにへとでのはも,から,より,まで
+*note: removed, seems unnecessary now
+*
+*
+*
+*==============================================================================================================================
+*3.3. Replace
+*
+*LEC specific only
+([、。…？！（「『]|^)(故|ゆえ)に	$1因って
+([、。…？！（「『]|^)(だ?けれ?ど)([、。…一-龠]|そ[これ]|こ[のれ]|あ[のれ])	$1だが$3
+*exclude : けれども
+^けれど([^も])	だが$1
+*is なのに -> だが safe?
+([、。…？！（「『]|^)なのに	$1だが
+*だって -> だから, should be fine when it's on opening (?)
+([、。…？！（「『]|^)だって	$1だから
+*
+*
+(なんつ)	何
+((あげる)([、。？！…」』）]))	$2ぞ$3
+((と思)(て))	$2っ$3
+(([、。…？！（「『])(にも関わらず))	$2なのに
+(([^、。…？！（「『])(そうな)の(です))	$2$3ん$4
+(([をがにへとでのはも])うれしい)	$2嬉しい
+((してや)ん(な[いく]))	$2れ$3
+((その)代(わり))	$2か$3
+*
+*--- 目指す ---
+((目指す)(は))	$2に$3
+*
+*--- いざ ---
+*いざ already have an internal translation, mean "now"
+*however, it doesn't always properly translated
+*but if we register it as "now" (adv), it'll translated good enough
+*but, it'll break phrase related with いざ
+*ex: いざなって (invite)
+*so let's replace that hiragana into kanji
+((いざなって))	誘って
+*
+*---fix とき---
+*might break hiragana names
+(([、。…？！（「『]|^|[をがにへとでのはも]|から|より|まで|どんな)とき([をがにへとでのはも]|から|より|まで|みたい))	$2時$3
+((っ[てた])とき(なのに))	$2時$3
+(([あそこ]んな)とき([には]|なの|から|より|まで|だけ))	$2時$3
+((ああいう|[こそあ]んな)とき([、。？！…」』）]))	$2時$3
+(([ア-ヴ])とき([をがにへとでのはも]|から|より|まで)([、。？！…」』）]))	$2時$3$4
+*
+*---fix 何---
+*hopefully it doesn't messing with (adj)
+*save
+(([あこそどみ]ん|だから|なに)(なに))	$2x
+(([一-龠])(なに)(し[てた]|する)([、。？！…」』）]))	$2$3x$4$5
+*
+(([^そん一-龠]|^)(なに)(この|して|する))	$2何$4
+((なに)(し[たて]|する|されて|[あや]って))	何$3
+(([^てはもあ、。…？！（「『])(なに)(？))	$2は$3$4
+(([、。…？！（「『]|^|から)(なに)([一-龠]|[ア-ヴ]|[あそこ][れのん]))	$2何$4
+((なに)(言って|考えて))	何$3
+*restore
+(([あこそどみ]ん|だから|なに)(x))	$2なに
+(([一-龠])(なに)x(し[てた]|する)([、。？！…」』）]))	$2$3$4$5
+*
+*--- fix 何が ---
+*test, not sure if this is safe or not
+*safe sample: 何があったのか
+*unsafe: 何が解けるか
+*(([、。…？！（「『]|^)(なに|何)(が))	$2$3か$4
+*
+*Another test...
+*なに + without を + ... + (exp) = might working
+*((なに)(を)(する|[んの]|し[てた]))	$2x$3$4
+*(([、。…？！（「『]|^)(なに)(を))	$2$3
+*((なに)x(を)(する|[んの]|し[てた]))	$2$3$4
+*
+*fix 出る
+*sometime it's written in hiragana
+(([一-龠ア-ヴ])([をがにへとでのはも]|から|より|まで)(で)([るてた])([一-龠ア-ヴ、。？！…」』）]))	$2$3出$5$6
+*
+*fix 残る
+*when as noun it'll break translation, let's try with あと
+(([、。…？！（「『]|^)残る(は))	$2あと$3
+*
+*--- handling ってんだ ---
+((って)ん(だ)(ろう))	$2るの$3
+((って)ん(だ)ろ([^う、。？！…」』）]))	$2るの$3、$4
+((って)ん(だ)([^っ、。？！…」』）]))	$2るの$3、$4
+((って)ん(だ))	$2るの$3
+*
+*---replace various of "however "---
+*because Atlas messed it when combined with sentence (ex: provisional form)
+*selfnotes : must be specific
+*((だが)([、。？！…」』）]))	でも$3
+(([せえべげけめねれて]|なら|であれ|[あうけくす来]れ)(ば)(ですが)([、。？！…」』）]))	$2$3でも$5
+((なら)(ですが)([、。？！…」』）]))	$2でも$4
+*
+*--- Misc ---
+*おれがたとえ, おれがた = We, と = and, え = food
+*wrong translation = we and food
+*expected = although we...
+*still, translation meaning might be nonsense when in partial sentence
+((が)(たとえ)([一-龠ア-ヴ]))	$2仮令$4
+*
+((わか)(ん)(ない))	$2ら$4
+*fix first person
+(([、。…？！（「『]|^)(おれ)([のはにとを]))	$2私$4
+*
+*fix "your"
+(([、。…？！（「『]|^)(アナタ)(たち)(の))	$2あなた$4$5
+*
+*==============================================================================
+*
+*---ちまう, じゃう, ちゃう etc---
+*handle colloquial of (accidentally/finish completely) conjugations
+*
+((な)きゃあ)	$2ければ
+((な)きゃ)	$2ければ
+((っ)ち(ま[いっわ]))	$2てし$3
+(ち(ま[いうえ]|まっ[たて]|まおう))	てし$2
+((ん)じ(まっ))	$2でし$3
+((ん)じ(まえば))	$2でし$3
+((ん)じゃおう([、。？！…」』）]))	$2でしまおう$3
+((ず)じまい([、。？！…」』）]))	$2で$3
+(([いん])(じゃ)(っ[たて]|[うえ]))	$2でしま$4
+*い -> not good with そんなんじゃいけない
+((ん)じ(まう))	$2でし$3
+*selfnotes : しゃいじゃった
+*
+*--- ちゃ ---
+*ちゃ pattern :
+*ちゃ + (adj) = replace with ては
+*ちゃ + う = no problem, Atlas can translate it
+*
+*to fix ちゃ, there're two possibilites :
+*ちゃう (unintentionally) or ては (conditionally)
+*or a partial word came from a (suf) like ちゃん, but we'll ignore it
+*normally a (conditionally) text is ended by (、) or (…), but in some case it isn't...
+*pre-save
+((なく)っちゃ([。？！」』）]))	$2ては$3
+(([、。？！…「『（])(お兄|おにい|おねえ|[一-龠]+)(ちゃ|ちゃあん|ちゃああん)([、。？！…」』）]))	$2$3ちゃん$5
+*save
+*((めちゃめ|むちゃく|いちゃい|ぴちゃぴ|むちゃく)ちゃ([、。？！…」』）]))	$2x$3
+(([あ-ん])(ちゃ|っちゃ)([あ-ん])(\3))	$2x$4x
+((ぶっ)ちゃ(け))	$2x$3
+((ちゃく|ちゃき)(\2))	$2x$2
+(([へめ]っ|もみく|[ちく]っ|ちゃっ|ごっ|しわく)ちゃ)	$2x
+((皺く)ちゃ(に))	$2x$3
+*
+((し|っ)ちゃ(いなさい|えば|って|ったら|おう))	$2てしま$3
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)っ(ちゃ)(う))	$2$4しま$6
+*((れて)っ(ちゃ)(う))	$2しま$4
+((ら)し(ちゃった))	$2せ$3
+*dunno why "ikenai" can't work...
+((ちゃ)(いけない))	てはいけません
+*possible ちゃお :
+*1. ちゃおう (volitional)
+*2. ちゃ + お + (noun), お here as a prefix like お疲れ様 etc
+((ちゃ)(お)([、。？！…」』）]))	$2$3う$4
+((ちゃ)(お)(っと)([、。？！…」』）]))	$2$3う$5
+((ちゃ)(お)([^うっ、。？！…」』）]))	$2ては$3$4
+*
+*((ちゃ)([、…]))	ては$3
+((ちゃ)([。？！」』）]))	$2う$3
+((ちゃ)あ([^、…。？！」』）]))	ては$3
+((ちゃ)あ([、…]))	ては$3
+((ちゃ)あ([。？！」』）]))	$2う$3
+((なく)ちゃ(だから))	$2て、$3
+((なく)ちゃ(いけません))	$2ては$3
+((なく)ちゃ(と思))	$2$3
+((なく)ちゃって(思))	$2と$3
+*
+*---te form---
+*(first priority is te form, followed by masu stem, so it wouldn't break word like 甘えて)
+*when -te form meets ちゃ, then only one て is used, ex: 顔をしてちゃダメ --> 顔をしてはダメ, not 顔をしててはダメ
+*selfnotes: ちゃえ(ば) should be no probs, for the moment...
+(([^、。？！…「『（])([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)ちゃ([、。？！…」』）]))	$2$3$5は$6
+(([^、。？！…「『（])([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(ちゃ)(いい|だめ|らめ|いけない|まずい|良い|駄目|ダメ|イイ|いられない|いけません|いけない))	$2$3$5は$7
+(([^、。？！…「『（])([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(ちゃ)([^っういえおわん]))	$2$3$5は$7
+*
+*---masu stem---
+*handling ちゃ in the middle of text is hard
+*here's the step :
+*firstly read if word before ちゃ is a masu stem、this is the hard part...
+*check what's after ちゃ :
+*if う then it's a unintentionally form
+*if not う, it should be replaced with ては
+*and don't forget to be carefull with (adv) and (noun) too
+*btw, if you're lazy, you can add ちゃ as prt-preposition in Atlas (ex: then)
+*ex: 待たせちゃ駄目, the translation will be like :
+*ちゃ as prt-preposition : It waits and it is not good then
+*ちゃ as ては : It is not good when waiting
+(なっ)ちゃ(た)	$1て$2
+(([^、。？！…「『（])([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(ちゃ)(いい|だめ|らめ|いけない|まずい|良い|駄目|ダメ|イイ|いられない|いけません|いけない))	$2$3ては$6
+(([^、。？！…「『（])([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(ちゃ)([^っういえおわんま]))	$2$3ては$6
+(([^、。？！…「『（])(ぎ)(ちゃ)([^っういえおわん]))	$2$3ては$5
+((にな)(ちゃ)([^っういえおわ]))	$2ては$4
+((にな|[一-龠])(ちゃ)(いい|だめ|らめ|いけない|まずい|良い|駄目|ダメ|イイ|失礼))	$2ては$4
+*
+*try to fix ちゃん after ては, will be removed if not working
+(ては(あん)([、。？！…」』）]))	ちゃん$3
+*
+*restore
+*((めちゃめ|むちゃく|いちゃい|ぴちゃぴ|むちゃく)x([、。？！…」』）]))	$2ちゃ$3
+(([あ-ん])(x)([あ-ん])(\3))	$2ちゃ$4ちゃ
+((ぶっ)x(け))	$2ちゃ$3
+((ちゃく|ちゃき)x(\2))	$2$2
+(([へめ]っ|もみく|[ちく]っ|ちゃっ|ごっ|しわく)x)	$2ちゃ
+((皺く)x(に))	$2ちゃ$3
+*
+*
+*===================================================================================
+*completing -masu verb
+*removed : ん
+*be sure to not messing with compound words/conjunctions
+*compound words/conjunctions pattern is verb1 + verb2, usually -masu stem verb + another verb, 
+*ex: 蠢かし始めた
+*disabled, completing with て is unsafe
+((ないで)(くださいまし)([、。？！…」』）]))	$2$3て$4
+*
+*((かせ)([、。？！…」』）]))	$2x$3
+*((いませ|[初]め|[思]う|くださいまし)([、。？！…」』）]))	$2x$3
+*(([^がへとでのはも、。？！…「『（])([さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ|[つづ]け)(じゃ|じまう|やすい|やさしい|よう|より|ほど|ねば))	$2$3x$5
+*
+*(([^へとでのはも、。？！…「『（])([さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|[つづ]け|すくめ)([、。？！…」』）]))	$2$3て$5
+*selfnotes : を used in phrase
+*unsafe pattern : kanji + め, 初め !== 初めて
+*れ could be from an imperative like やがれ
+*
+*masu stem vs そう言う
+(([^がにへとでのはも、。？！…「『（])([さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|づけ|すくめ)(そう言う))	$2$3て$5
+*
+*masu stem vs (exp)
+((合わせ|なさいませ)(だ|で(す|しょ|しょう)|だ(ろ|ろう)|だ))	$2x$3
+(([^がにへとでのはも、。？！…「『（])([さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|づけ|すくめ)(だ|で(す|しょ|しょう)|だ(ろ|ろう)|だ)([、。？！…」』）]))	$2$3て$8
+((合わせ|なさいませ)x(だ|で(す|しょ|しょう)|だ(ろ|ろう)|だ))	$2$3
+*
+*masu stem vs とく
+*masu stem + とく = -te form verb + 置く
+*masu stem + といて = て + おいて
+*save
+((いう|つく)(とき)([、。？！…」』）]))	$2x$3$4
+(([一-龠いさしなたらろつばこ]い)(とき)([、。？！…」』）]))	$2x$3$4
+(ほっ)(といて)([、。？！…」』）])	$1x$2$3
+*
+(([^がにへとでのはも、。？！…「『（])([さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|づけ|すくめ)と(く))	$2$3てお$5
+(([^がにへとでのはも、。？！…「『（])([さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|づけ|すくめ)と(け))	$2$3てお$5
+(([一-龠])(っ)と(け))	$2$3てお$4
+*(([し])と(け)([、。？！…」』）]))	$2てお$3$4
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)と([くけ])([、。？！…」』）]))	$2てお$4$5
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)と([き])([、。？！…」』）]))	$2ておけ$5
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)と([き])なさい([、。？！…」』）]))	$2てやれ$5
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)と([くけ])(か)([、。？！…」』）]))	$2てお$4$5$6
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)と([くけ])(って)([、。？！…」』）]))	$2てお$4とい$5$6
+(([一-龠])([っせべげけめねれて来きしくういえ])と(く)(って))	$2$3てお$4とい$5
+(([一-龠])([っせべげけめねれて来きしくういえ])と(く)(から|より|まで|ぞ|こと|んだ))	$2$3てお$4$5
+((んだ)(くさい)([、。？！…」』）]))	$2お$3$4
+(([一-龠])(ん)ど(く))	$2$3でお$4
+*といて, this might break "say" meaning, let's try it anyway...
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)とい(て)([、。？！…」』）]))	$2$4おく$5
+*volitional version
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ))と(こう)([、。？！…」』）]))	$2てお$4$5
+*conditional version
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ))と(けば)([、。？！…」』）]))	$2てお$4$5
+((ん)ど(けば)([、。？！…」』）]))	$2でお$3$4
+*
+*
+*restore
+((いう|つく)x(とき)([、。？！…」』）]))	$2$3$4
+(([一-龠いさしなたらろつばこ]い)x(とき)([、。？！…」』）]))	$2$3$4
+(ほっ)x(といて)([、。？！…」』）])	$1$2$3
+*
+*-ru verb + てしまう
+*should be fixed into masu stem + て + しまう
+(([一-龠])(れ)(る)(てしまう))	$2$3$5
+*
+*fix masu stem + ながら
+*sometimes て is included, however the proper word is masu stem + ながら, so we have to remove て
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)て(ながら))	$2$4
+*restore
+*((かせ)x([、。？！…」』）]))	$2$3
+*((いませ|[初]め|[思]う|くださいまし)x([、。？！…」』）]))	$2$3
+*(([^がへとでのはも、。？！…「『（])([さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ|[つづ]け)x(じゃ|じまう|やすい|やさしい|よう|より|ほど|ねば))	$2$3$5
+*
+*===================================================================================
+*--- -te form handler ---
+*
+*hijack - test
+*-te form + も + (、) Remove ても and make it a -masu stem because of new "no-break sentence on (、)" implementation
+*unsafe : それにしても
+*disabled, LEC
+*(([せべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(も)(、))	$2$6
+*
+*save part
+(([いえけくしせれべめ]て|あって|[一-龠]って|といって)(も))	$2x$3
+(([、。？！…「『（]|^)(とって)(も))	$2$3x$4
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(か)(なり))	$2x$4$5$6
+*
+*handling past -te form (してった)
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)っ(た))	$2$4$5
+*(([一-龠])([けげせぜてでへべめれぺ]て)っ(た))	$2$3$4
+*
+*-te form + らした ---
+*causative past form, but instead of masu stem, -te form is used.
+*ex: 
+*見てらした -> 見させた
+*言ってらした -> 言わせた
+*however, it'll be difficult to change it. Especially verb ended by んで and って
+*
+*1. して + らした -> させた (-す)
+*2.1. いて + らした -> かせた (-く)
+*2.2. いで + らした -> がせた (-ぐ)
+*3.1. んで + らした -> ませた　(-む)
+*3.2. んで + らした -> ばせた　(-ぶ)
+*3.3. んで + らした -> なせた　(-ぬ)
+*4.1. って + らした -> らせた　(-る)
+*4.2. って + らした -> わせた　(-う)
+*4.3. って + らした -> たせた　(-つ)
+*5. きて + らした -> こさせた (-くる)
+*6. 行って + らした -> 行かせた (-行く)
+*
+(([一-龠])(して)(らした))	$2させた
+(([一-龠])(いて)(らした))	$2かせた
+(([一-龠])(いで)(らした))	$2がせた
+(([一-龠])(て)(らした))	$2させた
+((行って)(らした))	行かせた
+((きて)(らした))	こさせた
+*って and んで gonna need specific replacement in TA dictionary
+*refer to no 3 and 4 above for correct conjugation
+*
+*-te form + られる ---
+*passive form, but instead of masu stem, -te form is used
+(([一-龠])(して)ら(れる|れない))	$2さ$4
+(([一-龠])(いて)ら(れる|れない))	$2か$4
+(([一-龠])(いで)ら(れる|れない))	$2が$4
+*(([一-龠])(て)ら(れる|れない))	$2さ$4
+*wrong: 追い立てられる shouldn't changed into 追い立される
+((行って)ら(れる|れない))	行か$3
+((きて)ら(れる|れない))	こさ$3
+(([せべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(ら)(れない))	$2$5$6
+*って and んで gonna need specific replacement in TA dictionary
+*refer to no 3 and 4 above for correct conjugation
+*ex:
+*帰ってられる replaced with 帰られる, because the original verb is ended by る
+*待ってられる replaced with 待たれる, because the original verb is ended by つ
+*
+*-te form + らない
+*from られない
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(ら)(ない))	$2$4$5れ$6
+(([一-龠])(て)(ら)(ない))	$2$3$4れ$5
+(([一-龠])([しい]て|[いん]で)(ら)(ない))	$2$3$4れ$5
+*
+*-te form vs ても (てても)
+*(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)て(も)([^、。？！…」』）]))	$2$4で$5$6
+*when it's in the middle, it's better using specific replacement
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)て(も)([、。？！…」』）]))	$2$4で$5$6
+*
+*-te form vs も
+*(([せべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(も)([^ん、。？！…」』）]))	$2で$5$6
+*unsafe: 来ても
+(([せべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(も)([、。？！…」』）]))	$2やれ$4$5$6
+(([一-龠])(んで)て(も)([、。？！…」』）]))	$2$3$4$5
+*selfnotes : ってもん、といっても
+*(([さま]れて|[しけべ]て|あって|させて|なくて)(も)([^、。？！…」』）]))	$2いて$3$4
+*(([さま]れて|[しけめべ]て|あって|させて|なくて)(も)([、。？！…」』）]))	$2いて$3$4
+*
+*-te form vs く
+*an adverbal form
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(く)([、。？！…」』）]))	$2$4い$5$6
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(く)(なんて))	$2$4い$5$6
+(([一-龠])(て|んで)(く)([、。？！…」』）]))	$2$3い$4$5
+(([一-龠])([しい]て|[いん]で)(く)(なんて))	$2$3い$4$5
+*
+*-te form vs くっか
+*adverbal confirmation form
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(く)っ(か)([、。？！…」』）]))	$2$4い$5$6$7
+(([一-龠])(て|んで)(く)っ(か)([、。？！…」』）]))	$2$3い$4$5$6
+*
+*-te form vs くか
+*same as above
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(く)(か)([、。？！…」』）]))	$2$4い$5$6$7
+(([一-龠])(て|んで)(く)(か)([、。？！…」』）]))	$2$3い$4$5$6
+*
+*-te form + くれて + いた
+*to prevent exist, we need to remove い
+*save
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(くれて)(いた)(こと))	$2$4$5x$6$7
+*
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(くれて)い(た))	$2$4$5$6
+*
+*restore
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(くれて)x(いた)(こと))	$2$4$5$6$7
+*
+*-te form + くれて + たん
+*to prevent phlegm, we need to remove ん
+*save
+*-
+*
+(([っせべげけめねれて来きしくういえじ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(くれて)(た)ん)	$2$4$5$6
+*
+*restore
+*-
+*
+*-te form + くれて + ない
+*to prevent exist, need to remove て
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(くれ)て(ない))	$2$4$5$6
+*
+*
+*-te form + いさせる
+*好きでいさせて, is this いる or する?
+*(adj) become a -te form, gonna need more data
+*
+*-te form vs か
+*it looks unsafe for in the middle text modification, better add it specifically
+*(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(か)([^、。？！…」』）ら]))	$2$4います$5$6
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(か)([、。？！…」』）]))	$2$4います$5$6
+(([一-龠])(んで)(か)([、。？！…」』）]))	$2$3います$4$5
+*(([まさ]れて|[いしけめべ]て|なくて|あって|させて|せられて)(か)([^、。？！…」』）ら]))	$2います$3$4
+*(([まさ]れて|[いしけめべ]て|なくて|あって|させて|せられて)(か)([、。？！…」』）]))	$2います$3$4
+*(([一-龠])(て|[いけめべじしれ]て|[さま]れて|なくて)(か)([、。？！…」』）]))	$2$3います$4$5
+*
+*-te form vs け (置く)
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(け)([、。？！…」』）]))	$2$4お$5$6
+*
+*-te form vs (exp)
+*save
+(どう)(して)(だ|です|でしょう|だろう|でしょ|だろ)	$1$2x$3
+*
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(だ|です|でしょう|だろう|でしょ|だろ)([、。？！…」』）]))	$2$4いて$6
+(([一-龠])(んで)(のだ|だ|だろ|だろう|でしょ|でしょう|です)([、。？！…」』）]))	$2$3$5
+*restore
+(どう)(して)x(だ|です|でしょう|だろう|でしょ|だろ)	$1$2$3
+*
+*-te form + (exp) + か
+*since -te form doesn't work with it
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(だ|です|でしょう|だろう|でしょ|だろ)(か)([、。？！…」』）]))	$2$4ます$6$7
+(([一-龠])(んで)(のだ|だ|だろ|だろう|でしょ|でしょう|です)(か)([、。？！…」』）]))	$2$3ます$5$6
+*
+*-te form + (exp) + が
+*since -te form doesn't work with (exp), we gonna need to change it
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(だ|です|でしょう|だろう|でしょ|だろ)(が)([、。？！…」』）]))	$2$4ます$6$7
+(([一-龠])(んで)(のだ|だ|だろ|だろう|でしょ|でしょう|です)(が)([、。？！…」』）]))	$2$3ます$5$6
+*
+*-te form vs provisional, conditional etc
+*save
+(([立])(て)(たら))	$2x$3$4
+*
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(れば|けば))	$2$4い$5
+((て)(なら)([一-龠、。？！…」』）]))	たら$4
+((んで)(れば|けば))	$2い$3
+(([一-龠])(て)(たら)([一-龠、。？！…」』）]))	$2$3い$4$5
+*restore
+(([立])x(て)(たら))	$2$3$4
+*
+*
+*-te form vs ろ (volitional/imperative)
+(([せべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(ろ)([、。？！…」』）]))	$2$5$6
+*selfnotes: っ is unsafe (ex: 待ってろ)
+((って)ろ([、。？！…」』）]))	$2$3
+*
+*-te form vs んのに
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)ん(のに)([、。？！…」』）]))	$2$4る$5$6
+*
+*-te form vs やんの
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(や)ん(の)([、。？！…」』）]))	$2$4$5れ$6$7
+*
+*-te form vs りゃ (usually used by male)
+*pattern should be : -te form + りゃ + (adj) clause
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)りゃ)	$2$4は
+*
+*-te form vs adverbal form
+*save
+((てくてく)(と))	$2x$3
+*
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(く)([をがにへとでのはも、。？！…」』）]|から|より|まで))	$2$4い$5$6
+*restore
+((てくてく)x(と))	$2$3
+*
+*-te form vs など
+*replace with なんか, since it's the colloquial for など when used for single listing.
+*another way is converting te form into masu stem, but it seems unsafe
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(など))	$2$4なんか
+*check if なんか is followed by いない
+((なんか)(いない|いないよ|ない)([、。？！…」』）]))	何かない$4
+*
+*-te form vs とか
+*might break text
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(とか))	$2$5
+*
+*-te form vs っと
+*maybe this is a contraction of a volitional -te form
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)っと([、。？！…」』）]))	$2ましょう$5
+*
+*-te form vs たい (I want to)
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(たい)([一-龠、。？！…」』）]))	$2$5$6
+*
+*-te form vs たくない (I don't want to)
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(たくない)([一-龠、。？！…」』）]))	$2$5$6
+*
+*-te form vs やんない
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)やん(ない|ないのか)([一-龠、。？！…」』）]))	$2$4$5$6
+*
+*--- te form + 無い --- (don't + verb)
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(無い))	$2$4ない
+*
+*passive -te form
+*pattern is され + んだ
+(([さわばがかまならあた][れせ]|[あえ来こ](られ|させ))(んだ))	$2のだ
+*unsafe: 楽しんだ, ません
+*ませんだ should be no prob, because already fixed by another code, since it won't work on Atlas
+*
+*restore what's been saved
+(([いえけくしせれべめ]て|あって|[一-龠]って|といって)x(も))	$2$3
+(([、。？！…「『（]|^)(とって)x(も))	$2$3$4
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)x(て)(か)(なり))	$2$4$5$6
+*
+*===================================================================================
+*(adj) stem vs げ
+*well, I'm not sure how to handle this, gonna need reference but so far got nothing...
+*
+*(adj) stem vs げに
+*this should be translated to be like an adverbal clause
+*ex: 鬱陶しげに = in depression, depressedly, really depressed
+*proper format is : (adj) stem + さ + げに, with げに here as a prt-preposition (ex: really, absolutely)
+(([いしなたらろつばこ])(げに)([、。？！…」』）]))	$2さ$3$4
+*disabled : さ
+*
+*(adj) stem vs げな
+*proper format : (adj) stem + げな
+(([一-龠])さ(げな)([^、。？！…」』）]))	$2$3$4
+*(([いしなたらろつばこ])さ(げな)([^、。？！…」』）]))	$2$3$4
+*(adj) stem vs げも
+(([いしなたらろつばこ])(げも)([^、。？！…」』）]))	$2さ$3$4
+*
+*--- classical (adj) + ござる or 出でる/いでる ---
+*pattern :
+*1. あ row (早い --> 早う)
+*2. い row (大きい --> 大きゅう)
+*3. う row (安い --> 安う)
+*4. お row (面白い --> 面白う)
+*selfnotes: impossible to fix, just create as new word in Atlas
+*ex:
+*お早うございます = good morning
+*
+*
+*===================================================================================
+*past form vs clause
+*pattern: past form + は + (adj)/clause
+*Atlas couldn't read it, must replace は with とは
+*whether it only occured to a specific word or not is still in investigation
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(た)(は)([^ず、。？！…」』）]))	$2$4と$5$6
+*(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(た)(は)(いい|イイ|よい|良い|だめ|駄目|ダメ))	$2$4と$5$6
+*
+*past form + げる
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(た)(げる)([、。？！…」』）]))	$2$4あ$5$6
+*
+*past form + めに
+*my guess is from ために
+*unsafe: 会うために
+*(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(た)(めに)([、。？！…」』）]))	$2$4た$5$6
+*
+*past passive + んで
+*to prevent "phlegm"
+((れた|えた)ん(で)([、。？！…」』）]))	$2の$3$4
+((けてた)ん(です)([、。？！…」』）]))	$2の$3$4
+*
+*===================================================================================
+*
+*--- ったらしい---
+*(っ(たらし)([いく]))	$2$3
+*
+*handling ったら
+*LEC disabled, try handle with VNR
+*ったら has two possible meanings : conditional or calling attention
+*calling attention is our problem
+*it is usually following after a noun, unfortunately we can't detect what kind of word before ったら
+*looks fine for name suffixes
+*and prolly katakana too
+*save verbs, add on demand
+*(ハマ)(ったら)	$1x$2
+*
+*(([ア-ヴ])(ったら)([^、。？！…」』）]))	$2とい$3$4
+*(([ア-ヴ])(ったら)([、。？！…」』）]))	$2とい$3$4
+*disabled: [すくぐぶつむるぬうこみ]
+*restore
+*(ハマ)x(ったら)	$1$2
+*
+*when verb meets ったら
+*-te form vs ったら
+*(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(ったら))	$2い$4$5
+*(([いえけくしせれべめ]て|あって)(ったら))	$2い$3
+*misc:
+*don't replace every ったら with といったら, like (adj),
+*it's already recognized by Atlas, if we replace it, the translation will be different
+*((なさい)(ったら)([^、。？！…」』）]))	$2とい$3$4
+*((なさい)(ったら)([、。？！…」』）]))	$2とい$3$4
+*
+*-te form vs たら
+*save らしい
+*(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(た)(らしい))	$2$4x$5$6
+*old --- (([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(たら))	$2$4い$5
+*new, -te form + たら = masu stem + たら
+*(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(たら))	$2$5
+*restore
+*(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)x(た)(らしい))	$2$4$5$6
+*
+*
+*handling ってば, てば, ったら, たら
+*LEC disabled, try handle with VNR
+*ってば came from といえば, but Atlas didn't put it properly, so let's try with といって
+*known problem : 来て and all -te form verb
+*since -te form + ってば not working, I'll try another emotional approachment, like converting it into masu stem + なさい
+*(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(ってば)([、。？！…」』）]))	$2$4ください$6
+*(([一-龠])([しい]て|[いん]で)(ってば)([、。？！…」』）]))	$2$3ください$5
+*((って)(ば)([、。？！…」』）]))	とい$2$4
+*edit : LEC, try "remove" instead of "replace". Only applied to person
+*([ぁぃぅぇぉー]|あたし|わたし|あたくし|わたくし|あなた|あんた|くん|さん|ちゃん|さま|たち|私|君|様|立ち|アナタ|アンタ|アタシ|ワタシ)(った|た)(ら)([、。？！…」』）])	$1$4
+*
+*(([ぁぃぅぇぉー]|あたし|わたし|あたくし|わたくし|あなた|あんた|くん|さん|ちゃん|さま|たち|私|君|様|立ち|アナタ|アンタ|アタシ|ワタシ)(って|て)(ば))	$2といえ$4
+*(([ア-ヴ])って(ば))	$2といえ$3
+*selfnotes: is it safe including all katakanas rule?
+*
+*---っつか---
+*should means てか, an abbreviation of ていうか or というか
+*unsafe: くっつか
+*disabled, better add specifically
+*((っつ)(か(まって|れる)))	$2x$3
+*(っつ(か))	という$2
+*((っつ)x(か(まって|れる)))	$2$3
+*
+*---っつわ---
+*came from といわ (say)
+(っつ(わ))	とい$2
+*
+*--- っつうの ---
+*means というの
+((っつ)(うの)([、。？！…」』）]))	とい$3$4
+*
+*--- って ---
+*って is another confusion, it means :
+*1. (coll) of という or というの or というのは
+*2. (coll) of と言って(も)
+*3. (coll) of として(も)
+*4. と
+*5. といって
+*Generally it's kinda a replacement of quoting particle, in english it should be like a "It is said that..."
+*
+*sentence ended by なって is hard too, because it means :
+*1. な from negative imperative form
+*2. な from suffix
+*3. な from なる (become)
+*4. a part of a -te form verb conjugation
+*
+*save
+(([、。？！…「『（とにもがは]|く|なら|から|より|まで|に[かし]|んだ|でも|など|まか|って|ければ|とか|どう|さえ|すら|いざ|[そこ]う)(な)(って)([^、。？！…」』）]))	$2$3x$5
+(([、。？！…「『（とにもがは]|く|なら|から|より|まで|に[かし]|んだ|でも|など|まか|って|ければ|とか|どう|さえ|すら|いざ|[そこ]う)(な)(って)([、。？！…」』）]))	$2$3x$5
+((う|[うく][しら])(な)(って))	$2$3u$4
+((って)(ぐらい))	$2x$3
+*selfnotes : だって, [katakana words]って、のか
+*how to detect だって from だって(even) or だ (plain copula) ? @_@
+*
+*--- な + って meets 言 or 思 or 想 ---
+*かなって should be translated to like "It is said it was wonder(ed) that..."
+*but since Atlas screwing up with かな, we're gonna trick it a bit
+((たら)(かな)(と思っ[てた]))	$2x$4
+*
+((か)なって([思想]っ[てた]|[思想]う))	$2と$3
+((か)な(と[思想]っ[てた]|と[思想]う))	$2$3
+(じゃ(ないか)な(って)([、。？！…」』）]))	では$2とい$3$4
+((か|ちゃい)な(って)([、。？！…」』）]))	$2とい$3$4
+*
+((たら)(x)(と[思想]っ[てた]))	$2かな$4
+*
+*the translation should be like "It (to be) (say/think)", depend on the verb form it could be a past or present tense.
+*save:
+((だ|の|や)(って)(言|いう))	$2x$4
+*(([一-龠])って(いう|言[いうわ]|言っ[てた]|思っ[てた]|思[いう]))	$2x$3
+*
+*
+*--- って + 言 or 思 ---
+*since って could be a -te form, I dunno whether this will work on any -te form or not...
+*
+*save
+*it seems 事 !== こと, so こと is not included
+(([一-龠が]|にと|ま)って(いう|言[いうわ]|言っ[てた]|[思想]っ[てた]|[思想][いう]|わけ|[訳事話]))	$2x$3
+*unsafe: 恥ずかしがって言ってる
+*るって looks troubling, sometimes it came from ru-verb, sometime from -te form verb, just how to detect it? >_<
+*ru-verb + って + いう -> ru-verb + という = safe
+*-te form + いう -> broken!
+*
+((って)てって(いう|言[いうわ]|言っ[てた]|[思想]っ[てた]|[思想][いう]|わけ|[訳事話]))	$2やれと$3
+(([^、。…？！（「『])([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)って(いう|言[いうわ]|言っ[てた]|[思想]っ[てた]|[思想][いう]|わけ|[訳事話]))	$2$3$5やれと$6
+*(([^、。…？！（「『])([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(いう|言[いうわ]|言っ[てた]|思っ[てた]|思[いう]|わけ|[訳事話]))	$2$3$5やれと$6
+((ないと)って(いいます|いう|言[いうわ]|言っ[てた]|[思想]っ[てた]|[思想][いう]|わけ|[訳事話]))	$2$3
+*
+*main code
+((なんだろ)って(いいます|いう|言[いうわ]|言っ[てた]|[思想]っ[てた]|[思想][いう]|わけ|[訳事話]))	$2うと$3
+(って(いいます|いう|言[いうわ]|言っ[てたち]|[思想]っ[てた]|[思想][いう]|わけ|[訳事話]))	と$2
+*
+*restore
+(([一-龠が]|にと|ま)x(いう|言[いうわ]|言っ[てた]|[思想]っ[てた]|[思想][いう]|わけ|[訳事話]))	$2って$3
+*disabled: [いさしなたらろつばこ]い|
+*selfnotes:
+*似合ってないって言ってる -> 似合ってないと言ってる, I forgot why I disabled it @_@
+*
+*speculative thinking (adj) + な + と思って/と思った
+*It should be translated like "It (to be) (think) it is (adj)", not negative-imperative clause.
+*ex: 嬉しいなと思って
+*should be translated into "It is thought it is happy", not "It is thought be not to happy"
+((む|[いさしなたらろつば]い|こう)な(と[思想]っ[てた]))	$2$3
+*
+*when って meets こと
+*(って(こと)([、。？！…」』）]))	という$2$3
+(([^、。！？…　「『（一-龠])って(こと))	$2という$3
+*
+*when って meets なら
+(って(なら)([、。？！…」』）]))	と$2$3
+*
+*handling って after anything inside square brackets
+*(([」』）])って(いうの))	$2と$3
+*(([」』）])って(こと))	$2という$3
+(([」』）])って)	$2といって
+*
+*--- って + どう---
+(([、。？！…「『（])([そ]れ)って(どう))	$2$3とは$4
+*
+*--- (exp) + なって ---
+*(exp) = だ
+((だ)なって([、。？！…」』）]))	$2といって$3
+*
+*--- (adj) + な + って ---
+*な here as (prt) to showing emotion, な here is not an (exp)
+((む|[いさしなたらろつばこア-ヴ]い|こう)な(って)([、。？！…」』）]))	$2とい$3$4
+*
+*--- (adj) + ったって---
+*means いったって
+(([いさしなたらろつばこア-ヴ]い)(ったって))	$2とい$3
+*
+*if (exp) + って is in the middle of text
+*save
+([行重]な)って([^、。？！…」』）])	$1x$2
+*
+((ます|ません|です|でしょう|だろう|な|かったね|ましょう|もらう|くれ|やろう|やる|やれ|しまう|ちゃう|よう)(って)([^、。？！…」』）]))	$2とい$3$4
+(([一-龠])([おろ]う)(って)([^、。？！…」』）]))	$2$3とい$4$5
+((でしょ|だろ|ましょ|やろ)(って)([^、。？！…」』）]))	$2うとい$3$4
+*restore
+([行重]な)x([^、。？！…」』）])	$1って$2
+*
+*if (exp) + って is at the end of text
+*save
+([行重]な)って([、。？！…」』）])	$1x$2
+*
+((ます|ません|です|でしょう|だろう|な|かったね|ましょう|もらう|くれ|やろう|やる|やれ|しまう|ちゃう|よう|るんだ)(って)([、。？！…」』）]))	$2とい$3$4
+((だろう|でしょう|です)(か)(って)([、。？！…」』）]))	$2$3とい$4$5
+(([一-龠])([おろ]う)(って)([、。？！…」』）]))	$2$3とい$4$5
+((でしょ|だろ|ましょ|やろ)(って)([、。？！…」』）]))	$2うとい$3$4
+(([一-龠ア-ヴ]|ないん)(だ)(って)([、。？！…」』）]))	$2$3とい$4$5
+*restore
+([行重]な)x([、。？！…」』）])	$1って$2
+*
+*if (adj) + っていうの
+*save
+((みたい)(って))	$2x$3
+*
+(([いさしなたらろつばこア-ヴ]い)って(言|い)(うの)([^、。？！…」』）]))	$2と$3$4$5
+(([いさしなたらろつばこア-ヴ]い)って(言|い)(うの)([、。？！…」』）]))	$2と$3$4$5
+*
+*if (adj) + って is in the middle of text
+((む|[いさしなたらろつばこア-ヴ]い|こう)(って)([^、。？！…」』）]))	$2とい$3$4
+((から|より|まで)(って)([^、。？！…」』）]))	$2とい$3$4
+*
+*if (adj) + って is at the end of text
+((む|[いさしなたらろつばこア-ヴ]い|こう)(って)([、。？！…」』）]))	$2とい$3$4
+*
+*restore
+((みたい)x(って))	$2$3
+*
+*========================================================================================
+*---(verb) + って---
+*
+*--- -te form + ろ + って ---
+*volitional form
+((し)(て)(ろ)(って)([、。？！…」』）]))	$2$4とい$5$6
+((んで)ろよ(って)([、。？！…」』）]))	$2やれとい$3$4
+((し)(て)ろ(と)(いう|言[いうわ]|言っ[てた]|[思想]っ[てた]|[思想][いう]|わけ|事))	$2$3る$4$5
+*
+*normal verb and -masu stem is safe, but -te form is not. Unfortunately we can't detect the verb type with this way...
+*if normal verb + って is in the middle of text
+((言う|いう)って([^、。？！…」』）]))	$2というのは$3
+(((って|んで)[るろ]|[あえいかがくけぎしじなねみめすべげやてれせさ][るろ]|できる|るべき|なかったら|したら|ければ|しよう)(って)(だけ))	$2という$5
+(((って|んで)[るろ]|[あえいかがくけぎしじなねみめすべげやてれせさ][るろ]|できる|るべき|なかったら|したら|ければ|しよう)(って)([^、。？！…」』）]))	$2とい$4$5
+(([一-龠])([すくぐつむるぬうび]|[そろこ]う|んだ)(って)([^、。？！…」』）]))	$2$3とい$4$5
+((ったら)って([^、。？！…」』）]))	$2というのは$3
+((たら)って([^、。？！…」』）]))	$2というのは$3
+*selfnotes :
+*たら still broken, how to create a quoting conditional clause? @_@
+*ex: It is said if (clause)
+*んだ must be specific, so it wouldn't break だって (even), ex: お兄ちゃんだって
+*
+*if normal verb + って is at the end of text
+*という or といって ?
+((言う|いう)って([、。？！…」』）]))	$2というのは$3
+(((って|んで)[るろ]|[あえいかがくけぎしじなねみめすべげやてれりせさ][るろ]|できる|るべき|なかったら|ければ|しよう)(って)([、。？！…」』）]))	$2という$5
+((ったら|したら)(って)([、。？！…」』）]))	$2という$4
+((たら)(って)([、。？！…」』）]))	$2という$4
+(([一-龠])([すくぐつむるぬうび]|[そろこ]う|んだ)(って)([、。？！…」』）]))	$2$3とい$4$5
+(([一-龠])(こす)(って)([、。？！…」』）]))	$2$3とい$4$5
+((ろう)(ね)(って)([、。？！…」』）]))	$2とい$4$5
+*
+*--- -te form + って ---
+*
+*if -te form verb + って is in the middle of text
+*it could means an imperative form, or a state-of-being form
+*however I believe it's an imperative form, let's try with やれ
+*(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(って)([^、。？！…」』）]))	$2$4やれとい$5$6
+*(([んい])(で)(って)([^、。？！…」』）]))	$2$3やれとい$4$5
+*(([一-龠])(て)(って)([^、。？！…」』）]))	$2$3やれとい$4$5
+*
+*if -te form verb + って is at the end of text
+*kanji+て is unsafe, better add in TA specifically
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(って)([、。？…」』）]))	$2$4やれとい$5$6
+(([んい])(で)(って)([、。？…」』）]))	$2$3とい$4$5
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(って)([！]))	$2$4やれ$6
+(([んい])(で)(って)([！]))	$2$3やれ$5
+*non -te form
+(([待])(て)(って)([、。？！…」』）]))	$2$3とい$4$5
+*-te form
+(([一-龠])(て)(って)([、。？！…」』）]))	$2$3やれ$4$5
+*
+*--- negative form + って ---
+*save -te form
+(([きわ]ず)(って)([^、。？！…」』）]))	$2x$3$4
+*
+*if a negative form + って is in the middle of text
+((ず|ないか)(って)([^x、。？！…」』）]))	$2とい$3$4
+*
+*if a negative form + って is at the end of text
+((ず|ないか)(って)([、。？！…」』）]))	$2とい$3$4
+*
+*restore
+(([きわ]ず)x(って)([^、。？！…」』）]))	$2$3$4
+*
+*--- past form + って ---
+*not sure how to handle this, because it could mean:
+*1. past form + って = even
+*2. past form + といって = it is said
+*
+*if a past form + って is in the middle of text
+*not sure if this is useful, it seems った don't need fix
+*(([しれ]た)(って)([^、。？！…」』）]))	$2とい$3$4
+*
+*if a past form + って is at the end of text
+*(([しれ]た)(って)([、。？！…」』）]))	$2とい$3$4
+*
+*verb + (prt) + って (end)
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(た)(から)(って)([、。？！…」』）]))	$2$4$5とい$6$7
+*
+*another specific pattern (middle)
+((ちゃ|く)(んだ)って([^、。？！…」』）]))	$2$3x$4
+((んだ)って([^の、。？！…」』）]))	$2というのは$3
+((い)てって([^、。？！…」』）し]))	$2のは$3
+(([一-龠])(い|し)(って)([^、。？！…」』）]))	$2$3とい$4$5
+((.)(る|ない)って(か))	$2$3というの$4
+((.)(る|ない)って(の|もん))	$2$3という$4
+((.)(る|ない)って([^、。？！…」』）のも]))	$2$3というのは$4
+(([そこ])(ういうの)って([^、。？！…」』）]))	$2$3は$4
+((させ)(よう)(って)([^、。？！…」』）]))	$2$3とい$4$5
+((もらおう)(って))	$2とい$3
+*
+*another specific pattern (end)
+(([一-龠])(い|し)って([、。？！…」』）]))	$2$3といって$4
+((の)(って)([、。？！…」』）]))	$2は$4
+((させ)(よう)(って)([、。？！…」』）]))	$2$3とい$4$5
+((だ)ぞ(って)([、。？！…」』）]))	$2とい$3$4
+*
+*
+*restore what's been saved --- end of って part ---
+((だ|の|や)x(言|いう))	$2って$3
+(([、。？！…「『（とにもがは]|く|なら|から|より|まで|に[かし]|んだ|でも|など|まか|って|ければ|とか|どう|さえ|すら|いざ|[そこ]う)(な)x([、。？！…」』）]))	$2$3って$4
+(([、。？！…「『（とにもがは]|く|なら|から|より|まで|に[かし]|んだ|でも|など|まか|って|ければ|とか|どう|さえ|すら|いざ|[そこ]う)(な)x([^、。？！…」』）]))	$2$3って$4
+((う|[くう][しら])(な)u(って|と))	$2$3$4
+((って)x(ぐらい))	$2$3
+((ちゃ|く)(んだ)x([^、。？！…」』）]))	$2$3って$4
+*(([一-龠])x(いう|言[いうわ]|言っ[てた]|思っ[てた]|思[いう]))	$2って$3
+*
+*
+*==================================================================
+*--- plain て as casual quoting, instead of って ---
+((ー)て(いいます|いう|言[いうわ]|言っ[てた]|[思想]っ[てた]|[思想][いう]|わけ|事))	$2と$3
+((ます|ろう|もう|こう|ぼう|ませぬ)(て)([、。？！…」』）]))	$2といっ$3$4
+((されて)(て)([、。？！…」』）]))	$2やれといっ$3$4
+*
+*--- といってほど ---
+(といって(ほど))	$2
+*--- ついて ---
+(ついて)て(くれ)	$1$2
+*
+*
+*---っと---
+*sentences ended by っと, not sure how to handle it properly
+*ex: さてっと, ないっと
+*(([、。？！…「『（])(お|え|き|そ|も|や|ず|よ|ちょ)(っと)([、。？！…」』）]))	$2$3x$5
+*((ずい)(っと)([、。？！…」』）]))	$2x$4
+*((っと)([、。？！…」』）]))	といって$3
+*(([、。？！…「『（])(お|え|き|そ|も|や|ず|よ|ちょ)(x)([、。？！…」』）]))	$2$3っと$5
+*((ずい)(x)([、。？！…」』）]))	$2っと$4
+*
+*======= adding with (obj-prt), conjugations, etc ======
+*save
+(([、。？！…「『（]|^)([あこそ]いつら)([等]|から|より|まで|こそ|だけ|じゃ|なら|ほど|なんか))	$2$3x$4
+(([、。？！…「『（]|^)([あこそ]いつ)([等]|から|より|まで|こそ|だけ|じゃ|なら|ほど|なんか))	$2$3x$4
+(([一-龠])(いくて|よい|良い)([一-龠]))	$2x$3$4
+(([、。？！…「『（]|^)([あこそ]れ)([程|以外]))	$2$3x$4
+*
+*((ちゃう)([、。？！…」』）]))	$2ぞ$3
+(([一-龠])(いくて|よい|良い)([一-龠]))	$2の$3$4
+(([、。？！…「『（]|^)([あこそ]いつら)([^xをがにへとでのはもかめやだ、。？！…」』）]))	$2$3は$4
+(([、。？！…「『（]|^)([あこそ]いつ)([^xらをがにへとでのはもかめやだ、。？！…」』）]))	$2$3は$4
+*notes: こそ、から、より、まで、だけ、じゃない、しめ、をがにへとでのはも
+(([、。？！…「『（]|^)(にしても))	$2それ$3
+(([、。？！…「『（]|^)([あこそ]れ)([、一-龠ア-ヴ]|きっと))	$2$3は$4
+(([、。？！…「『（]|^)(こちら)([、一-龠ア-ヴ]))	$2$3は$4
+((顔)(し[てた]|する))	$2を$3
+(([一-龠])(やってしまおう)([、。？！…」』）]))	$2を$3$4
+(([、。？！…「『（]|^)(俺)(もう)([^あ-ん、。？！…」』）]))	$2$3は$4$5
+((んなこと)(、)([一-龠]))	$2は$3$4
+(([、。？！…「『（]|^)(ほんと)(、))	$2$3に$4
+*restore
+(([、。？！…「『（]|^)([あこそ]いつら)x([等]|から|より|まで|こそ|だけ|じゃ|なら|ほど|なんか))	$2$3$4
+(([、。？！…「『（]|^)([あこそ]いつ)x([等]|から|より|まで|こそ|だけ|じゃ|なら|ほど|なんか))	$2$3$4
+(([一-龠])x(いくて|よい|良い)([一-龠]))	$2$3$4
+(([、。？！…「『（]|^)([あこそ]れ)x([程|以外]))	$2$3$4
+*
+*save
+*私立, 私信
+(([（「『、。…？！]|^)(わたくしごと|私[立信]))	$2x$3
+*
+*plural
+(([（「『、。…？！]|^|じゃあ|は)(あたし|わたし|わたくし|俺|私|アタシ|ワタシ|あたい|おまえ|お前|オマエ|おめえ|あなた|あんた|アナタ|アンタ|きさま|キサマ|貴様|てめえ|テメエ|貴方|ボク)(ら|ラ|たち|タチ|ども|ドモ|[立方達様共怨物以]|さま|サマ)([ッ方]|より|まで|こそ|だけ|じゃ|なら|みたい|ばかり|ほど|ぐらい|すら|[よさ][、。？！…」』）]))	$2$3$4x$5
+(([（「『、。…？！]|^|じゃあ|は)(あたし|わたし|わたくし|俺|私|アタシ|ワタシ|あたい|おまえ|お前|オマエ|おめえ|あなた|あんた|アナタ|アンタ|きさま|キサマ|貴様|てめえ|テメエ|貴方|ボク)(ら|ラ|たち|タチ|ども|ドモ|[立方達様共怨物]|さま|サマ)([^xっをがにへとでのはもだたやなしじらんか]))	$2$3$4は$5
+(([（「『、。…？！]|^|じゃあ|は)(あたいら)([^xっをがにへとでのはもだたやなしじらんか]))	$2$3は$4
+(([（「『、。…？！]|^|じゃあ|は)(あたし|わたし|わたくし|俺|私|アタシ|ワタシ|あたい|おまえ|お前|オマエ|おめえ|あなた|あんた|アナタ|アンタ|きさま|キサマ|貴様|てめえ|テメエ|貴方|ボク)(ら|ラ|たち|タチ|ども|ドモ|[立方達様共怨物以]|さま|サマ)x([ッ方]|より|まで|こそ|だけ|じゃ|なら|みたい|ばかり|ほど|ぐらい|すら|[よさ][、。？！…」』）]))	$2$3$4$5
+*
+*single
+(([（「『、。…？！]|^|じゃあ|は)(あたし|わたし|わたくし|俺|私|アタシ|ワタシ|あたい|おまえ|お前|オマエ|おめえ|あなた|あんた|アナタ|アンタ|きさま|キサマ|貴様|てめえ|テメエ|貴方|ボク)(ら|ラ|たち|タチ|ども|ドモ|[ッ立方達様共怨物設以]|さま|サマ|より|まで|こそ|だけ|じゃ|なら|みたい|ばかり|ほど|ぐらい|すら|ばっか|抜き|[よさ][、。？！…」』）]))	$2$3x$4
+((ちゃん)(ら|ラ|たち|タチ|ども|ドモ|[ッ先立方達様共怨物以]|さま|サマ|より|まで|こそ|だけ|じゃ|なら|みたい|ばかり|ほど|付け|ぐらい|すら|ばっか|抜き|よ[、。？！…」』）]))	$2x$3
+(([（「『、。…？！]|^|じゃあ|は)(おまえ|おめえ|てめえ)え([、。？！…」』）]))	$2$3は$4
+(([（「『、。…？！]|^|じゃあ|は)(おまえ|おめえ|てめえ)え([をがにへとでのはもだたやなしじらんかね]))	$2$3$4
+(([（「『、。…？！]|^|じゃあ|は)(あたし|わたし|わたくし|俺|私|アタシ|ワタシ|あたい|おまえ|お前|オマエ|おめえ|あなた|あんた|アナタ|アンタ|きさま|キサマ|貴様|てめえ|テメエ|貴方|ボク)([^xっをがにへとでのはもだたやなしじらんかね]))	$2$3は$4
+((ちゃん)([一-龠]))	$2は$3
+(([（「『、。…？！]|^|じゃあ|は)(あたし|わたし|わたくし|俺|私|アタシ|ワタシ|あたい|おまえ|お前|オマエ|おめえ|あなた|あんた|アナタ|アンタ|きさま|キサマ|貴様|てめえ|テメエ|貴方|ボク)x(ら|ラ|たち|タチ|ども|ドモ|[ッ立方達様共怨物設以]|さま|サマ|より|まで|こそ|だけ|じゃ|なら|みたい|ばかり|ほど|ぐらい|すら|ばっか|抜き|[よさ][、。？！…」』）]))	$2$3$4
+((ちゃん)x(ら|ラ|たち|タチ|ども|ドモ|[ッ先立方達様共怨物以]|さま|サマ|より|まで|こそ|だけ|じゃ|なら|みたい|ばかり|ほど|付け|ぐらい|すら|ばっか|抜き|よ[、。？！…」』）]))	$2$3
+*
+*restore
+(([（「『、。…？！]|^)x(わたくしごと|私[立信]))	$2$3
+*
+*--- 何を ---
+*another test, will break phrase started with 何, like "how many..."
+*only kanji & katakana, hiragana gonna need more specific rules.
+*disabled : LEC, let's see if it doesn't need this or not
+*(([（「『、。…？！]|^)(何)([々一箇個回期気月軒故呉語座歳事時者種十処条色食心人千卒代点度奴日年倍番百物分遍方某枚万名曜様用何泊件匹]))	$2$3x$4
+*(([（「『、。…？！]|^)(何)(発目|週間))	$2$3x$4
+*(([（「『、。…？！]|^)(何)([一-龠ア-ヴ]))	$2$3を$4
+*(([（「『、。…？！]|^)(何)x([々一箇個回期気月軒故呉語座歳事時者種十処条色食心人千卒代点度奴日年倍番百物分遍方某枚万名曜様用何泊件匹]))	$2$3$4
+*(([（「『、。…？！]|^)(何)x(発目|週間))	$2$3$4
+*
+*hiragana :
+*(([（「『、。…？！]|^)(何)(さ)([、。？！…」』）]))	$2$3x$4$5
+*(([（「『、。…？！]|^)(何)([っへんこげぜごかがせぞだてでとなにのはもやよられを]|なに|くれと|しろ|たろ|ぼう|ひとつ|かい|きも|がつ|けんか|ゆえ|くわ|ぶん|べん|さま|まで))	$2$3x$4
+*(([（「『、。…？！]|^)(何)([あ-ん]))	$2$3を$4
+*(([（「『、。…？！]|^)(何)x(さ)([、。？！…」』）]))	$2$3$4$5
+*(([（「『、。…？！]|^)(何)x([っへんこげぜごかがせぞだてでとなにのはもやよられを]|なに|くれと|しろ|たろ|ぼう|ひとつ|かい|きも|がつ|けんか|ゆえ|くわ|ぶん|べん|さま|まで))	$2$3$4
+*
+*--- て + an (adj) clause ---
+*still not sure how to handle this
+*the focus meaning will be different
+*ex: 警備システムを戻しては良い
+*with は, the focus is the (adj) clause
+*without は, the focus is first clause
+*there are three possibilities here :
+*1. -te form + (adj) clause <-- need fix with は
+*2. masu stem + たって (tatte here means "even") + (adj) clause <-- no need fix
+*3. past form + って (coll) + (adj) clause <-- need fix with といって
+*how to properly detect it?
+*
+*save past form
+*selfnotes: past form like った don't need a fix, however there is still a possibility a -te form...
+*((ったって|そして)(良[いか]|いい))	$2x$3
+*
+*(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(良[いか]))	$2$4は$5
+*(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)(いい))	$2$4は良い
+*restore
+*((ったって|そして)x(良[いか]|いい))	$2$3
+*
+*--- single (adv) + ？ ---
+*to prevent "do" translation in Atlas
+(([（「『、。…？！]|^)(かな)(？))	$2$3。
+*
+*=================================================================================
+*=================================================================================
+*
+*---onomatopoeics---
+*fixing separated (adv) (ex : ぐちゃ、ぐちゃと become ぐちゃぐちゃと)
+*how to exclude pattern like 「やめなさい、やめなさいといったら…」 ? @_@
+*save
+((やめなさい|ゆっくり)(、)(\2)(と))	$2$3x$4$5
+*
+(([あ-んア-ヴ]{2,})、\2([ッっ][とて]))	$2$2$3
+(([あ-んア-ヴ]{2,})、\2、(と))	$2$2$3
+(([あ-んア-ヴ]{2,})、\2(と))	$2$2$3
+(([あ-んア-ヴ]{2,})\2、(と))	$2$2$3
+*((、|…+)(と))	$3
+*
+*restore
+((やめなさい|ゆっくり)(、)x(\2)(と))	$2$3$4$5
+*
+*
+*---join incomplete sentence---
+*based on a comma or ellipses/triple dots, actually TA already have the option
+*however it'll process all text which is sometimes not good when the sentence is improperly written.
+*a poor attempt, it's hard using regex to detect whether a sentence is complete or not
+*
+*save
+(([あ-んア-ヴ一-龠』])([、…]+)(よりによって|たらたら))	$2x$3$4
+(([、。？！…「『（])([あそこ]の|うん)([、…]+))	$2$3x$4
+*test
+(けど)([、…]+)(とか)([、。…？！」』）])	$1x$2$3$4
+*((けど)([、…]+)(とか)([、。…？！」』）]))	$2x$3$4$5
+*
+*from a partial -te form
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)([、…]+)(い(ません|す)|ください))	$2$4$6
+*
+*from a partial -te form, and remove the て
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)て([、…]+)(ばかり))	$2$4$5
+*
+*from a masu stem
+(([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)([、…]+)(ま(せん|す|し[たて])))	$2$5
+*selfnotes: [てた] look unsafe, need specific rules
+((、)(いうな)(！))	を$3$4
+*
+(([あ-んア-ヴ一-龠』])([、…]+)(まで|より|ない|の[がにか]|の(で(す|あ(る|った))|ように)|なっちゃう|たら|みたい|だった[のか]|で(した|あった)|だと思|ために|ございま|だけに|ありま(せん|す)|なの(だろ|でしょ|です|か)))	$2$4
+(([あ-んア-ヴ一-龠』])([、…]+)(と(い(うこと|った))|まし[たて]))	$2$4
+*selfnotes : don't include single だった, because can break だったら
+*です not good when : ですが、ですが
+(([あ-んア-ヴ一-龠』])([、…]+)(と[かは]|ばかり|さん|だっけ)([、。…？！」』）]))	$2$4$5
+*removed なの, it seems it's useless
+*disabled: かといって, I forgot the reason...
+*(([^をがにへとでのはも])([、…]+)(かといって)([、。…？！」』）]))	$2$4$5
+*selfnotes : とか unsafe in the middle text, could be an adverb (ex: とかblablabla)
+*
+*join by (prt or preposition)
+([…、]+)(というより)	$2
+((への)([、…]+)([^。？！」』）]))	$2$4
+*
+*join by (conj)
+(([^。？！「『（])([、…]+)(られ[なるて]))	$2$4
+*
+*join by onomatopoeic/mimic sound
+*might break previous sentence
+*note: うん、とりあえず
+*(([、。？！…「『（]|^)(うん)(、)(と))	$2$3$5
+(([、。？！…「『（]|^)(ピクリ)(、)(と))	$2$3$5
+*
+*remove onomatopeics to prevent double meaning
+((くすくすと|クスクスと|ニッコリと)(し))	$2x$3
+((くすくすと|クスクスと|ニッコリと))
+((くすくすと|クスクスと|ニッコリと)x(し))	$2$3
+(ずるずる)\1(と)	$1$2
+*
+*remove repeated adv
+*try remove the next phrase, and also remove (、)
+((強く)、(\2))	$2
+*
+*join by number
+*LEC, disabled
+*(([０-９])(、)([０-９]))	$2─$4
+*(([０-９])(、)([０-９]))	$2─$4
+*
+*by phrase
+((くだ)([、…]+)(さい))	$2$4
+((ない)([、…]+)(から))	$2$4
+((よろしく)([、…]+)(お願いします))	$2$4
+*
+*misc
+[、…](です(か|けど)?|でしょう?か|だろう?か|ませんか?)([、。…？！」』）])	$1$3
+(([、。？！…「『（]|^)([こそど]う)([、…]+)(でしょ|です|だろ|し[てた]))	$2$3$5
+(([あそこ]んな)([、…]+)(こと))	$2$4
+(([、。？！…「『（]|^)(まるで)([、…]+))	$2$3
+((の)、(好き|大好き|気持|初めて|禁止|嬉しい|いい))	$2は$3
+((の)(好き|大好き|気持いい|初めて|禁止|嬉しい|いい)([、。…？！」』）]))	$2は$3$4
+(([、…]+)(の(はず|方)|してた))	$3
+(([、…]+)(かな)([。？！…」』）]))	か$4
+((、)(じゃん|じゃないか|じゃないの|じゃないのか|じゃねえか|じゃないですか)([」』）])(.))	$3$4$5
+([あ-んア-ヴ一-龠])、(どう(だろう|です))([、。…？！」』）])	$1$2$4
+((、)\x5E(です)([」』）]))	$3$4
+*restore
+(([あ-んア-ヴ一-龠』])x([、…]+)(よりによって|たらたら))	$2$3$4
+(([、。？！…「『（])([あそこ]の|うん)x([、…]+))	$2$3$4
+((けど)x([、…]+)(とか)([、。…？！」』）]))	$2$3$4$5
+*
+*---reducing sfx---
+(([、。？！…「『（】]|^)(くり|ぎゅ|もみ|レロ|ゴク|けた|ぴちゃ|ちゅぽ|ずり|ぺろ|ずりゅ|ギク|ぬりゅ|こりゅ|コリ|ぎり|ズン|じゅぽ|むにゅ|ぎち|ぎゅむ|しゅ|さわ|ぽか|ぐり|ごきゅ)\3+([、。？！…」』）]))	$2$3$3$4
+*
+*---separating repeated phrase---
+*save
+(([馴惚離濡切]れ|[思長]い|[見]え)\2)	$2x
+*
+*(、) changed to (。) because of break sentence
+(([、。？！…「『（】]|^)(なんだ|ない|ねえ|はい|わか(った|ってる|る)|ありがとう|うるさい|だって|いたい|たべる|いそげ|いいさ|いや|それで|そうか|すみません|やめて|しない|どうしよう|ヤバい|やばい|イって|そっか)\3+([、。？！…」』）]))	$2$3。$3$5
+(([、。？！…「『（】]|^)(なんだ|ない|ねえ|はい|わか(った|ってる|る)|ありがとう|うるさい|だって|いたい|たべる|いそげ|いいさ|いや|それで|そうか|すみません|やめて|しない|どうしよう|ヤバい|やばい|イって|そっか)\3+([一-龠ア-ヴ]))	$2$3。$3。$5
+(([、。？！…「『（】]|^)([一-龠]([うえろれいせめて]|ない|べて|[っれ]た|かった|こう|くな|(いて|か)る|いで|えるな|んだ|れてる))\3+([、。？！…」』）]))	$2$3。$3$6
+(([、。？！…「『（】]|^)([一-龠]([うえろれいせめて]|ない|べて|[っれ]た|かった|こう|くな|(いて|か)る|いで|えるな|んだ|れてる))\3+([　あ-ん一-龠ア-ヴ]))	$2$3。$3。$6
+(([、。？！…「『（】]|^)([一-龠](た))\3+([、。？！…」』）]))	$2$3。$3$5
+(([、。？！…「『（】]|^)(あそこ|やめ)(だ)\3([、。？！…」』）]))	$2$3$4。$3$5
+(([、。？！…「『（】]|^)(イって|イっちゃえ)\3+([、。？！…」』）]))	$2$3。$3。$4
+(([、。？！…「『（】]|^)(イって|イっちゃえ)\3+([一-龠ア-ヴ]))	$2$3。$3。$4
+*restore
+(([馴惚離濡切]れ|[思長]い|[見]え)x)	$2$2
+*
+*==============================================================================================================================
+*4. Substitutions (ex: jpn to eng), only put substitutions that couldn't be handled by TA.
+*problem with "no-break sentence on commas" is that the "^" symbol is considered as a word, need to fix it.
+((ワタシ)(と|も))	私$3
+*(^(ですか|けど|あら|そうそう|あの|というか))	。$2
+*(^(っていうか|ってことは|うわ|てか|つか|あの|しまった|けど|この|その|こんな|そんな|やだ|てことは|だというのに|かと思うと|かと思えば|かと思ったら|ならばと|だと思う|だと思うった|だからか|もし|という|だろう|というか|いわゆる|かといって|くそう)([、。…？！]))	^$2$3
+*(^(にも拘らず|にも拘わらず|にも関わらず|お陰で|じゃないと|だからこそ|ハイ|やば)([、。…？！]))	^$2$3
+*be careful, replacing with english directly sometimes will broke the translation when the word is in quote state
+*((^)(ふむ|あら|あう)([、。…？！」』）]))	$2^$3$4
+*(([、。…？！「『（])([そあこ]の)([、。…？！」』）]))	$2^$3$4
+*(([、。…？！「『（])([そあこ]の)([、。…？！」』）]))	$2^$3$4
+*(([、。…？！「『（])(そら)([、。…？！])\3)	$2^$3$4^$3
+*disabled : ああ
+*LEC handling 何
+([、。…？！「『（]|^)(なんだ)、([こそあ]れ)([、。…？！」』）])	$1$2$3$4
+([、。…？！「『（]|^)(なん|何)だ([こそあ]れ)([、。…？！」』）])	$1$3は何$4
+([、。…？！「『（]|^)(なん|何)だ([こそあ]れは)([、。…？！」』）])	$1$3何$4
+*
+*
+*==============================================================================================================================
+*Beyond this script is another test
+*
+*
+*sentence break that VNR can't handle
+*save
+(だろう?|でしょう?|から)(別に)	$1x$2
+*
+(だろう?|でしょう?)(ご?[一-龠]{1,4})	$1、$2
+*restore
+(だろう?|でしょう?|から)x(別に)	$1$2
+*
+*disabled : あら
+*LEC, handling "、"
+([、。？！…「『（]|^)(ふ[むふん]|あ[うあ]|うん)、	$1$2。
+([、。？！…「『（]|^)([おうはよど][うお]|[あは]は|[ねふえ]え|えと|よし|うげ|ほ[へえ]|待て)、	$1$2。
+([、。？！…「『（]|^)(あはは|わっは|えぇと|あうう|さては|ほほう)、	$1$2。
+([、。？！…「『（]|^)(おおっと|いえいえ|でしょう|ばいばい|やれやれ|(あっ|にゃ|[ぬあ]は)は+)、	$1$2。
+([、。？！…「『（]|^)(どうしたの)、	$1$2。
+([、。？！…「『（]|^)(おはよう|おはようございます|それじゃ|おかえり|おかえりなさい)、	$1$2。
+*notes: 初めまして
+(ましょう|まして)、	$1。
+(よう|ちゃえ|やめて)、	$1。
+(ありがとう|ます|ました)、(では)	$1。$2
+*(それこそ)が、	$1$2
+([、。？！…「『（])(途端)、	$1$2。
+([。？！…「『（]|^)(あは|へへ)[、。？！…」』）]	$1$2。
+([。？！…「『（]|^)(ええと|えへへ|ふええ)[、。？！…」』）]	$1$2。
+(気持ちいい|違う|野郎)、	$1。
+*
+*LEC passive + わ
+([いさしなたらろつばごこ]い)わ[、…]+	$1。
+*
+*LEC まあ
+*It will break if following "、" Ex: なら、まあ、 should be fixed to なら。まあ、
+、(まあ、)	。$1
+*
+*It seem だ(です) + "、" would break LEC, test replace with "。"
+*break : なんだ
+(?<!はた)(だ)、	$1。
+*
+*LEC 大丈夫
+*if followed by "、" will break translation
+*prevent brave man
+((大丈夫)|\2です|\2か)、	$1。
+(大丈夫)(って)	$1とい$2
+(大丈夫です)(？)	$1か$2
+*
+*LEC if "、" followed by 2nd person, it would make wrong translation
+、(あたし|わたし|わたくし|俺|私|アタシ|ワタシ|あたい|おまえ|お前|オマエ|おめえ|あなた|あんた|アナタ|アンタ|きさま|キサマ|貴様|てめえ|テメエ|貴方|ボク)(ら|ラ|たち|タチ|ども|ドモ|[ッ立方達様共怨物設]|さま|サマ|より|まで|こそ|だけ|じゃ|なら|みたい|ばかり|ほど|ぐらい|すら|ばっか|抜き|[よさ][、。？！…」』）])	。$1$2
+*
+*LEC VNR fix for translated word + ？
+*usually when english translation + ？ it will become a question sentence
+*ex : あら？ -> Ah？ -> Is it Ah?  <--- We don't want this
+*all fixes should goes here
+([、。？！…「『（]|^)(え|あ[あられのん]|あのね|うわ|うわわ|ふん|ほう|ふむ)(？)	$1$2！$3
+(ちゃん|パパ|ママ|先生|[一-龠]い)(？)	$1！$2
+*
+*Fix informal questioning form
+*like ですか？ is OK with LEC, but if です is missing the translation would missed a "？" symbol
+*let's add with additional "？"
+(か)(？)	$1$2？
+*
+*
+*LEC remove "and" translations, this happened on incomplete clause but ended without "、" so exclude this comma
+*
+*-te form (this is very unsafe, let's try first)
+*try exclude "っ"
+*save
+*test disable this, and handle with VNR output type method
+**([言話ア-ヴだ]っ)て([。？！…」』）])	$1x$2
+*(初|はじ|や)(めて)([。？！…」』）])	$1$2x$3
+*([出犯]|めま|[こど]う)(して)([。？！…」』）])	$1$2x$3
+*([、。？！…「『（]|^)(そして)([。？！…」』）])	$1$2x$3
+*
+*([せべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(て)([。？！…」』）])	$1$3る$4
+(思)って([。？！…」』）])	$1う$2
+(行って)([。？！…」』）])	$1る$2
+(わかって)([。？！…」』）])	$1る$2
+*
+*restore
+**([言話ア-ヴだ]っ)x([。？！…」』）])	$1て$2
+*(初|はじ|や)(めて)x([。？！…」』）])	$1$2$3
+*([出犯]|めま|[こど]う)(して)x([。？！…」』）])	$1$2$3
+*([、。？！…「『（]|^)(そして)x([。？！…」』）])	$1$2$3
+*
+*(adj)+し
+([ア-ヴ一-龠いさしなたらろつばぽこ]い)し([。？！…」』）])	$1$2
+([一-龠][き]い)し([。？！…」』）])	$1$2
+*
+*verbs+し
+([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(てる)し([。？！…」』）])	$1$3$4
+(する|ます)し([。？！…」』）])	$1$2
+*this might break
+([一-龠][うる]|[一-龠]める|ちゃう)し([。？！…」』）])	$1$2
+([なあい]る)し([。？！…」』）])	$1$2
+*
+*past form+し (might have problem with "っ")
+([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ)|あっ)(た)し([。？！…」』）])	$1$3$4
+(だった)し([。？！…」』）])	$1$2
+*
+*だ+し
+*be careful, must be specific
+(そ[うこ]|[わだ]け|[たな]ん|ないん|[一-龠ア-ヴ])(だ)し([。？！…」』）])	$1$2$3
+(あいつ)(だ)し([。？！…」』）])	$1$2$3
+(だろう|でしょう)し([。？！…」』）])	$1$2
+*masu stem+だ+し
+*if break, add additional pattern ahead
+([っせべげけめねれて来きしくういえ]|[さわばがかまならあた][れせ]|しえ|なく|まし|[あえ来こ](られ|させ))(だ)し([。？！…」』）])	$1$3$4
+(がり)(だ)し([。？！…」』）])	$1$2$3
+(るん)(だ)し([。？！…」』）])	$1$2$3
+*
+*LEC ですし
+*meaning to giving a reason, but LEC translated it as "sushi"
+*better way is replace with synonym but let's try with just remove
+(です)し([、。？！…」』）])	$1$2
+*
+*LEC H words replacements
+*change 中出し
+(中)(出)し(され)	$1に$2$3
+([、。？！…「『（]|^)(出)し([、。？！…」』）])	$1$2せ$3
+*
+*change イ (cum) to 来 (come), might break on foreign-dialect
+([一-龠、。？！…「『（]|^)イって([ア-ヴあ-ん一-龠、。？！…」』）])	$1来て$2
+([あ-ん一-龠、。？！…「『（]|^)イって	$1来て
+([あ-ん一-龠、。？！…「『（]|^)イっちゃ[いう]	$1来て
+([あ-ん一-龠、。？！…「『（]|^)イった	$1来た
+([あ-ん一-龠、。？！…「『（]|^)イっちゃった	$1来た
+([あ-ん一-龠、。？！…「『（]|^)イき(たい)	$1来$2
+([あ-ん一-龠、。？！…「『（]|^)イき(ましょう|ます)	$1来$2
+([あ-ん一-龠、。？！…「『（]|^)イ[くクき]([あ-ん])	$1来る$2
+([あ-ん一-龠、。？！…「『（]|^)イ[かカ](せて|せない|せっ?ち)	$1来さ$2
+([あ-ん一-龠、。？！…「『（]|^)イこう	$1来よう
+*
+*LEC verbs replacement
+摘(まん[だで]|まめば)	つ$1
+シコシコさ(れて)	擦ら$1
+シコシコ(って)	擦$1
+シコシコ(擦)	$1
+(ちゅうちゅう|ちゅぱちゅぱ)し([てた])	しゃぶっ$2
+*
+*LEC adverbs/onomatopoeics replacement
+ぐしょぐしょ	べたべた
+([あ-ん一-龠、。？！…「『（]|^)(ギュ)([っッ]て)	$1ぎゅっと
+*
+*LEC adverbs/onomatopoeics removement
+*hope no word ending with してた, also していて might need to be handled but let's try ignore it for now
+([あ-ん一-龠、。？！…「『（]|^)(ツゥー|シコシコ|クチュクチュ|ヌト|ビクン|ギュギュ|カァ|ショリショリ|ビク|コリ|コリコリ|クリクリ|ビクビク|グッグッ|ギュー|ツカツカ|ゴクリ|ゾクゾク|プリ|ゾク|グイ|ネチッネチッ|ズポズポ|ゾクリ|ギチ|グチュグチュ|チュパチュパ|チロチロ|ズル|ガクガク|ピン|パコパコ)(として[たる]|して[たる]|[ッっ]として[たる])	$1
+([あ-ん一-龠、。？！…「『（]|^)(ツゥー|シコシコ|クチュクチュ|ヌト|ビクン|ギュギュ|カァ|ショリショリ|ビク|コリ|コリコリ|クリクリ|ビクビク|グッグッ|ギュー|ツカツカ|ゴクリ|ゾクゾク|プリ|ゾク|グイ|ネチッネチッ|ズポズポ|ゾクリ|ギチ|グチュグチュ|チュパチュパ|チロチロ|ズル|ガクガク|ピン|パコパコ)(とする|とし[てた]|する|し[てた]|[ッっ]とする|[ッっ]とし[てた])	$1
+([あ-ん一-龠、。？！…「『（]|^)(ツゥー|シコシコ|クチュクチュ|ヌト|ビクン|ギュギュ|カァ|ショリショリ|ビク|コリ|コリコリ|クリクリ|ビクビク|グッグッ|ギュー|ツカツカ|ゴクリ|ゾクゾク|プリ|ゾク|グイ|ネチッネチッ|ズポズポ|ゾクリ|ギチ|グチュグチュ|チュパチュパ|チロチロ|ズル|ガクガク|ピン|パコパコ)(と|[ッっ]と)	$1
+([あ-ん一-龠、。？！…「『（]|^)(ツゥー|シコシコ|クチュクチュ|ヌト|ビクン|ギュギュ|カァ|ショリショリ|ビク|コリ|コリコリ|クリクリ|ビクビク|グッグッ|ギュー|ツカツカ|ゴクリ|ゾクゾク|プリ|ゾク|グイ|ネチッネチッ|ズポズポ|ゾクリ|ギチ|グチュグチュ|チュパチュパ|チロチロ|ズル|ガクガク|ピン|パコパコ)([一-龠])	$1$3
+([あ-ん一-龠、。？！…「『（]|^)(ニコニコ)(と|[ッっ]と)	$1
+*part1, try with general hiragana group pattern, if failed move it to part2
+([あ-ん一-龠、。？！…「『（]|^)(むわ|くちゅくちゅ|にゅるり|くちゅり|くちゅ|ぱっくり|ぷとぷ|ずぶずぶ|ちゅうちゅう)(として[たる]|して[たる]|[ッっ]として[たる])	$1
+([あ-ん一-龠、。？！…「『（]|^)(むわ|くちゅくちゅ|にゅるり|くちゅり|くちゅ|ぱっくり|ぷとぷ|ずぶずぶ|ちゅうちゅう)(とする|とし[てた]|する|し[てた]|[ッっ]とする|[ッっ]とし[てた])	$1
+([あ-ん一-龠、。？！…「『（]|^)(むわ|くちゅくちゅ|にゅるり|くちゅり|くちゅ|ぱっくり|ぷとぷ|ずぶずぶ|ちゅうちゅう)(と|[ッっ]と)	$1
+([あ-ん一-龠、。？！…「『（]|^)(むわ|くちゅくちゅ|にゅるり|くちゅり|くちゅ|ぱっくり|ぷとぷ|ずぶずぶ|ちゅうちゅう)([一-龠])	$1$3
+*part2
+([をがにへとでのはも一-龠、。？！…「『（]|から|より|まで|^)(ぷに|ぷるん|ぷにぷに|むにゅ)(として[たる]|して[たる]|[ッっ]として[たる])	$1
+([をがにへとでのはも一-龠、。？！…「『（]|から|より|まで|^)(ぷに|ぷるん|ぷにぷに|むにゅ)(とする|とし[てた]|する|し[てた]|[ッっ]とする|[ッっ]とし[てた])	$1
+([をがにへとでのはも一-龠、。？！…「『（]|から|より|まで|^)(ぷに|ぷるん|ぷにぷに|むにゅ)(と|[ッっ]と)	$1
+([をがにへとでのはも一-龠、。？！…「『（]|から|より|まで|^)(ぷに|ぷるん|ぷにぷに|むにゅ)([一-龠])	$1$3
+*
+*LEC 何
+([、。？！…「『（]|^)(何)([こそあ]れ)([、。？！…」』）])	$1$3は$2？$4
+*
+*LEC "what is it?" translation, usually related with "どう"
+([、。？！…「『（]|^)(どうしたの|どしたの)(？)	$1何$3
+*
+*LEC 無い
+*to avoid "cuttlefish" translation
+*save
+(少)(ないか)	$1x$2
+*
+(こと|[一-龠])ない(か)	$1無い$2
+*restore
+(少)x(ないか)	$1$2
+*
+*LEC どうやって
+*replace with another synonym
+*save
+([、。？！…「『（]|^)どうやって(も)	$1x$2
+*
+([、。？！…「『（]|^)どうやって	$1どうしても
+*restore
+([、。？！…「『（]|^)x(も)	$1どうやって$2
+*
+*LEC とっても
+*replace with とても
+([、。？！…「『（]|^)(と)っ(ても)	$1$2$3
+*
+*LEC ほら (brag) fix
+(じゃあ)ほら、	$1見て。
+*
+*LEC on VNR using default setting, so it always assuming Subject as first person
+*try to fix it so the translation not first person
+*by adding "it is"
+*first replace 、 with 。
+([、。？！…「『（]|^)(ありえない|あり得ない|すごい|かわいい|可愛い|だいじょうぶ|大丈夫|とうぜん|当然|おいしい|美味しい)、	$1$2。
+([、。？！…「『（]|^)(ありえない|あり得ない|すごい|かわいい|可愛い|だいじょうぶ|大丈夫|とうぜん|当然|おいしい|美味しい)(だ|です|だろう|でしょう)、	$1$2$3。
+([、。？！…「『（]|^)(とても|すごく)(ありえない|あり得ない|すごい|かわいい|可愛い|だいじょうぶ|大丈夫|とうぜん|当然|おいしい|美味しい)、	$1$2$3。
+([、。？！…「『（]|^)(とても|すごく)(ありえない|あり得ない|すごい|かわいい|可愛い|だいじょうぶ|大丈夫|とうぜん|当然|おいしい|美味しい)(だ|です|だろう|でしょう)、	$1$2$3$4。
+([、。？！…「『（]|^)(いいじゃん)、	$1$2。
+*then add with それは
+([、。？！…「『（]|^)(ありえない|あり得ない|すごい|かわいい|可愛い|だいじょうぶ|大丈夫|とうぜん|当然|おいしい|美味しい)([。？！…」』）])	$1それは$2$3
+([、。？！…「『（]|^)(ありえない|あり得ない|すごい|かわいい|可愛い|だいじょうぶ|大丈夫|とうぜん|当然|おいしい|美味しい)(だ|です|だろう|でしょう)([。？！…」』）])	$1それは$2$3$4
+([、。？！…「『（]|^)(とても|すごく)(ありえない|あり得ない|すごい|かわいい|可愛い|だいじょうぶ|大丈夫|とうぜん|当然|おいしい|美味しい)([。？！…」』）])	$1それは$2$3$4
+([、。？！…「『（]|^)(とても|すごく)(ありえない|あり得ない|すごい|かわいい|可愛い|だいじょうぶ|大丈夫|とうぜん|当然|おいしい|美味しい)(だ|です|だろう|でしょう)([。？！…」』）])	$1それは$2$3$4$5
+([、。？！…「『（]|^)(いいじゃん)([。？！…」』）])	$1それは$2$3
+*then replace だろう/でしょう with です to normalize
+*disabled: 大丈夫 (has "braveman","boyhood" problem)
+(ありえない|あり得ない|すごい|かわいい|可愛い|だいじょうぶ|とうぜん|当然|おいしい|美味しい)(だろう|でしょう)([。？！…」』）])	$1です$3
+*
+*by adding "you are"
+*disabled, try with "it is" first
+*([、。？！…「『（]|^)(かわいい|可愛い)([、。？！…」』）])	$1君は$2$3
+*
+*LEC handling その "The"
+*disabled: need more samples to test
+*([、。？！…「『（]|^)その([一-龠])	$1それは$2
+*
+*LEC another words replacement
+([あ-ん一-龠、。？！…「『（]|^)ヒダ([^ア-ヴ])	$1隙間$2
+([あ-ん一-龠、。？！…「『（]|^)お(汁)	$1$2
+*すごい - "terrible" sounds unfit, change it to グレート "great" seems better
+(は)すごい	$1グレート
+*
+*
+*Handling replacement error from TA replacements. Yeah I'm too lazy to fix there.
+*join
+(([、。？！…「『（]|^)(それに|もし|どうして)(、))	$2$3
+(([、…]+)(らしい))	$3
+((。。)(くらい))	$3
+*add 。
+*LEC, disabled, VNR doesn't need this. Replace with "。" instead
+([　、。？！…「『（]|^)(はい|いえ|そうそう|ほうほう|けど|ねえねえ|お願い)、	$1$2。
+*
+*
+**=============================================================
+*Trash clean up
+(([、。？！…「『（])([だつわぬはぐよ]|ひあ|[あう][ぐく]|ぬる|どき)([\x5E、。？！…」』）]))	$2$4
+(^\x5E(つか)([、。？！…」』）]))	$3
+((。)\2+)	$2$2
+、+	、
+*==============================================================================================================================
+*5. Lastly, finalize script.
+*LEC
+*a sentence ended with question mark "？" always translated along with the next sentence
+*therefore we need to separate it with "。"
+*([？])([^。！」])	$1。$2
+*replacing quotes so can be translated by LEC
+*[《『]	“
+*[》』]	”
+*removing open brackets "「" because LEC can't accept it
+*disabled : VNR already handled it
+*([「])
+*handling "…" based on some pattern
+*revert masked symbols
+[。」]MS0001「	♪
+[。」]MS0002「	★
+[。」]MS0003「	☆
+[。」]MS0004「	❤
+*clean up again, limit to 1
+([★☆♪❤])\1+	$1
+*"…" could act as separator like "。" or as comma "、"
+…+(？)	$1
+…+(」)	。$1
+*for some reason "…+" is skipped by VNR, so we'll apply this rule inside VNR instead
+*…+	。
+*removing close brackets "」" because LEC can't accept it
+*disabled : VNR already handled it
+*([！？])[」]	$1
+*([^！？])[」]	$1。
+*
+*=======================================================================
+*=============================end of script================================
+*=======================================================================

@@ -1,0 +1,204 @@
+# brands.yaml
+# 9/23/2013 jichi
+
+noecchi:
+  - Falcom
+  - エクスペリエンス
+  - コーエー
+  - スクウェア・エニックス
+
+otome:
+  - AMEDEO
+  - Rejet
+  - ひつじぐも
+  - マリンハート
+  - オトメイト
+  - 美蕾
+
+yuri:
+  - 10mile
+  - Shining Star
+  - Shining Star Lily's
+  - ゆりんゆりん
+
+junai:
+  - 07th Expansion
+  - Aries
+  - Circletempo
+  - CLIP☆CRAFT
+  - ETERNAL
+  - feng
+  - eRONDO
+  - Fizz
+  - FrontWing
+  - hibiki works
+  - HOOKSOFT
+  - Insync
+  - Innocent Grey
+  - Lapis lazuli
+  - Leaf
+  - light
+  - Lump of Sugar
+  - molamola.software
+  - minori
+  - Navel
+  - NEKO WORKs
+  - onomatope*
+  - PeasSoft
+  - PINK CHUCHU
+  - PULLTOP
+  - PULLTOP Air
+  - PULLTOP LATTE
+  - ROOT
+  - raiL soft
+  - rootnuko
+  - SkyFish
+  - SkyFish poco
+  - Sphere
+  - sprite
+  - Sugar Pot
+  - Sugar Pot+
+  #- TEATIME
+  - Studio e・go!
+  - Twinkle
+  - Whirlpool
+  - φage
+  - あかべぇそふとつぅ
+  - あっぷりけ
+  - ういんどみる
+  #- きゃんでぃそふと
+  - みなとそふと
+  - でぼの巣製作所
+  - ぱじゃまソフト
+  - ま～まれぇど
+  - ねこねこソフト
+  - アージュ
+  - エスクード
+  - キャラメルBOX
+  - グランドクロス
+  - ファイヤワークス
+  - ブルームハンドル
+  - ライアーソフト
+  - サーカス
+  - 枕
+  - 戯画
+  - 玉藻スタジオ
+
+# No hentai image
+junaiimage:
+  # yuri
+  - 10mile
+  # seminuki
+  - はむはむソフト
+  - アリスソフト
+  - エウシュリー
+  - エスクード
+  # junai
+  - 07th Expansion
+  - Aries
+  - ETERNAL
+  - hibiki works
+  - Insync
+  - Innocent Grey
+  - light
+  - Lump of Sugar
+  - PULLTOP
+  - PULLTOP Air
+  - PULLTOP LATTE
+  - Navel
+  - sweet light
+  - sprite
+  - Sugar Pot
+  - Sugar Pot+
+  - あかべぇそふとすりぃ
+  - あっぷりけv
+  - アージュ
+  - 枕
+  # other junai
+  - 3rdEye
+  - BaseSon
+  - CROSS†CHANNEL
+  - Favorite
+  - FrontWing
+  - key
+  - La'cryma
+  - Qoobrand
+  - Ricotta
+  - Rosebleu
+  - ruf
+  - SagaPlanets
+  - アンサンブル
+  - オーガスト
+  - ニトロプラス
+
+seminuki:
+  # Supposed to be nuki but junai at server side
+  - Astronauts
+  - bootUP!
+  - BaseSon Light
+  - D;drive.
+  - Digital Cute
+  - Galette
+  - Iris
+  - Mink
+  - Mink EGO
+  - Triangle
+  - ZyX
+  - ωstar
+  - ぷちぱるふぇ
+  - アリスソフト
+  - バグシステム
+  - エルフ
+  - エウシュリー
+  - エレンシア
+  - はむはむソフト
+  - ぱじゃまエクスタシー
+  - 脳内彼女
+
+nuki:
+  - 13cm
+  - BLACK RAINBOW
+  - Cattleya
+  - CODEPINK
+  - CYCLET
+  - Empress
+  - G.J？
+  - Guity
+  - GuityN
+  - Liquid
+  - LoveJuice
+  - LiLiM DARKNESS
+  - MAIKA
+  - MOONSTONE Cherry
+  - M no Violet
+  #- Mink
+  - Puzzlebox
+  - RiddleSoft
+  - SPEEDO HYBRID
+  - sol-fa-soft
+  - STRIKES
+  - STUDIO邪恋
+  - WAFFLE
+  - Waffle
+  - つるみく
+  - くらむちゃうだー
+  - アクティブ
+  - アトリエさくら
+  - アイル
+  - イリュージョン
+  - ナイトホーク
+  - クロックアップ
+  - デュアルテイル  # Venus Blood
+  - ルネ
+  - らぶフェチ
+  - らぱぷる
+  - ソフトさーくるクレージュ
+  - コンプリーツ
+  - アンダーリップ
+  - イエローピッグ
+  - クレージュ
+  - ディーゼルマイン
+  - 汁ダク系虹組
+  - 牛乳戦車
+
+# EOF

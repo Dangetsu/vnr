@@ -1,0 +1,200 @@
+/* dmm.sass
+   11/23/2013 jichi
+   http://www.dmm.co.jp/dc/doujin/-/detail/=/cid=d_048634/
+   http://www.dmm.co.jp/css/base.css
+
+.dmm.review
+  .bold
+    font-weight: bold !important
+
+  #review-list
+    padding: 0 6px 12px
+    border: 1px #f81 solid
+    .chapter
+      margin: 0 -6px 12px
+      padding: 0.2em 6px
+      background: #f81
+      color: #fff
+      font-weight: bold
+      // jichi 11/24/2013: remove hard-coded font-size
+      //font-size: 12px
+    .overall
+      margin-bottom: 12px
+    .review-nav
+      line-height: 1.5em
+      padding: 3px
+      background: #e5e5e5
+      &.second
+        margin-top: 12px
+        background: #f2f2f2
+    .first .review-nav.second
+      margin-top: 0
+      border-top: 1px #bbb solid
+    .review-nav li
+      margin-right: 3px
+      padding-right: 3px
+      border-right: 1px #666 solid
+      font-weight: bold
+    .list-nav li
+      padding-left: 3px
+      border-right: 0
+    .review-nav
+      li
+        &.last
+          margin-right: 0
+          padding-right: 0
+          border-right: 0
+        a
+          font-weight: normal
+      ul
+        display: inline
+        li
+          display: inline
+      dt, dd
+        display: inline
+    .hreview
+      margin-top: 18px
+    .summary
+      margin-left: 9px
+      padding-left: 6px
+      border-left: 3px #666 solid
+      font-weight: bold
+    .bg-yel
+      line-height: 1.65em
+      padding: 3px
+      p img
+        margin: 0.4em 0
+        vertical-align: middle
+    .wrap-desc
+      margin: 6px 6px 12px
+      p
+        margin-bottom: 12px
+      .note
+        margin-bottom: 3px
+        color: #666
+
+  [class^="d-rating"]
+    display: inline-block
+    width: 66px
+    height: 13px
+    line-height: 13px
+    overflow: hidden
+    background: white url(http://p.dmm.co.jp/p/ms/review/ico_stars.png) no-repeat
+    span
+      position: absolute
+      z-index: -1
+
+  .d-rating-00
+    background-position: 0 0
+  .d-rating-05
+    background-position: 0 -15px
+  .d-rating-10
+    background-position: 0 -30px
+  .d-rating-15
+    background-position: 0 -45px
+  .d-rating-20
+    background-position: 0 -60px
+  .d-rating-25
+    background-position: 0 -75px
+  .d-rating-30
+    background-position: 0 -90px
+  .d-rating-35
+    background-position: 0 -105px
+  .d-rating-40
+    background-position: 0 -120px
+  .d-rating-45
+    background-position: 0 -135px
+  .d-rating-50
+    background-position: 0 -150px
+
+  [class^="d-rating"].la
+    width: 105px
+    height: 19px
+    background: url(http://p.dmm.co.jp/p/ms/review/ico_stars_la.png) no-repeat
+
+  .d-rating-00.la
+    background-position: 0 0
+  .d-rating-05.la
+    background-position: 0 -20px
+  .d-rating-10.la
+    background-position: 0 -40px
+  .d-rating-15.la
+    background-position: 0 -60px
+  .d-rating-20.la
+    background-position: 0 -80px
+  .d-rating-25.la
+    background-position: 0 -100px
+  .d-rating-30.la
+    background-position: 0 -120px
+  .d-rating-35.la
+    background-position: 0 -140px
+  .d-rating-40.la
+    background-position: 0 -160px
+  .d-rating-45.la
+    background-position: 0 -180px
+  .d-rating-50.la
+    background-position: 0 -200px
+
+  #review
+    .d-boxcaptside + .d-boxcaptside
+      border: 0
+    // jichi 11/24/2013: remove border
+    //border: 6px #222 solid
+    // jichi 11/24/2013: remove black hider
+    h2
+      display: none
+    //h2
+    //  line-height: 1.4em
+    //  color: #fff
+    //  background: #222
+    // jichi 11/24/2013: remove background color for header
+    //.capt
+    //  background: #eee
+    .overview
+      overflow: hidden
+      // jichi 11/24/2013: remove margins and paddings
+      //margin: 6px 0 0
+      //padding: 6px 6px 10px
+      margin-bottom: -20px // jichi: reduce bottom margin
+      border-bottom: 1px #ccc dotted
+      // jichi 11/24/2013: remove hard-coded font size
+      //font-size: 14px
+      font-size: 90% // jichi reduce header font size
+      // jichi 11/24/2013: change to align left
+      //text-align: right
+    .review-list
+      li
+        margin: 18px 12px 0
+        padding: 18px 0 0
+        border-top: 1px #bbb solid
+        &:first-child
+          margin-top: 0
+          border-top: 0
+      p
+        margin-bottom: 12px
+
+  // jidhi 11/24/2013: global settings
+  font-size: 85%            // reduce font size
+  // overall statistics
+  .overview
+    color: brown
+  ul
+    list-style-type: none   // remove bullet
+    margin: 0               // remove horizontal margins
+  // sort combobox
+  .d-boxcaptside
+    display: none
+  // eroine button
+  .btn-eroine
+    display: none
+  // new review button
+  .d-btn
+    display: none
+  // evaluate0, evaluate1, ... evaluation buttons
+  [id^="evaluate"]
+    display: none
+  // yes/no buttons
+  a[href^="javascript:void(0)"]
+    display: none
+
+// EOF

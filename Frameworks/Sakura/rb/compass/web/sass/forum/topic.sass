@@ -1,0 +1,103 @@
+/* forum/topic.sass
+   1/2/2015 jichi
+   See: http://isotope.metafizzy.co/css/style.css
+
+@import main/color
+@import main/cursor
+@import main/shadow
+@import main/transition
+
+$avatar-width: 40px
+
+// Copied from my bootstrap/color.sass
+$bg-success-color: #dff0d8
+$bg-success-hover-color: #d0e9c6
+.bg-success
+  background-color: $bg-success-color
+  &:hover
+    background-color: $bg-success-hover-color
+
+.forum-topic .topic
+  //a[class*="link-"]
+  //  @extend .cursor-pointer
+  &.finished
+    @extend .bg-success
+  img.avatar
+    width: $avatar-width
+    //height: $avatar-width
+    @extend .avatar-shadow
+  padding-top: 15px // include the height of footer
+  min-height: $avatar-width
+  > a > img.avatar
+    float: left
+    width: $avatar-width
+    //height: $topic-avatar-width
+    @extend .avatar-shadow
+  > .right
+    margin-left: $avatar-width + 9px
+    > .title
+      font-size: 120%
+      margin: 5px
+      //color: #333 // gray
+    > .line
+      display: block
+      font-size: 90%
+      //[class*="text-"]
+      //  display: inline
+      .item
+        display: inline
+        margin-right: 10px
+      padding: 3px 0 3px 10px
+      .type
+        display: inline
+      .time,
+      .user,
+      .title,
+      .lang
+        display: inline
+        margin-left: 9px
+      .lang
+        color: purple
+    > .header
+      background-color: rgba(128,0,128,0.05) // purple
+      .score
+        display: inline
+        float: right
+    //> .header
+    //  //  color: darkblue // TODO: Use linke instead
+    //  //  display: inline
+    //  .time
+    //    //@extend .text-minor
+    //    display: inline
+    //    margin-left: 9px
+    //    font-size: 90%
+    //  .lang
+    //    //@extend .text-minor
+    //    color: purple
+    //    display: inline
+    //    margin-left: 9px
+    //    font-size: 90%
+    > .image
+      margin: 5px
+      > a > img
+        @extend .img-shadow
+        max-width: 100%
+    > .game-title
+      font-size: 90%
+      a.link-game
+        @extend .text-minor
+    > .content
+      margin-left: 5px
+      font-size: 95%
+      img
+        @extend .img-shadow
+        max-width: 100%
+    >.footer
+      //margin: -5px 0 0
+      height: 18px // larger than the height of buttons
+      .fade-in
+        opacity: 0
+  &:hover > .right > .footer .fade-in
+    opacity: 1
+
+// EOF

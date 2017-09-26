@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!-- typesystem_std_string.xml
+9/26/2014 jichi
+For <string>.
+-->
+<typesystem>
+
+  <!-- Copied from typesystem_core_common.xml -->
+  <!--
+  <inject-code class="native" position="beginning">
+  bool py2kStrCheck(PyObject* obj)
+  {
+  #ifdef IS_PY3K
+    return false;
+  #else
+    return PyString_Check(obj);
+  #endif
+  }
+  </inject-code>
+  -->
+
+  <!-- Shiboken has built-in support for this type
+  <primitive-type name="std::string" target-lang-api-name="PyString">
+    <include file-name="string" location="global"/>
+    <conversion-rule>
+      <native-to-target>
+      const int N = %in.size();
+      const char *str = %in.c_str();
+	  PyObject *%out = PyString_FromStringAndSize(str, N);
+      return %out;
+      </native-to-target>
+      <target-to-native>
+        <add-conversion type="PyString">
+        const char *str = PyString_AS_STRING(%in);
+        %out = str;
+        </add-conversion>
+        <add-conversion type="Py_None">
+        %out = %OUTTYPE();
+        </add-conversion>
+      </target-to-native>
+    </conversion-rule>
+  </primitive-type>
+  -->
+
+  <!-- See QString from typesystem_core_common.xml -->
+  <primitive-type name="std::wstring" target-lang-api-name="PyUnicode">
+    <include file-name="string" location="global"/>
+    <conversion-rule>
+      <native-to-target>
+      const int N = %in.size();
+      const wchar_t *str = %in.c_str();
+      PyObject *%out = PyUnicode_FromWideChar(str, N);
+      return %out;
+      </native-to-target>
+      <target-to-native>
+        <add-conversion type="PyUnicode">
+        Py_UNICODE *unicode = PyUnicode_AS_UNICODE(%in);
+        %out = unicode;
+        </add-conversion>
+        <!-- http://stackoverflow.com/questions/2573834/c-convert-string-or-char-to-wstring-or-wchar-t -->
+        <add-conversion type="PyString" check="PyString_Check(%in)">
+        const char *str = PyString_AS_STRING(%in);
+        %out = %OUTTYPE(str, str + PyString_GET_SIZE(%in));
+        </add-conversion>
+        <add-conversion type="Py_None">
+        %out = %OUTTYPE();
+        </add-conversion>
+      </target-to-native>
+    </conversion-rule>
+  </primitive-type>
+
+</typesystem>

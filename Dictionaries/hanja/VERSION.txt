@@ -1,0 +1,11 @@
+Hanja Hangul Converter 0.0.7
+http://kldp.net/projects/hanja/
+http://blog.daum.net/masoris20/69
+
+- dic0.txt: List to convert CJK Compatibility Forms to Han unification. This list do same thing with Unicode normalization algorithm.
+- dic1.txt: Hanja character list, which didn't use duuembeobchik (두음법칙). In Korean Language in South Korea, when read sino-korean there are rule apply to first sound to make easy to pronounce. This rule is don't use in North Korea. You can download original hanja-hangul.ods file. (Han unification)
+- dic2.txt: Represent Phonetic Data in Unihan. (Han unification)
+- dic3.txt: Represent Phonetic Data in Unihan. (CJK Compatibility Forms)
+- dic4.txt: List of Sino-korean. List extracted form libhangul-0.0.4 and converted to use Unicode normalization algorithm. (Han unification)
+- dic5.txt: Exception list for covert Hanja to Hangul. Read 3.3 for detail. (Han unification)
+- dic6.txt: (experiment) Database to convert Hangul to Hanja.

@@ -1,0 +1,54 @@
+; error.haml
+; 9/14/2012 jichi
+; @param  rc
+; @param  tr  i18n.tr
+; @param  code  int
+; @param  message  str
+; @param  url  str
+!!! 5
+%html
+  %head
+    %title #{tr('Error')} #{code}
+    :css
+      /* Bootstrap */
+      a {
+        color: #428bca;
+        text-decoration: none;
+      }
+      a:hover,
+      a:focus {
+        color: #2a6496;
+        text-decoration: underline;
+      }
+      a:focus {
+        outline: thin dotted;
+        outline: 5px auto -webkit-focus-ring-color;
+        outline-offset: -2px;
+      }
+      /* Global */
+      body {
+        /*background-color: #ececec;*/
+        background-repeat: repeat;
+        background-image: url("#{rc.image_url('background')}");
+        color: #bababa;
+        /*color: #cacaca;*/
+        font: 120% arial,helvetica,clean,sans-serif;
+        text-align: center;
+        margin-top: 10%;
+
+        /* See: http://www.w3.org/Style/Examples/007/text-shadow */
+        text-shadow: 1px 1px white,-1px -1px #555;
+      }
+  %body
+    %div
+      %h1 #{tr('Network Error')}
+      %p Unable to connect to the address.
+      %p ホストに接続できません。
+      %p 無法訪問地址。
+    %div(style="margin-top:2em")
+      %h3 #{tr('Error')} #{code}: #{message}
+      %p
+        URL:
+        %a(href="#{url}") #{url}
+
+; EOF

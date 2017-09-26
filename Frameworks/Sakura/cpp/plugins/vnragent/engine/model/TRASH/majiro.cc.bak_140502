@@ -1,0 +1,152 @@
+// majiro.cc
+// 4/20/2014 jichi
+// See: http://dev.haeleth.net/majiro.shtml
+// See: http://bbs.sumisora.org/read.php?tid=10983263
+// See: http://bbs.sumisora.org/read.php?tid=10917044
+// See: http://bbs.sumisora.org/read.php?tid=225250
+#include "engine/model/majiro.h"
+#include "engine/enginedef.h"
+#include "engine/enginehash.h"
+#include "engine/engineutil.h"
+#include "memdbg/memsearch.h"
+#include <qt_windows.h>
+#include <QtCore/QStringList>
+
+//#define DEBUG "majiro"
+#include "sakurakit/skdebug.h"
+
+// Used to get function's return address
+// http://stackoverflow.com/questions/8797943/finding-a-functions-address-in-c
+#pragma intrinsic(_ReturnAddress)
+
+/** Private data */
+
+namespace { // unnamed
+
+/**
+ *  Compute ITH's split value from the first parameter of the hooked function.
+ *  Let eax be arg1, the original logic in MajiroSpecialHook is:
+ *      ([eax+0x28] & 0xff) | (([eax+0x48] >> 1) & 0xffffff00)
+ */
+inline DWORD splitOf(DWORD *arg1)
+{ return (arg1[10] & 0xff) | ((arg1[18] >> 1) & 0xffffff00); }
+
+/**
+ *  TODO: The current split cannot distinguish name and choices
+ *  The current hooked function have line-breaking issue
+ *
+ *  Sample game: レミニセンス
+ *  int __cdecl sub_41AF90(CHAR ch, int arg2, LPCSTR str, arg4, arg5);
+ *    String          = byte ptr  4
+ *    arg_4           = dword ptr  8
+ *    lpString        = dword ptr  0Ch
+ *    arg_C           = dword ptr  10h
+ *    arg_10          = dword ptr  14h
+ *  - arg1: LPCSTR, font family name (MS Gothic)
+ *  - arg2: LPSIZE, size of the canvas to draw
+ *  - arg3: LPCSTR, starting address of the string to paint
+ *  - arg4: LPSTR, output string, could be zero (in 罪深き終末論)
+ *  - arg5: int, constant, always 1
+ *  - return: width of the text, = 26 * text length
+ *  Scenario text's ch seems to always be one.
+ *
+ *  Callers:
+ *  0x41aa10 @ 0x416ab0 // Scenario
+ *  0x41f650 // Name
+ */
+typedef int (__cdecl *hook_fun_t)(LPCSTR, LPSIZE, LPCSTR, LPCSTR, int);
+hook_fun_t oldHookFun;
+
+int __cdecl newHookFun(LPCSTR fontName1, LPSIZE canvasSize2, LPCSTR text3, LPSTR output4, int const5)
+{
+  // Compute ITH signature
+  DWORD returnAddress = (DWORD)_ReturnAddress(),
+        split = splitOf((DWORD *)fontName1);
+  // The following logic is consistent with VNR's old texthook
+  auto signature = Engine::hashThreadSignature(returnAddress, split);
+
+  //return oldHook(arg1, arg2, str, arg4, arg5);
+#ifdef DEBUG
+  qDebug() << QString::fromLocal8Bit(fontName1) << ":"
+           << canvasSize2->cx << "," << canvasSize2->cy << ":"
+           << QString::fromLocal8Bit(text3) << ":"
+           << QString::fromLocal8Bit(output4 ? output4 : "(null)") << ":"
+           << const5 << ";"
+           << " signature: " << QString::number(signature, 16);
+#endif // DEBUG
+  auto q = AbstractEngine::instance();
+  QByteArray data = q->dispatchTextA(text3, signature, Engine::UnknownRole);
+  if (!data.isEmpty())
+    return oldHookFun(fontName1, canvasSize2, data, output4, const5);
+  else {
+    // Estimated painted character width for MS Gothic, assume SJIS on average takes up two chars
+    enum { CharWidth = 13 };
+    return CharWidth * ::strlen(text3);
+  }
+}
+
+} // unnamed namespace
+
+/** Public class */
+
+bool MajiroEngine::match()
+{ return Engine::globs(QStringList() << "data*.arc" << "stream*.arc"); }
+
+bool MajiroEngine::attach()
+{
+  DWORD startAddress,
+        stopAddress;
+  if (!Engine::getProcessMemoryRange(&startAddress, &stopAddress))
+    return false;
+  enum { sub_esp = 0xec81 }; // caller pattern: sub esp = 0x81,0xec
+  DWORD addr = MemDbg::findCallerAddress((DWORD)::TextOutA, sub_esp, startAddress, stopAddress);
+  // Note: ITH will mess up this value
+  //addr = 0x41af90; // レミニセンス function address
+  if (!addr)
+    return false;
+  return ::oldHookFun = replaceFunction<hook_fun_t>(addr, ::newHookFun);
+}
+
+// EOF
+
+/*
+ *
+bool MajiroEngine::detach()
+{
+  if (!::hookAddress || !::oldHookFun)
+    return false;
+  bool ok = detours::restore<hook_fun_t>(::hookAddress, ::oldHookFun);
+  ::hookAddress = 0;
+  return ok;
+}
+
+void MajiroEngine::drawText(const QString &text, const void *context)
+{
+  Q_ASSERT(context);
+  auto params = static_cast<const detail::Context *>(context);
+  detail::olddraw(params->arg1, params->arg2, text.toLocal8Bit(), params->arg4, params->arg5);
+}
+
+void MajiroEngine::releaseContext(void *context)
+{
+  Q_ASSERT(context);
+  delete static_cast<detail::Context *>(context);
+}
+*/
+
+  /*
+   *  Observeations from レミニセンス:
+   *  - arg1 of the scenario is a fixed portable value.
+   *  - arg2 of the scenario is not portable, but a constant for each run.
+   *  - arg1 and arg2 2of both the name and other texts are random number.
+   *  - arg2's first 4 bytes of name and scenario texts are the same.
+   *  - arg4 is not portable, but a contant for each run.
+   *  - arg5 is aways 1.
+   *  - Scenario always comes after name
+   *  - Scenario size always larger than (800,600), less than (1920,1080)
+   *
+   *  Game-specific arg1:
+   *  - 暁の護衛 罪深き終末論: 32 = 0x20 = ' '
+   *  - レミニセンス: 48 = 0x30 = '0'
+   *  - PotentialAbility: 0xa0
+   */

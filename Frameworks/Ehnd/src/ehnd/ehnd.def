@@ -1,0 +1,22 @@
+LIBRARY	EHND
+EXPORTS
+ 	J2K_Initialize
+ 	J2K_InitializeEx
+ 	J2K_FreeMem
+ 	J2K_GetPriorDict
+ 	J2K_ReloadUserDict
+ 	J2K_SetDelJPN
+ 	J2K_SetField
+ 	J2K_SetHnj2han
+ 	J2K_SetJWin
+ 	J2K_SetPriorDict
+ 	J2K_SetProperty
+ 	J2K_StopTranslation
+ 	J2K_Terminate
+ 	J2K_TranslateChat
+ 	J2K_TranslateFM
+ 	J2K_TranslateMM
+ 	J2K_TranslateMMEx
+ 	J2K_TranslateMMNT
+ 	J2K_TranslateMMNTW
+	?GetJ2KMainDir@@YA?AVCString@@XZ=J2K_GetJ2KMainDir

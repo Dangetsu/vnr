@@ -1,0 +1,123 @@
+# 2/14/2014
+
+# Languages related files
+#wiki:
+#- sidebar
+
+api:
+- defs.py
+
+service:
+- defs.coffee
+- i18n.coffee
+- I18n.groovy
+
+client:
+- share.yaml: -id:, id:
+- winlocale.py
+- util.js: 'id', id: & make
+- kagami.qml: indonesianFont
+- grimoire.qml: ..
+- mirage.qml: ..
+- tsupdate.py: 'id'
+- sktr.py: "id" "Indonesian"
+- sakurakit/tr/Makefile: id_ID.ts id_ID.qm
+- settings.py: indonesianFont
+- i18n.py: 'id'
+
+- mtinfo.py: ..
+  - baidufanyi.py: 'id'
+- _trman.py: 'id'
+- _prefs.py: 'id', Indonesian
+
+Info
+- Read Me.txt
+- wiki VNR
+- Google Code
+
+# Translator related files
+qml/js/util.js: jbeijing: & make
+kagami.qml: jbeijingColor
+grimoire.qml: ..
+mirage.qml: ..
+share.yaml: baidu
+reader.yaml: ..
+hostcombobox.qml: .., plus the menuItems
+jaconv.py lang_
+share/mt
+  mtinfo.py: ..
+reader:
+  settings.py: jbeijingColor jbeijingEnabled jbeijingLocation
+  config.py: JBEIJING_COLOR
+  libman.py: ..
+  dataman.py: ..
+  i18n.py: ..
+  mytr.py: ..
+  main.py: jbeijingEnabled
+  __main__.py: jbeijing
+  _prefs.py: jbeijing
+  trman.py: ..
+  _trman.py: ..
+
+browser:
+  settings.py: jbeijingEnabled jbeijingLocation
+  beans.py
+  settings.haml
+  main.py: jbeijingEnabled
+  __main__.py
+  _trman.py: ..
+  trman.py: ..
+
+wiki Machine Translators and Additional Software
+
+debug translating special characters
+
+# TTS related files
+qml/apps/reader/voiceview/table.qml
+ttsman.py
+_ttsman.py
+_prefs.py
+
+## Ref related file
+./py/apps/reader/main.py -- getchu
+./py/apps/reader/__main__.py
+./py/apps/reader/rc.py
+./qml/apps/reader/refview/inspector.qml
+./qml/apps/reader/refview/table.qml
+./py/apps/reader/i18n.py
+
+./py/apps/reader/managers/refman.py
+./py/apps/reader/dialogs/refinput.py
+./py/apps/reader/managers/dataman.py
+
+# ref proxy
+./py/apps/reader/config.py
+./py/apps/reader/features.py
+./py/apps/reader/managers/proxy.py
+./rb/compass/web/sass/sites/getchu.sass
+./share.yaml
+
+## Term type
+./qml/apps/reader/termview/filtertoolbar.qml
+./qml/apps/reader/termview/inspector.qml
+./qml/apps/reader/termview/table.qml
+./qml/js/util.js
+
+./xml/terms.xml
+
+./apps/reader/managers/dataman.py
+./apps/reader/dialogs/terminput.py
+./apps/reader/managers/termman.py
+
+./libs/sakurakit/sktr.py # translation
+mytr.py # translation
+
+#./scripts/tahcompile.py
+#./libs/unitraits/jpmacros.py
+
+## Debug
+debug refinput search game
+debug add game
+debug render in gameview
+
+# EOF

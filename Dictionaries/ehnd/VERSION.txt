@@ -1,0 +1,13 @@
+URL: http://sokcuri.neko.kr/220301117949
+Update: 2015/04/02
+
+Renamed files to get rid of Korean characters:
+
+PostFilter_@sokcuri.txt = PostFilter_@꿀도르.txt
+PostFilter_@sokcuri_C.txt = PostFilter_@꿀도르_C.txt
+PreFilter_@sokcuri.txt = PreFilter_@꿀도르.txt
+PreFilter_@sokcuri_C.txt = PreFilter_@꿀도르_C.txt
+SkipLayer_@sokcuri.txt = SkipLayer_@꿀도르.txt -- Encoding changed from UTF16 to UTF8
+UserDict_@sokcuri_0.txt = UserDict_@꿀도르#0#필수파일.txt
+UserDict_@sokcuri_1.txt = UserDict_@꿀도르#1.txt
+UserDict_@sokcuri_name.txt = UserDict_@꿀도르#이름.txt

@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+
+  <apl_path>
+    <servletpath>http://dws.voicetext.jp/tomcat/servlet/vt_flash</servletpath>
+    <resultpath>http://dws.voicetext.jp/ASLCLCLVVS/JMEJSYGDCHMSMHSRKPJL/</resultpath>
+    <krpath>http://dws.voicetext.jp/tomcat/servlet/vt</krpath>
+
+    <countgetpath>http://dws.voicetext.jp/tomcat/servlet/get_count</countgetpath>
+    <countputpath>http://dws.voicetext.jp/tomcat/servlet/put_count</countputpath>
+
+    <countgetpath_micro>http://dws.voicetext.jp/tomcat/servlet/get_count_micro</countgetpath_micro>
+    <countputpath_micro>http://dws.voicetext.jp/tomcat/servlet/put_count_micro</countputpath_micro>
+  </apl_path>
+
+
+  <talk_data>
+    <!-- HIKARI -->
+    <small>images/talk_306.png</small>
+    <big>images/talkB_306.png</big>
+    <info>images/talkAbout_306.png</info>
+    <speakerID>306</speakerID>
+    <speakerID_Micro>356</speakerID_Micro>
+    <dictID>3</dictID>
+  </talk_data>
+
+  <talk_data>
+    <!-- JULIE -->
+    <small>images/talk_103.png</small>
+    <big>images/talkB_103.png</big>
+    <info>images/talkAbout_103.png</info>
+    <speakerID>103</speakerID>
+    <speakerID_Micro>153</speakerID_Micro>
+    <dictID>1</dictID>
+  </talk_data>
+
+  <talk_data>
+    <!-- HONG -->
+    <small>images/talk_204.png</small>
+    <big>images/talkB_204.png</big>
+    <info>images/talkAbout_204.png</info>
+    <speakerID>202</speakerID>
+    <speakerID_Micro>252</speakerID_Micro>
+    <dictID>2</dictID>
+  </talk_data>
+
+  <talk_data>
+    <!-- SAYAKA -->
+    <small>images/talk_304.png</small>
+    <big>images/talkB_304.png</big>
+    <info>images/talkAbout_304.png</info>
+    <speakerID>304</speakerID>
+    <speakerID_Micro>354</speakerID_Micro>
+    <dictID>3</dictID>
+  </talk_data>
+
+  <talk_data>
+    <!-- KATE -->
+    <small>images/talk_100.png</small>
+    <big>images/talkB_100.png</big>
+    <info>images/talkAbout_100.png</info>
+    <speakerID>100</speakerID>
+    <speakerID_Micro>150</speakerID_Micro>
+    <dictID>1</dictID>
+  </talk_data>
+
+  <talk_data>
+    <!-- Qiang -->
+    <small>images/talk_205.png</small>
+    <big>images/talkB_205.png</big>
+    <info>images/talkAbout_205.png</info>
+    <speakerID>203</speakerID>
+    <speakerID_Micro>253</speakerID_Micro>
+    <dictID>2</dictID>
+  </talk_data>
+
+  <talk_data>
+    <!-- MISAKI -->
+    <small>images/talk_302.png</small>
+    <big>images/talkB_302.png</big>
+    <info>images/talkAbout_302.png</info>
+    <speakerID>302</speakerID>
+    <speakerID_Micro>352</speakerID_Micro>
+    <dictID>3</dictID>
+  </talk_data>
+
+  <talk_data>
+    <!-- PAUL -->
+    <small>images/talk_101.png</small>
+    <big>images/talkB_101.png</big>
+    <info>images/talkAbout_101.png</info>
+    <speakerID>101</speakerID>
+    <speakerID_Micro>151</speakerID_Micro>
+    <dictID>1</dictID>
+  </talk_data>
+
+  <talk_data>
+    <!-- Hyeryun -->
+    <small>images/talk_014.png</small>
+    <big>images/talkB_014.png</big>
+    <info>images/talkAbout_014.png</info>
+    <speakerID>10</speakerID>
+    <speakerID_Micro>60</speakerID_Micro>
+    <dictID>0</dictID>
+  </talk_data>
+
+  <talk_data>
+    <!-- HARUKA -->
+    <small>images/talk_303.png</small>
+    <big>images/talkB_303.png</big>
+    <info>images/talkAbout_303.png</info>
+    <speakerID>303</speakerID>
+    <speakerID_Micro>353</speakerID_Micro>
+    <dictID>3</dictID>
+  </talk_data>
+
+  <talk_data>
+    <!-- James -->
+    <small>images/talk_104.png</small>
+    <big>images/talkB_104.png</big>
+    <info>images/talkAbout_104.png</info>
+    <speakerID>104</speakerID>
+    <speakerID_Micro>154</speakerID_Micro>
+    <dictID>1</dictID>
+  </talk_data>
+
+  <talk_data>
+    <!-- jihun -->
+    <small>images/talk_018.png</small>
+    <big>images/talkB_018.png</big>
+    <info>images/talkAbout_018.png</info>
+    <speakerID>3</speakerID>
+    <speakerID_Micro>53</speakerID_Micro>
+    <dictID>0</dictID>
+  </talk_data>
+
+  <talk_data>
+    <!-- SHOW -->
+    <small>images/talk_301.png</small>
+    <big>images/talkB_301.png</big>
+    <info>images/talkAbout_301.png</info>
+    <speakerID>301</speakerID>
+    <speakerID_Micro>351</speakerID_Micro>
+    <dictID>3</dictID>
+  </talk_data>
+
+  <talk_data>
+    <!-- BRIDGET -->
+    <small>images/talk_500.png</small>
+    <big>images/talkB_500.png</big>
+    <info>images/talkAbout_500.png</info>
+    <speakerID>500</speakerID>
+    <speakerID_Micro>550</speakerID_Micro>
+    <dictID>1</dictID>
+  </talk_data>
+
+  <talk_data>
+    <!-- VIOLETA -->
+    <small>images/talk_400.png</small>
+    <big>images/talkB_400.png</big>
+    <info>images/talkAbout_400.png</info>
+    <speakerID>400</speakerID>
+    <speakerID_Micro></speakerID_Micro>
+    <dictID>4</dictID>
+  </talk_data>
+
+  <talk_data>
+    <!-- RYO -->
+    <small>images/talk_305.png</small>
+    <big>images/talkB_305.png</big>
+    <info>images/talkAbout_305.png</info>
+    <speakerID>305</speakerID>
+    <speakerID_Micro>355</speakerID_Micro>
+    <dictID>3</dictID>
+  </talk_data>
+
+  <talk_data>
+    <!-- HUGH -->
+    <small>images/talk_501.png</small>
+    <big>images/talkB_501.png</big>
+    <info>images/talkAbout_501.png</info>
+    <speakerID>501</speakerID>
+    <speakerID_Micro>551</speakerID_Micro>
+    <dictID>2</dictID>
+  </talk_data>
+
+  <talk_data>
+    <!-- Francisco -->
+    <small>images/talk_401.png</small>
+    <big>images/talkB_401.png</big>
+    <info>images/talkAbout_401.png</info>
+    <speakerID>401</speakerID>
+    <speakerID_Micro></speakerID_Micro>
+    <dictID>4</dictID>
+  </talk_data>
+
+  <talk_data>
+    <!-- TAKERU -->
+    <small>images/talk_307.png</small>
+    <big>images/talkB_307.png</big>
+    <info>images/talkAbout_307.png</info>
+    <speakerID>307</speakerID>
+    <speakerID_Micro>357</speakerID_Micro>
+    <dictID>3</dictID>
+  </talk_data>
+
+  <talk_data>
+    <!-- CHLOE -->
+    <small>images/talk_600.png</small>
+    <big>images/talkB_600.png</big>
+    <info>images/talkAbout_600.png</info>
+    <speakerID>600</speakerID>
+    <speakerID_Micro></speakerID_Micro>
+    <dictID>4</dictID>
+  </talk_data>
+
+  <talk_data>
+    <!-- MIYU -->
+    <small></small>
+    <big></big>
+    <info></info>
+    <speakerID></speakerID>
+    <speakerID_Micro></speakerID_Micro>
+    <dictID></dictID>
+  </talk_data>
+
+  <osusume_data>
+    <id>101</id>
+    <info>MISAKI</info>
+    <title>
+        <![CDATA[用途のご紹介：電話自動応答システム]]>
+     </title>
+    <speed>100</speed>
+    <pitch>100</pitch>
+    <volume>100</volume>
+    <speaker>302</speaker>
+    <disp_text>いつもありがとうございます。 こちらはカスタマーサポートセンターです...</disp_text>
+    <text>
+        <![CDATA[いつもありがとうございます。 こちらはカスタマーサポートセンターです。発信音の後に、ご指定のサービスメニュー番号を押してください。]]>
+    </text>
+  </osusume_data>
+
+  <osusume_data>
+    <id>102</id>
+    <info>SAYAKA</info>
+    <title>
+        <![CDATA[用途のご紹介：電子書籍の読み上げ]]>
+     </title>
+    <speed>100</speed>
+    <pitch>100</pitch>
+    <volume>100</volume>
+    <speaker>304</speaker>
+    <disp_text>吾輩は猫である。名前はまだ無い。どこで生れたかとんと見当がつかぬ。</disp_text>
+    <text>
+        <![CDATA[吾輩は猫である。名前はまだ無い。どこで生れたかとんと見当がつかぬ。]]>
+    </text>
+  </osusume_data>
+
+  <osusume_data>
+    <id>103</id>
+    <info>SAYAKA</info>
+    <title>
+        <![CDATA[用途のご紹介：防災無線]]>
+     </title>
+    <speed>100</speed>
+    <pitch>100</pitch>
+    <volume>100</volume>
+    <speaker>304</speaker>
+    <disp_text>緊急地震速報。強い揺れに注意してください...</disp_text>
+    <text>
+        <![CDATA[緊急地震速報。
+強い揺れに注意してください。車はハザードランプを点けてください。落ちてくるものに注意し、頭を保護して、落ち着いて行動してください。]]>
+    </text>
+  </osusume_data>
+
+  <osusume_data>
+    <id>104</id>
+    <info>RYO</info>
+    <title>
+        <![CDATA[用途のご紹介：機器操作マニュアル]]>
+     </title>
+    <speed>100</speed>
+    <pitch>100</pitch>
+    <volume>100</volume>
+    <speaker>305</speaker>
+    <disp_text>カートリッジが正しくセットされておりません...</disp_text>
+    <text>
+        <![CDATA[カートリッジが正しくセットされておりません。詳しくは操作説明書の67ページを御覧下さい。]]>
+　　</text>
+  </osusume_data>
+
+  <osusume_data>
+    <id>105</id>
+    <info>SHOW</info>
+    <title>
+        <![CDATA[用途のご紹介：バス・電車のアナウンス]]>
+     </title>
+    <speed>100</speed>
+    <pitch>100</pitch>
+    <volume>100</volume>
+    <speaker>301</speaker>
+    <disp_text>つぎは、高田馬場、高田馬場、お出口は右側です...</disp_text>
+    <text>
+        <![CDATA[つぎは、高田馬場、高田馬場、お出口は右側です。
+西武新宿線、地下鉄東西線はお乗り換えです。
+お客様にお願い致します。]]>
+　　</text>
+  </osusume_data>
+
+
+  <osusume_data>
+    <id>201</id>
+    <info>SAYAKA</info>
+    <title>
+        <![CDATA[タグの使い方について：スピードの調整　通常/ゆっくり]]>
+     </title>
+    <speed>100</speed>
+    <pitch>100</pitch>
+    <volume>100</volume>
+    <speaker>304</speaker>
+    <disp_text>ただいま、大きな地震がありました。</disp_text>
+    <text>
+        <![CDATA[ただいま、大きな地震がありました。
+<vtml_speed value="80">ただいま、大きな地震がありました。</vtml_speed>
+<vtml_speed value="65">ただいま、大きな地震がありました。</vtml_speed>]]>
+</text>
+  </osusume_data>
+
+  <osusume_data>
+    <id>202</id>
+    <info>RYO</info>
+    <title>
+        <![CDATA[タグの使い方について：ポーズ時間変更　通常/間を空ける]]>
+     </title>
+    <speed>100</speed>
+    <pitch>100</pitch>
+    <volume>100</volume>
+    <speaker>305</speaker>
+    <disp_text>当地域に、大雨、洪水警報が発令されました。</disp_text>
+    <text>
+        <![CDATA[<vtml_speed value="80">当地域に、大雨、洪水警報が発令されました。</vtml_speed>
+<vtml_speed value="80">当地域に、<vtml_pause time="1000"/>大雨、<vtml_pause time="1000"/>洪水警報が<vtml_pause time="1000"/>発令されました。
+</vtml_speed>]]>
+</text>
+  </osusume_data>
+
+  <osusume_data>
+    <id>203</id>
+    <info>MISAKI</info>
+    <title>
+        <![CDATA[タグの使い方について：アクセントの調整　頭高型/平板型]]>
+     </title>
+    <speed>100</speed>
+    <pitch>100</pitch>
+    <volume>100</volume>
+    <speaker>302</speaker>
+    <disp_text>若い人は、彼氏のアクセントを、区別して使っている。</disp_text>
+    <text>
+        <![CDATA[若い人は、<vtml_phoneme alphabet="x-pentax" ph="カ^レシ">彼氏</vtml_phoneme>のアクセントを、区別して使っている。
+若い人は、「<vtml_phoneme alphabet="x-pentax" ph="カレシ">彼氏</vtml_phoneme>」のアクセントを、区別して使っている。]]>
+    </text>
+  </osusume_data>
+
+  <osusume_data>
+    <id>204</id>
+    <info>MISAKI</info>
+    <title>
+        <![CDATA[タグの使い方について：文末の調整　語尾を上げる/下げる]]>
+     </title>
+    <speed>100</speed>
+    <pitch>100</pitch>
+    <volume>100</volume>
+    <speaker>302</speaker>
+    <disp_text>どうして誘ってくれなかったんですか。</disp_text>
+    <text>
+        <![CDATA[どうして誘ってくれなかったんですか。<vtml_sentend level="9"/>
+どうして誘ってくれなかったんですか。<vtml_sentend level="1"/>]]>
+    </text>
+  </osusume_data>
+
+  <osusume_data>
+    <id>205</id>
+    <info>SAYAKA</info>
+    <title>
+        <![CDATA[タグの使い方について：アクセントレベル調整　標準/高く]]>
+     </title>
+    <speed>100</speed>
+    <pitch>100</pitch>
+    <volume>100</volume>
+    <speaker>304</speaker>
+    <disp_text>ありがとうございました。</disp_text>
+    <text>
+        <![CDATA[ありがとうございました。
+<vtml_accent level="8">ありがとう</vtml_accent>ございました。]]>
+    </text>
+  </osusume_data>
+
+
+  <osusume_data>
+    <id>901</id>
+    <info>SHOW</info>
+    <title>
+        <![CDATA[感情音声機能デモ：「ｵｯﾄｫ！(･oﾉ)ﾉ」]]>
+     </title>
+    <speed>100</speed>
+    <pitch>100</pitch>
+    <volume>100</volume>
+    <speaker>301</speaker>
+    <disp_text>ｵｯﾄｫ！(･oﾉ)ﾉもうこんな時間、明日は早起きしなくちゃ。</disp_text>
+    <text>
+        <![CDATA[ｵｯﾄｫ！(･oﾉ)ﾉもうこんな時間、明日は早起きしなくちゃ。
+＼(＾▽＾)／中国語の発音テスト100点うれしい
+ていうかヒロインしたいけどどう考えても私ヒロインじゃないし！！(｀Д´) ムキー!
+私からの返信FAXにはバニーちゃんをちょろっとかいてあげました(^∇^)ｱﾊﾊﾊﾊ!
+病棟から電話あって、すげえ焦った。(￣ー￣； ﾋﾔﾘ]]>
+    </text>
+  </osusume_data>
+
+  <osusume_data>
+    <id>902</id>
+    <info>SHOW</info>
+    <title>
+        <![CDATA[感情音声機能デモ：「(*ﾉ▽ﾉ)ｲﾔﾝ」]]>
+     </title>
+    <speed>100</speed>
+    <pitch>100</pitch>
+    <volume>100</volume>
+    <speaker>301</speaker>
+    <disp_text>女の子だからそんなこと言っちゃ駄目(*ﾉ▽ﾉ)ｲﾔﾝ</disp_text>
+    <text>
+        <![CDATA[女の子だからそんなこと言っちゃ駄目(*ﾉ▽ﾉ)ｲﾔﾝ
+泣きすぎで、化粧とれまくり。号(┬┬ω┬┬)泣
+今日のご飯はラーメンでっす☆∩(^∇^)∩ﾊﾞﾝｻﾞｰｲ♪
+ダンディゾンの飯島さんシナモンロール売り切れ。(ﾟ◇ﾟ)~ガーン
+]]>
+    </text>
+  </osusume_data>
+  <osusume_data>
+    <id>903</id>
+    <info>SHOW</info>
+    <title>
+        <![CDATA[感情音声機能デモ：「(ﾟｰﾟ)ﾆﾔﾘ」]]>
+     </title>
+    <speed>100</speed>
+    <pitch>100</pitch>
+    <volume>100</volume>
+    <speaker>301</speaker>
+    <disp_text>うむ。今日いい感じに仕上がったな。美容院で恥をかくことはあるまいよ(ﾟｰﾟ)ﾆﾔﾘ</disp_text>
+    <text>
+<![CDATA[うむ。今日いい感じに仕上がったな。美容院で恥をかくことはあるまいよ(ﾟｰﾟ)ﾆﾔﾘ
+”(*>ω<)o"ｸｰｰｯ餃子にビールは最強の組み合わせ◎
+え～。最初に言ったのが本心やから(/ω＼) ハジカシー
+]]>
+    </text>
+  </osusume_data>
+
+  <osusume_data_micro>
+    <id>104</id>
+    <info>RYO</info>
+    <title>
+        <![CDATA[用途のご紹介：機器操作マニュアル]]>
+     </title>
+    <speed>100</speed>
+    <pitch>100</pitch>
+    <volume>100</volume>
+    <speaker>305</speaker>
+    <disp_text>カートリッジが正しくセットされておりません...</disp_text>
+    <text>
+        <![CDATA[カートリッジが正しくセットされておりません。詳しくは操作説明書の67ページを御覧下さい。]]>
+  </text>
+  </osusume_data_micro>
+  <osusume_data_micro>
+    <id>201</id>
+    <info>SAYAKA</info>
+    <title>
+        <![CDATA[タグの使い方について：スピードの調整　通常/ゆっくり]]>
+     </title>
+    <speed>100</speed>
+    <pitch>100</pitch>
+    <volume>100</volume>
+    <speaker>304</speaker>
+    <disp_text>ただいま、大きな地震がありました。</disp_text>
+    <text>
+        <![CDATA[ただいま、大きな地震がありました。
+<vtml_speed value="80">ただいま、大きな地震がありました。</vtml_speed>
+<vtml_speed value="65">ただいま、大きな地震がありました。</vtml_speed>]]>
+</text>
+  </osusume_data_micro>
+
+
+</root>

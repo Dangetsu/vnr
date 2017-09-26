@@ -1,0 +1,10 @@
+# 4/26/2014 jichi
+# CaboCha 0.68
+https://code.google.com/p/cabocha
+
+# 10/3/2014 jichi
+# See: http://stackoverflow.com/questions/315285/can-i-use-two-incompatible-versions-of-the-same-dll-in-the-same-process
+Avoid conflicts with old libcabocha.dll in VOICEROID+ Zunko.
+- Rename libcabocha.dll to cabocha.dll
+- Edit _CaboCha.pyd and replace "libcabocha.dll" to "cabocha.dll\0\0\0" using "vim -b"
+  There is only one match.

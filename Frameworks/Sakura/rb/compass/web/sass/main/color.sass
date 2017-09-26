@@ -1,0 +1,124 @@
+/* color.sass
+   9/10/2014 jichi
+
+@import compass/css3
+
+// Checker links
+a
+  &.link.link-even // blue, bootstrap default
+    color: #428bca
+    &:hover,
+    &:focus
+      color: #2a6496
+  &.link.link-odd // purple, picked by gimp
+    color: #89329f
+    &:hover,
+    &:focus
+      color: #572663
+
+// Text
+
+//.text-muted
+//  color: #999 // bootstrap default
+
+.text-inverse
+  color: snow
+  &:hover
+    color: white
+
+.text-minor
+  color: #888
+  &:hover
+    color: #555
+
+// highlight
+.text-hl
+  +text-shadow(0 0 20px cyan)
+  //+text-shadow(0 0 0.2em #8f7)
+  //+text-shadow(0 0 0.2em #f87, 0 0 0.2em #f87)
+  //+text-shadow(0 0 0.2em #87f, 0 0 0.2em #87f, 0 0 0.2em #87f)
+  //+text-shadow(white 0.1em 0.1em 0.2em)
+  //+text-shadow(1px 1px white, -1px -1px #444)
+
+.lang
+  color: #333
+  //font-weight: bold
+.lang:hover
+  color: black
+
+//.text-success {
+//  color: #3c763d;
+//}
+//.text-success:hover {
+//  color: #2b542c;
+//}
+//.text-danger {
+//  color: #a94442;
+//}
+//.text-danger:hover {
+//  color: #843534;
+//}
+//.text-info {
+//  color: #31708f;
+//}
+//.text-info:hover {
+//  color: #245269;
+//}
+
+.score-color
+  //color: #e62828 // orange, the same as douban: http://movie.douban.com/subject/1304026/
+  color: purple
+
+.btn.like,
+.like-color
+  //@extend .text-success
+  color: #3c763d
+  &:hover
+    color: #2b542c
+  &.selected
+    //@extend .text-info
+    color: #31708f
+    &:hover
+      color: #245269
+
+.btn.dislike,
+.dislike-color
+  //@extend .text-danger
+  color: #a94442
+  &:hover
+    color: #843534
+  &.selected
+    //@extend .text-info
+    color: #31708f
+    &:hover
+      color: #245269
+
+.btn.watch,
+.watch-color
+  //@extend .text-primary
+  color: #428bca
+  &:hover
+    color: #3071a9
+  &.selected
+    //@extend .text-info
+    color: #31708f
+    &:hover
+      color: #245269
+
+// Subtitles
+
+//.annot
+//  //+text-shadow(red 1px 1px 10px)
+//  //+text-shadow(magenta 1px 1px 5px)
+//  //+text-shadow(#2d5f5f 1px 1px 5px) // dark green
+//  +text-shadow(#800080 1px 1px 5px) // purple
+//  color: snow
+//  //font-weight: bold
+//  font-size: 180%
+//  text-align: center
+//  //+text-shadow(red 1px 1px 10px)
+//  border-radius: 9px
+//  padding: 3px 4px
+//  background-color: rgba(0, 0, 0, 0.6) // black
+
+// EOF

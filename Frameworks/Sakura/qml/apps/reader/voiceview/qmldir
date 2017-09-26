@@ -1,0 +1,6 @@
+# voiceview/qmldir
+# 6/22/2013 jichi
+#Footer      footer.qml
+OptionBar   optionbar.qml
+Table       table.qml
+ToolBar     toolbar.qml

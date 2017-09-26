@@ -1,0 +1,100 @@
+{# games.xml 11/1/2012 jichi
+ # @param  now  datetime.datetime
+ # @param  games  iter[dataman.Game]
+-#}
+<?xml version="1.0" encoding="utf-8"?>
+<!-- games.xml {{now.strftime("%Y-%m-%d %H:%M")}} -->
+<grimoire version="1.0">
+	<games>
+%for it in games
+		<game id="{{it.id or 0}}">
+			<md5>{{it.md5}}</md5>
+			<path>{{it.path|e}}</path>
+%	if it.itemId
+			<itemId>{{it.itemId}}</itemId>
+%	endif
+%	if it.loader
+			<loader>{{it.loader}}</loader>
+%	endif
+%	if it.launchPath
+			<launchPath>{{it.launchPath|e}}</launchPath>
+%	endif
+%	if it.userDefinedName
+			<userDefinedName>{{it.userDefinedName|e}}</userDefinedName>
+%	endif
+%	if it.language
+			<language>{{it.language}}</language>
+%	endif
+%	if it.launchLanguage
+			<launchLanguage>{{it.launchLanguage}}</launchLanguage>
+%	endif
+%	if it.encoding
+			<encoding>{{it.encoding}}</encoding>
+%	endif
+%	if it.timeZoneEnabled != None
+			<timeZoneEnabled>{{'true' if it.timeZoneEnabled else 'false'}}</timeZoneEnabled>
+%	endif
+%	if it.gameAgentDisabled
+			<gameAgentDisabled>true</gameAgentDisabled>
+%	endif
+%	if it.keepsSpace
+			<keepsSpace>true</keepsSpace>
+%	endif
+%	if it.removesRepeat
+			<removesRepeat>true</removesRepeat>
+%	endif
+%	if it.ignoresRepeat
+			<ignoresRepeat>true</ignoresRepeat>
+%	endif
+%	if it.threadKept
+			<threadKept>true</threadKept>
+%	endif
+%	if it.voiceDefaultEnabled
+			<voiceDefaultEnabled>true</voiceDefaultEnabled>
+%	endif
+%	if it.hook
+			<hook {%- if it.hookDisabled %} disabled="true" {%- endif %}>{{it.hook|e}}</hook>
+%	endif
+%	if it.deletedHook and it.deletedHook != it.hook
+			<deletedHook>{{it.deletedHook|e}}</deletedHook>
+%	endif
+			<threads>
+%	if it.threadSignature
+				<thread type="scene">
+					<name>{{it.threadName}}</name>
+					<signature>{{it.threadSignature}}</signature>
+				</thread>
+%	endif
+%	if it.nameThreadSignature and not it.nameThreadDisabled
+				<thread type="name">
+					<name>{{it.nameThreadName}}</name>
+					<signature>{{it.nameThreadSignature}}</signature>
+				</thread>
+%	endif
+%	if it.otherThreads
+%		for sig, name in it.otherThreads.iteritems()
+				<thread type="other">
+					<name>{{name}}</name>
+					<signature>{{sig}}</signature>
+				</thread>
+%		endfor
+%	endif
+			</threads>
+			<names>
+%	for type, names in it.names.iteritems()
+%		for n in names
+				<name type="{{type}}">{{n|e}}</name>
+%		endfor
+%	endfor
+			</names>
+			<visitTime>{{it.visitTime}}</visitTime>
+			<visitCount>{{it.visitCount}}</visitCount>
+%	if it.commentCount
+			<commentCount>{{it.commentCount}}</commentCount>
+%	endif
+			<commentsUpdateTime>{{it.commentsUpdateTime}}</commentsUpdateTime>
+			<refsUpdateTime>{{it.refsUpdateTime}}</refsUpdateTime>
+		</game>
+%endfor
+	</games>
+</grimoire>

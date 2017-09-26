@@ -1,0 +1,31 @@
+/* fixes/bootstrap.sass
+   8/15/2013 jichi
+
+a,
+a:active,
+a:focus,
+a:hover,
+a:link,
+a:visited
+  border: 0!important // remove link dot border, see: http://stackoverflow.com/questions/2789703/remove-stubborn-underline-from-link
+
+a.badge,
+a.label,
+a .badge,
+a .label,
+.badge a,
+.label a
+  color: snow   // default is cyan
+
+// Fix the difficency of webkit which cannot figure out :empty state
+.label:empty,
+.badge:empty
+  display: inline // default is display:none
+
+// Bootstrap icon button
+a.btn.btn-link
+  padding: 0px
+  i
+    padding: 0px
+
+// EOF

@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<!-- typesystem_trscript.xml 4/1/2013 jichi -->
+<typesystem package='pytrscript'>
+  <load-typesystem name="typesystem_cpp_types.xml" generate="yes" />
+  <load-typesystem name="typesystem_std_string.xml" generate="yes" />
+  <object-type name="TranslationScriptPerformer" />
+</typesystem>

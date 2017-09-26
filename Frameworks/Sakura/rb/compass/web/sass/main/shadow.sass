@@ -1,0 +1,24 @@
+/* shadow.sass
+   8/31/2013 jichi
+
+@import compass/css3/box-shadow
+
+// Images
+
+$img-shadow-blur: 6px
+
+.img-shadow
+  +box-shadow(0 0 $img-shadow-blur #333)
+  &:hover
+    +box-shadow(0 0 $img-shadow-blur red)
+
+.img-shadow-hover:hover
+  +box-shadow(0 0 $img-shadow-blur red)
+
+.avatar-shadow
+  //+single-box-shadow // broken in new version
+  +box-shadow(0 0 $img-shadow-blur #333)
+  &:hover
+    @extend .img-shadow-hover
+
+// EOF

@@ -1,0 +1,46 @@
+# installer.yaml
+# 12/13/2012 jichi
+#
+# Difference between 'location' and 'path'
+# See: http://stackoverflow.com/questions/7195717/what-is-the-difference-between-the-pathelement-attributes-path-and-location
+
+# Application
+app:
+  debug: false
+
+version:
+  id: 1
+  name: installer
+  organization: sakuradite
+  domain: sakuradite.org
+  timestamp: 1356141659
+
+qt:
+  #metaCallPort: 6101    # IPC QMetaCall listening port (6100 + app.id)
+  threadCount: 8        # QtCore.QThreadPool.maxThreadCount
+  threadTimeout: 6000   # QThreadPool.waitForDone timeout in msecs
+  quitTimeout: 3000     # time taken for closing the app
+
+# Translations
+tr:
+  locales: ['ja_JP', 'zh_TW', 'zh_CN']
+  locations:
+  - $PWD/../Qt/translations
+  - $PWD/py/libs/sakurakit/tr
+  - $PWD/py/apps/installer/tr
+
+# Locations
+
+scripts:
+  reader:
+    update: $PWD/../../Scripts/getreader.cmd
+    remove: $PWD/../../Scripts/delreader.cmd
+  player:
+    update: $PWD/../../Scripts/getplayer.cmd
+    remove: $PWD/../../Scripts/delplayer.cmd
+
+traces:
+  reader: $PWD/../../Dictionaries/edict.db
+  player: $PWD/../../Deprecated/libvlc.dll
+
+# EOF

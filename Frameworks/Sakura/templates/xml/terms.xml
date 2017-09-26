@@ -1,0 +1,75 @@
+{# terms.xml 2/17/2013 jichi
+ # @param  now  datetime.datetime
+ # @param  terms  iter[dataman.Term]
+-#}
+<?xml version="1.0" encoding="utf-8"?>
+<!-- terms.xml {{now.strftime("%Y-%m-%d %H:%M")}} -->
+<grimoire version="1.0" timestamp="{{timestamp}}">
+	<terms>
+%for it in terms
+%	if it.id
+		<term id="{{it.id}}" type="{{it.type}}" {%- if it.disabled %} disabled="true" {%- endif %}>
+%		if it.gameId
+			<gameId>{{it.gameId}}</gameId>
+%		endif
+			<userId>{{it.userId}}</userId>
+%		if it.userHash
+			<userHash>{{it.userHash}}</userHash>
+%		endif
+%		if it.host
+			<host>{{it.host}}</host>
+%		endif
+%		if it.context
+			<context>{{it.context}}</context>
+%		endif
+			<sourceLanguage>{{it.sourceLanguage}}</sourceLanguage>
+			<language>{{it.language}}</language>
+			<timestamp>{{it.timestamp}}</timestamp>
+%		if it.updateTimestamp
+			<updateTimestamp>{{it.updateTimestamp}}</updateTimestamp>
+			<updateUserId>{{it.updateUserId}}</updateUserId>
+%		endif
+%		if it.hentai
+			<hentai>true</hentai>
+%		endif
+%		if it.icase
+			<icase>true</icase>
+%		endif
+%		if it.special
+			<special>true</special>
+%		endif
+%		if it.private
+			<private>true</private>
+%		endif
+%		if it.regex
+			<regex>true</regex>
+%		endif
+%		if it.phrase
+			<phrase>true</phrase>
+%		endif
+%		if it.pattern
+			<pattern>{{it.pattern|e}}</pattern>
+%		endif
+%		if it.text
+			<text>{{it.text|e}}</text>
+%		endif
+%		if it.ruby
+			<ruby>{{it.ruby|e}}</ruby>
+%		endif
+%		if it.priority
+			<priority>{{it.priority}}</priority>
+%		endif
+%		if it.role
+			<role>{{it.role|e}}</role>
+%		endif
+%		if it.comment
+			<comment>{{it.comment|e}}</comment>
+%		endif
+%		if it.updateComment
+			<updateComment>{{it.updateComment|e}}</updateComment>
+%		endif
+		</term>
+%	endif
+%endfor
+	</terms>
+</grimoire>

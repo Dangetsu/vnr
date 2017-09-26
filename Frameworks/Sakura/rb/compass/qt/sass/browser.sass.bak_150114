@@ -1,0 +1,383 @@
+/* browser.sass
+   3/29/2013 jichi
+
+// Global
+
+$win-background-color: #b9d1ea // light blue, the same as win7 basic background color
+//background: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgb(222, 232, 245), stop:1 rgb(247, 251, 255)) // win7 paint toolbar color
+
+$mac-background-color: #939393 // gray, the same as mac os x
+
+//$hover-border-color: #add8e6 // lightblue
+$hover-border-color: #7da8e6 // bluer, emulate bootstrap border
+
+.texture
+  background-image: url('$PWD/images/textures/marble.jpg')
+
+/** Main */
+
+// http://stackoverflow.com/questions/12053582/scoping-sass-variable
+=main-style($foreground-color, $background-color, $border-color)
+
+  // Status bar
+  QStatusBar
+    color: $foreground-color
+
+    &.warning,
+    &.error
+      font-weight: bold
+
+/** Address style */
+
+=address-aero-style($foreground-color, $background-color, $border-color)
+  // Address combobox edit
+  QComboBox.webkit.address
+    height: 22px
+    padding-left: -19px
+    color: $foreground-color
+    border-radius: 4px
+    background-color: transparent
+    //padding-left: 2px
+    border: 1px solid transparent
+
+    //&:hover
+    //  border: 1px solid $border-color
+    &:hover,
+    &:focus
+      border: 1px solid $hover-border-color // lightblue
+
+    // Paint the down-arrow as a minus sign
+    &::down-arrow
+      background-color: $foreground-color
+      width: 7px
+      height: 1px
+
+    &::drop-down
+      subcontrol-position: left
+      border: 1px solid transparent
+      border-radius: 3px
+      width: 16px
+      height: 16px
+      margin: 2px
+
+      &:on,
+      &:hover
+        border-color: $border-color
+        background-color: rgba($background-color, 0.1)
+
+=address-style($foreground-color, $background-color, $border-color)
+  // Address combobox edit
+  QComboBox.webkit.address
+    height: 22px
+    padding-left: -19px
+    color: $foreground-color
+    border-radius: 4px
+    //padding-left: 2px
+    border: 1px solid rgba($hover-border-color, 0.4)
+    background-color: rgba($background-color, 0.4)
+
+    //&:hover
+    //  border: 1px solid $border-color
+    &:hover
+      border-color: rgba($hover-border-color, 0.8)
+      background-color: rgba($background-color, 0.8)
+    &:focus
+      border-color: $hover-border-color
+      background-color: $background-color
+
+    // Paint the down-arrow as a minus sign
+    &::down-arrow
+      background-color: $foreground-color
+      width: 7px
+      height: 1px
+
+    &::drop-down
+      subcontrol-position: left
+      border: 1px solid transparent
+      border-radius: 3px
+      width: 16px
+      height: 16px
+      margin: 2px
+
+      &:on,
+      &:hover
+        border-color: $border-color
+        background-color: rgba($background-color, 0.1)
+
+/** Toolbar style */
+
+$toolbar-button-width: 24px // large enough so that all buttons are visible
+$toolbar-nav-count: 6 // number of buttons in the left navigation bar
+$toolbar-opt-count: 3 // number of buttons in the right option bar
+
+=toolbar-aero-style($foreground-color, $background-color, $border-color)
+  // Address toolbar
+  QToolBar.webkit.toolbar
+    border: 1px solid rgba($border-color, 0.8)
+    //border: 1px solid $border-color
+    border-radius: 4px
+
+    &.toolbar-nav
+      min-width: $toolbar-button-width * $toolbar-nav-count
+    &.toolbar-opt
+      min-width: $toolbar-button-width * $toolbar-opt-count
+
+    QToolButton
+      color: $foreground-color
+      width: 16px
+      height: 16px
+      font-size: 12px
+      //font-weight: bold
+      &:checked
+        font-weight: bold
+        //border: 2px solid $hover-border-color
+        //border: 1px solid $hover-border-color
+        //border: 1px solid rgba($border-color, 0.4)
+        //border: 2px solid transparent
+        //background-color: rgba($background-color, 0.1)
+      &:disabled // disabled must come at last
+        color: #bbb // gray
+        font-weight: normal
+        //border: none
+
+      // https://bugreports.qt-project.org/browse/QTBUG-2036
+      &::menu-indicator // disable menu arrow
+        image: none
+
+=toolbar-style($foreground-color, $background-color, $border-color)
+  // Address toolbar
+  QToolBar.webkit.toolbar
+    border: 1px solid rgba($border-color, 0.8)
+    //border: 1px solid $border-color
+    border-radius: 4px
+    background-color: rgba($background-color, 0.5)
+
+    &.toolbar-nav
+      min-width: $toolbar-button-width * $toolbar-nav-count
+    &.toolbar-opt
+      min-width: $toolbar-button-width * $toolbar-opt-count
+
+    QToolButton
+      color: $foreground-color
+      width: 16px
+      height: 16px
+      font-size: 12px
+      &:disabled
+        color: #bbb // gray
+
+      //font-weight: bold
+      //&:hover
+      //  border-radius: 4px
+      //  background-color: $background-color
+      //  border: 1px solid $border-color
+      &::menu-indicator // disable menu arrow
+        image: none
+
+/** Tabbar style */
+
+=tabbar-aero-style($foreground-color, $background-color, $border-color)
+  QTabBar::tab.webkit
+    padding: 5px
+    //min-width: 5em
+    min-width: 100px
+    //width: 20px
+    border-radius: 4px
+    color: $foreground-color
+    //background-color: rgba($border-color, 0.2)
+    margin-left: 2px
+    margin-right: 2px
+    margin-bottom: 4px // margin to the tabview
+
+    //background: qlineargradient(spread:pad, x1:0.5, y1:0, x2:0.5, y2:1, stop:0 rgba(73,73,74,255), stop:1 rgba(40,40,40,255))
+
+    border: 1px solid transparent
+
+    &:selected
+      border-color: rgba($border-color, 0.8)
+    &:hover
+      //border: 1px solid $border-color
+      border-color: $hover-border-color
+      background-color: rgba($background-color, 0.1)
+
+    /*
+      &:last
+        border-top-right-radius: 3px
+        border-bottom-right-radius: 3px
+        margin-right: 0px
+      &:first
+        border-top-left-radius: 3px
+        border-bottom-left-radius: 3px
+        margin-left: 0px
+      &:only-one
+        border-radius: 3px
+        margin: 0px
+
+=tabbar-style($foreground-color, $background-color, $border-color)
+  // See: http://stackoverflow.com/questions/7340046/qtabwidget-tabposition-when-using-stylesheets
+  QTabBar::tab.webkit
+    //$tab-border-width: 1px
+    //$tab-border-radius: 3px
+    padding: 5px
+    //min-width: 5em
+    min-width: 100px
+    //width: 20px
+
+    //border-top-left-radius: 4px
+    //border-top-right-radius: 4px
+    border-radius: 4px
+
+    color: $foreground-color
+    //background-color: rgba($border-color, 0.2)
+    margin-bottom: 1px // margin to the tabview
+
+    //margin-left: -$tab-border-width
+    //margin-right: -$tab-border-width
+
+    //border: 1px solid rgb(190, 190, 190)
+    border: 1px solid transparent
+
+    //background-color: rgba($background-color, 0.2)
+    //background: qlineargradient(spread:pad, x1:0.5, y1:0, x2:0.5, y2:1, stop:0 rgb(73, 73, 74), stop:1 rgb(40, 40, 40))
+    //background: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgb(222, 232, 245), stop:1 rgb(247, 251, 255))
+    //background: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 rgb(39, 117, 219), stop:1 rgb(107, 171, 249))
+
+    &:selected
+      border-color: rgba($border-color, 0.8)
+      background-color: rgba($background-color, 0.8)
+      //background: qlineargradient(spread:pad, x1:0.5, y1:1, x2:0.5, y2:0, stop:0 #dee8f5, stop:1 #f7fbff) // The same as windows toolbar banner color
+    &:hover
+      //border: 1px solid $border-color
+      border-color: $hover-border-color
+      background-color: $background-color
+
+    /*
+      &:only-one
+        margin-left: 0px
+        margin-right: 0px
+        //border-radius: $tab-border-radius
+      &:first
+        margin-left: 0px
+        //border-top-left-radius: $tab-border-radius
+        //border-bottom-left-radius: $tab-border-radius
+      &:last
+        margin-right: 0px
+        //border-top-right-radius: $tab-border-radius
+        //border-bottom-right-radius: $tab-border-radius
+
+/** Tab widget style */
+
+=tabwidget-aero-style($foreground-color, $background-color, $border-color)
+  // Tab corner button, see: bootstrap .close
+  QTabWidget.webkit
+    QPushButton.btn-tab-corner
+      width: 18px
+      height: 18px
+      border-radius: 4px
+      font-size: 12px
+      padding-left: 1px // center the text
+      font-weight: bold
+      color: $foreground-color
+      background-color: rgba($background-color, 0.1)
+      margin-bottom: 4px // margin to the tabview
+
+      &:focus,
+      &:hover
+        border: 1px solid $border-color
+        //border: 1px solid $hover-border-color
+        background-color: rgba($background-color, 0.2)
+
+=tabwidget-style($foreground-color, $background-color, $border-color)
+  // Tab corner button, see: bootstrap .close
+  QTabWidget.webkit
+    QPushButton.btn-tab-corner
+      width: 18px
+      height: 18px
+      border-radius: 4px
+      font-size: 12px
+      //font-weight: bold
+      padding-left: 1px // center the text
+      color: $foreground-color
+      margin-bottom: 4px // margin to the tabview
+      border: 1px solid rgba($border-color, 0.3)
+      background-color: rgba($background-color, 0.3)
+
+      &:focus,
+      &:hover
+        border-color: $border-color
+        background-color: $background-color
+
+// Specialization
+
+QMainWindow.main
+  &.win7.aero
+    +main-style(snow, white, white)
+    +address-aero-style(snow, white, white)
+    +toolbar-aero-style(snow, white, white)
+    +tabbar-aero-style(snow, white, white)
+    +tabwidget-aero-style(snow, white, white)
+
+  &.win8.aero
+    +main-style(black, $hover-border-color, white)
+    +address-aero-style(black, $hover-border-color, white)
+    +toolbar-aero-style(black, $hover-border-color, white)
+    +tabbar-aero-style(black, $hover-border-color, white)
+    +tabwidget-aero-style(black, $hover-border-color, white)
+
+  &.win7.notaero,
+  &.winxp
+    background-color: $win-background-color
+
+  &.mac,
+  &.linux
+    background-color: $mac-background-color
+
+  &.win7.notaero,
+  &.winxp,
+  &.mac,
+  &.linux
+    +main-style(black, white, $hover-border-color)
+    +address-style(black, white, $hover-border-color)
+    +toolbar-style(black, white, $hover-border-color)
+    +tabwidget-style(black, white, $hover-border-color)
+
+  &.win7.notaero,
+  &.winxp,
+  &.linux
+    +tabbar-style(black, white, $hover-border-color)
+
+  // Mac uses default  documentMode
+  //&.mac,
+  //  +tabbar-style(black, white, $hover-border-color)
+
+// EOF
+
+// Windows XP
+//.notaero
+//  //$foreground-color: black
+//
+//  // Tab corner button, see: bootstrap .close
+//  QTabWidget.webkit
+//    QPushButton.btn-tab-corner
+//      font-size: 12px
+//      font-weight: bold
+//      border: 1px solid transparent
+//      margin-bottom: 4px // margin to the tabview
+//
+//      // Bootstrap .btn.btn-default
+//      color: #333
+//      width: 18px
+//      height: 18px
+//      border-radius: 4px
+//      border-color: #ccc
+//      background-color: #fff
+//      &:hover, &:focus, &:checked, &:pressed
+//        color: #333
+//        border-color: #adadad
+//        //background-color: #ebebeb
+//      &:hover
+//        background-color: #e6e6e6
+//      &:checked, &:pressed
+//        background-color: #ccc
+//      &:hover,
+//      &:focus
+//        border-color: rgba(82,168,236,0.8) // blue, steal from bootstrap input[text] color

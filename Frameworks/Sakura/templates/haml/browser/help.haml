@@ -1,0 +1,192 @@
+; help.haml
+; 3/31/2014 jichi
+; @param  cdn
+; @param  tr  i18n.tr
+!!! 5
+%html
+  %head
+    %title #{tr('Help')}
+    %link(rel="stylesheet",href="#{rc.cdn_url('bootstrap3.css')}")
+    :css
+      /* Global */
+      body {
+        /*background-color: #ececec;*/
+        background-repeat: repeat;
+        background-image: url("#{rc.image_url('background-black')}");
+        color: snow;
+        font: 120% arial,helvetica,clean,sans-serif;
+      }
+      .portal {
+        border-radius: 4px;
+        border: 1px solid snow;
+        /*background-color: rgba(0,0,0,0.1);*/
+        margin: 10px auto;
+        max-width: 300px;
+        padding: 9px 18px;
+      }
+      section.section {
+        margin-top: 40px;
+      }
+      section.section.first {
+        margin-top: 0px;
+      }
+      img.logo {
+        width: 80px;
+        height: 80px;
+        margin-left: 20px;
+      }
+      hr {
+        margin: 10px 0;
+      }
+      label {
+        text-align: right;
+      }
+      .links a {
+        margin-right: 10px;
+      }
+      .form-group {
+        margin: 0; /* remove forum vertical margins */
+      }
+  %body
+    .container.portal
+      %section.section.first
+        %h4.section-head
+          #{tr('Mouse Gestures')}
+        %hr
+        .section-body
+          .group
+            %h5 #{tr('Tabs')}
+            .form-horizontal
+              .form-group
+                %label.control-label.col-xs-6 #{tr('New Tab')}:
+                .form-control-static.col-xs-6 →←
+              .form-group
+                %label.control-label.col-xs-6 #{tr('Close Tab')}:
+                .form-control-static.col-xs-6 ↓→
+              .form-group
+                %label.control-label.col-xs-6 #{tr('Undo Close Tab')}:
+                .form-control-static.col-xs-6 ←→
+              .form-group
+                %label.control-label.col-xs-6 #{tr('Previous Tab')}:
+                .form-control-static.col-xs-6 ↑←
+              .form-group
+                %label.control-label.col-xs-6 #{tr('Next Tab')}:
+                .form-control-static.col-xs-6 ↑→
+          .group
+            %h5 #{tr('Pages')}
+            .form-horizontal
+              .form-group
+                %label.control-label.col-xs-6 #{tr('Back')}:
+                .form-control-static.col-xs-6 ←
+              .form-group
+                %label.control-label.col-xs-6 #{tr('Forward')}:
+                .form-control-static.col-xs-6 →
+              .form-group
+                %label.control-label.col-xs-6 #{tr('Reload')}:
+                .form-control-static.col-xs-6 ↑↓
+
+      %section.section
+        %h4.section-head
+          #{tr('Keyboard Shortcuts')}
+        %hr
+        .section-body
+          .group
+            %h5 #{tr('Tabs')}
+            .form-horizontal
+              .form-group
+                %label.control-label.col-xs-6 #{tr('New Tab')}:
+                .form-control-static.col-xs-6 Ctrl+T
+              .form-group
+                %label.control-label.col-xs-6 #{tr('Close Tab')}:
+                .form-control-static.col-xs-6 Ctrl+W
+              .form-group
+                %label.control-label.col-xs-6 #{tr('Undo Close Tab')}:
+                .form-control-static.col-xs-6 Ctrl+Shift+T
+              .form-group
+                %label.control-label.col-xs-6 #{tr('Previous Tab')}:
+                .form-control-static.col-xs-6 Ctrl+{
+              .form-group
+                %label.control-label.col-xs-6 #{tr('Next Tab')}:
+                .form-control-static.col-xs-6 Ctrl+}
+              .form-group
+                %label.control-label.col-xs-6 #{tr('Navigate Tab')}:
+                .form-control-static.col-xs-6 Ctrl+1 ... Ctrl+9
+          .group
+            %h5 #{tr('Pages')}
+            .form-horizontal
+              .form-group
+                %label.control-label.col-xs-6 #{tr('Back')}:
+                .form-control-static.col-xs-6 Ctrl+[
+              .form-group
+                %label.control-label.col-xs-6 #{tr('Forward')}:
+                .form-control-static.col-xs-6 Ctrl+]
+              .form-group
+                %label.control-label.col-xs-6 #{tr('Reload')}:
+                .form-control-static.col-xs-6 Ctrl+R
+              .form-group
+                %label.control-label.col-xs-6 #{tr('Stop Loading')}:
+                .form-control-static.col-xs-6 Esc
+          .group
+            %h5 #{tr('Focus')}
+            .form-horizontal
+              .form-group
+                %label.control-label.col-xs-6 #{tr('Focus address bar')}:
+                .form-control-static.col-xs-6 Ctrl+L
+          .group
+            %h5 #{tr('Zoom')}
+            .form-horizontal
+              .form-group
+                %label.control-label.col-xs-6 #{tr('Zoom In')}:
+                .form-control-static.col-xs-6 Ctrl+=
+              .form-group
+                %label.control-label.col-xs-6 #{tr('Zoom Out')}:
+                .form-control-static.col-xs-6 Ctrl+-
+              .form-group
+                %label.control-label.col-xs-6 #{tr('Zoom Reset')}:
+                .form-control-static.col-xs-6 Ctrl+0
+
+      %section.section
+        %h4.section-head
+          #{tr('Japan-only Sites')}
+        %hr
+        .section-body
+          .group
+            %h5 通販サイト
+            -for url,name in \
+                ("www.dmm.co.jp/top", "DMM"), \
+                ("www.toranoana.jp", "とらのあな"),
+              %div(class="site")
+                %a(href="http://#{url}",title="#{url}") #{name}
+          .group
+            %h5 出版社
+            -for url,name in \
+                ("www.sun-magazine.jp/index.php", "サン出版"),
+              %div(class="site")
+                %a(href="http://#{url}",title="#{url}") #{name}
+          .group
+            %h5 ブランドHP
+            -for url,name in \
+                ("www.alicesoft.com/main.html", "アリスソフト"), \
+                ("melty-plus.com/top.html", "めるてぃぷらす"), \
+                ("tenco.cc/home/top", "天狐"), \
+                ("www.minori.ph/index_02.html", "minori"),
+              %div(class="site")
+                %a(href="http://#{url}",title="#{url}") #{name}
+          .group
+            %h5 あかべぇそふと
+            -for url,name in \
+                ("www.akabeesoft2.com", "あかべぇそふとつぅ"), \
+                ("www.akabeesoft2-try.com/top/top.php", "あかべぇそふとつぅTRY"), \
+                ("www.akabeesoft3.com/top.html", "あかべぇそふとすりぃ"), \
+                ("www.akabei-akane.com", "あかね"), \
+                ("www.applique-soft.com/main.html", "あっぷりけ"), \
+                ("www.effordomsoft.com", "エフォルダムソフト"), \
+                ("www.akatsukiworks.com/top.html", "暁WORKS"), \
+                ("www.collaborations2005.com/index02.html", "CollaborationS"), \
+                ("www.cosmiccute.com/top.html", "COSMIC CUTE"), \
+                ("www.hibiki-site.com/top.html", "hibiki"), \
+                ("www.nostalgicchord.com/top.html", "NostalgicChord"),
+              %div(class="site")
+                %a(href="http://#{url}",title="#{url}") #{name}
+
+; EOF

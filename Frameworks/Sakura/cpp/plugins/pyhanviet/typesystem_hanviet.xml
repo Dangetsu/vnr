@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<!-- typesystem_hangul.xml 4/1/2013 jichi -->
+<typesystem package='pyhanviet'>
+  <load-typesystem name="typesystem_core_common.xml" generate="no" />
+  <object-type name="HanVietTranslator" />
+</typesystem>

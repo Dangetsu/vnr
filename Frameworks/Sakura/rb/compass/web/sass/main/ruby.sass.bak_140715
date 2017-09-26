@@ -1,0 +1,66 @@
+/* ruby.sass
+   10/10/2013 jichi
+
+@import main/cursor
+@import main/i18n
+
+.ruby
+  // remove underline for furigana
+  a,
+  a:active,
+  a:focus,
+  a:hover,
+  a:link,
+  a:visited
+    //rt  // does not work
+    text-decoration: none
+  a:active,
+  a:focus,
+  a:hover
+    rb
+      text-decoration: underline
+  // change font
+  ruby
+    @extend .cursor-pointer
+    @extend .ja
+    //font-weight: bold
+    //font-size: 18px
+    rt
+      font-size: 90%
+  // Hover to show color. must be consistent with mecabjlp.py
+  &:not(:hover):not(.article)
+    color: purple
+  //a:hover,
+  &:hover:not(.article),
+  .sentence:hover
+    .word1
+      background-color: rgba(250,0,0,.15)   // red
+      rt
+        background-color: rgba(250,0,0,.15)
+    .word2
+      background-color: rgba(250,250,0,.15) // yellow
+      rt
+        background-color: rgba(250,250,0,.15)
+    .word3
+      background-color: rgba(0,250,0,.15)   // green
+      rt
+        background-color: rgba(0,250,0,.15)
+    .word4
+      background-color: rgba(0,0,250,.15)   // blue
+      rt
+        background-color: rgba(0,0,250,.15)
+  &.article
+    rb
+      font-size: 110%
+    //rt
+    //  font-size: 80%
+    //.sentence
+    //  &:hover
+    //    rb
+    //      text-decoration: underline
+
+.yomi
+  @extend .cursor-pointer
+  //@extend .ja // ugly with bootstrap label
+
+// EOF

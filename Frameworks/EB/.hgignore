@@ -1,0 +1,44 @@
+# .hgignore
+# 11/15/2012
+# Files that matches the patterns in this file will not saved
+# to the mercurial repository.
+# See: http://mercurial.selenic.com/wiki/QuickStart
+
+# - Globs -
+syntax: glob
+
+# Mac
+.DS_Store
+.dSYM
+
+# Windows
+Thumbs.db
+#desktop.ini
+
+# Repository
+.svn
+.git
+.hg
+
+# Python
+*.pyc
+*.pyo
+
+# C++
+*.o
+*.a
+*.la
+*.obj
+*.exp
+#*.lib
+
+# VIM
+.*.swp
+
+# Project
+*.pro.user
+
+# - Regular Expressions -
+#syntax: regexp
+
+# EOF

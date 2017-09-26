@@ -1,0 +1,42 @@
+/* dlsite.sass
+   11/26/2013 jichi
+   http://www.dlsite.com/maniax/work/=/product_id/RJ107332.html
+   http://www.dlsite.com/css/common.css
+
+$dlsite-url: 'http://www.dlsite.com'
+//$dlsite-url: 'http://153.121.52.138/proxy/dlsite/www'
+
+.dlsite.review
+  // jidhi 11/26/2013: global settings
+  // remove yes/no buttons
+  .review_ref
+    display: none
+  // hide footer
+  .review_more
+    display: none
+  //font-size: 85%      // global font-size does not work
+  #work_review_list
+    // reduce font size
+    font-size: 85%
+  // line in the middle
+  .review_title
+    border-top: 1px #bbb solid
+  // the same as common.css
+  .review_title_r
+    float: right
+  .review_title_l
+    float: left
+    // override headers (h4)
+    h1,h2,h3,h4,h5,h6
+      // reduce font size
+      font-size: 90%
+
+  p.osusume
+    width: 58px
+    height: 19px
+    float: left
+    text-indent: -9999px
+    margin-right: 5px
+    background: url(#{$dlsite-url}/images/web/home/btn_reviewer_osusume.gif) no-repeat
+
+// EOF

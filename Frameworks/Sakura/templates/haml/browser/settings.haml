@@ -1,0 +1,113 @@
+; settings.haml
+; 8/9/2014 jichi
+; @param  cdn
+; @param  tr  i18n.tr
+; @param  reader  settings.reader()
+!!! 5
+%html
+  %head
+    %title #{tr('Preferences')}
+    -for it in 'bootstrap3.css', 'bootstrap.switch.css'
+      %link(rel="stylesheet",href="#{rc.cdn_url(it)}")
+    :css
+      /* Global */
+      body {
+        /*background-color: #ececec;*/
+        background-repeat: repeat;
+        background-image: url("#{rc.image_url('background')}");
+        font: 120% arial,helvetica,clean,sans-serif;
+      }
+      .portal {
+        border-radius: 4px;
+        background-color: rgba(255,255,255,0.9);
+        margin: 10px auto;
+        max-width: 300px;
+        padding: 9px 18px;
+      }
+      section.section {
+        margin-top: 40px;
+      }
+      section.section.first {
+        margin-top: 0px;
+      }
+      img.logo {
+        width: 80px;
+        height: 80px;
+        margin-left: 20px;
+      }
+      hr {
+        margin: 10px 0;
+      }
+      label {
+        text-align: right;
+      }
+      .links a {
+        margin-right: 10px;
+      }
+      .form-group {
+        margin: 0; /* remove forum vertical margins */
+      }
+      .switch-group {
+        height: 18px; /* limit bootstrap switch height */
+        margin-top: 6px;
+      }
+  %body
+    .container.portal
+      %section.section.first
+        %h4.section-head
+          #{tr('Translators')}
+        %hr
+        .section-body
+          .group
+            %h5 #{tr('Offline')}
+            -for key,name,url,enabled in \
+                ("jbeijing", "JBeijing", "http://www.kodensha.jp/soft/jb/", reader.jbeijingLocation()), \
+                ("fastait", "FastAIT", "http://www.kodensha.jp/soft/jb/", reader.fastaitLocation()), \
+                ("dreye", "Dr.eye", "http://www.dreye.com", reader.dreyeLocation()), \
+                ("ez", "ezTrans XP", "http://www.cssoft.co.kr", reader.ezTransLocation()), \
+                ("hanviet", "Hán Việt", "http://www.tangthuvien.vn/forum/showthread.php?t=30151", true), \
+                ("atlas", "Atlas", "http://www.fujitsu.com/global/services/software/translation/atlas/downloads/trial.html", reader.atlasLocation()), \
+                ("lec", "LEC", "http://www.lec.com", reader.lecLocation()),
+              .form-horizontal
+                .form-group
+                  %label.control-label.col-xs-6
+                    %a(target="_blank",title="#{url}",href="#{url}") #{name}
+                  .switch-group.col-xs-6
+                    -if enabled
+                      %input.switch(data-key="#{key}",type="checkbox",data-size="mini",data-on-text="◯",data-off-text="☓")
+                    -else
+                      %input.switch(disabled="true",data-key="#{key}",type="checkbox",data-size="mini",data-on-text="◯",data-off-text="☓")
+          .group
+            %h5 #{tr('Online')}
+            -for key,name,url in \
+                ("baidu", 'Baidu.com', "http://fanyi.baidu.com"), \
+                ("bing", 'Bing.com', "http://www.bing.com/translator"), \
+                ("google", 'Google.com', "http://translate.google.com"), \
+                ("lecol", 'LEC.com', "http://lec.com"), \
+                ("infoseek", 'Infoseek.ne.jp', "http://translation.infoseek.ne.jp"), \
+                ("excite", 'Excite.co.jp', "http://excite.co.jp/world"), \
+                ("transru", 'Translate.Ru', "http://translate.ru"),
+              .form-horizontal
+                .form-group
+                  %label.control-label.col-xs-6
+                    %a(target="_blank",title="#{url}",href="#{url}") #{name}
+                  .switch-group.col-xs-6
+                    %input.switch(data-key="#{key}",type="checkbox",data-size="mini",data-on-text="◯",data-off-text="☓")
+
+    -for it in 'jquery', 'bootstrap.switch'
+      %script(src="#{rc.cdn_url(it)}")
+
+    :javascript
+      $(function() {
+        $('input.switch').each(function() {
+          var $this = $(this);
+          var key = $this.data('key');
+          $this.bootstrapSwitch({
+            state: settingsBean.isTranslatorEnabled(key)
+          }).on('switchChange.bootstrapSwitch', function(ev, checked) {
+            settingsBean.setTranslatorEnabled(key, checked);
+          })
+        });
+      });
+
+; EOF

@@ -1,0 +1,947 @@
+# share.yaml
+# 11/1/2012 jichi
+#
+# Difference between 'location' and 'path'
+# See: http://stackoverflow.com/questions/7195717/what-is-the-difference-between-the-pathelement-attributes-path-and-location
+# test
+# Environment variables
+
+env:
+  path:
+  - $PWD/bin # only needed on Windows XP
+  - $PWD/../Python
+  - $PWD/../Qt/PySide
+  - $PWD/../MeCab/bin
+  - $PWD/../Boost/bin
+  - $PWD/../Ehnd/bin
+  #- $PWD/../CaboCha/bin
+  #- $PWD/../EB/site-packages
+
+  pythonpath:
+  - $PWD/bin
+  - $PWD/py
+  - $PWD/py/apps
+  - $PWD/py/libs
+  - $PWD/../Qt
+  - $PWD/../Qt/PySide   # for shiboken
+  - $PWD/../MeCab/py
+  - $PWD/../EB/site-packages
+  #- $PWD/../CaboCha/py
+  #- $PWD/../Qt/site-packages
+
+  mecabrc: $PWD/../../Dictionaries/mecabrc/unidic.rc
+
+  #xp: # only for Windows XP
+  #  pythonpath:
+  #  - $PWD/bin/xp
+
+  integritypath:
+  - $PWD/bin/vnragent.dll
+  - $PWD/bin/vnrhook.dll
+  #- $PWD/bin/vnrboot.dll
+  - $PWD/bin/texthook.dll
+  - $PWD/../Python/Lib/site-packages/pydasm.pyd
+  - $PWD/../Qt/PySide/QtCore4.dll
+  - $PWD/../Qt/PySide/QtGui4.dll
+  - $PWD/../Qt/translations/qt_ko.qm
+  - $PWD/../MeCab/bin/libmecab.dll
+  - $PWD/../Boost/bin/boost_regex.dll
+  - $PWD/../Ehnd/bin/ehnd.dll
+  - $PWD/../EB/site-packages/eb.pyd
+  - $PWD/../../Dictionaries/gaiji/KOJIEN.plist
+  - $PWD/../../Fonts/msgothic.ttf
+  #- $PWD/../CaboCha/bin/cabocha.dll
+  #- $PWD/../../Dictionaries/lingoes/ja-zh.ld2
+  #- $PWD/../NTLEA/ntleac.exe # do not work on Code Ultra
+
+webkit:
+  # Default: Mozilla/5.0 (Windows NT 6.1) AppleWebKit/534.34 (KHTML, like Gecko) Website Reader/1416161842 Safari/534.34
+  # Use Chrome: http://www.useragentstring.com/pages/Browserlist/
+  useragent: Mozilla/5.0 (Windows NT 6.3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2049.0 Safari/537.36
+
+# CDN
+cdn: # Note: the http:// prefix is indispensable, or it will be interpreted as qrc://
+
+  # Twitter
+  # http://www.bootstrapcdn.com/#tab_fontawesome
+  bootstrap2: http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js
+  bootstrap2.css: http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css
+
+  bootstrap3: http://netdna.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js
+  bootstrap3.css: http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css
+
+  #font-awesome.css: http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css
+  font-awesome3.css: $PWD/../AJAX/font-awesome/3.2.1/css/font-awesome.min.css
+  font-awesome4.css: $PWD/../AJAX/font-awesome/4.2.0/css/font-awesome.min.css
+
+  twitter.widgets: http://platform.twitter.com/widgets.js
+
+  # Microsoft CDN: http://www.asp.net/ajaxlibrary/cdn.ashx#Third-Party_Files_on_the_CDN_21
+  jquery: http://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js
+  #jquery: $PWD/../AJAX/jquery/2.0.3/jquery-2.0.3.min.js
+
+  # Google CDN: https://developers.google.com/speed/libraries/devguide
+  #jquery: http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js
+
+  # Google Code
+
+  # http://code.ovidiu.ch/dragdealer/
+  # http://code.google.com/p/dragdealer/
+  # http://archive.ovidiu.ch/v2/dragdealer-js
+  #dragdealer: https://dragdealer.googlecode.com/svn/tags/0.9.5/dragdealer.js
+  #dragdealer.css: https://dragdealer.googlecode.com/svn/tags/0.9.5/dragdealer.css
+  dragdealer: $PWD/../AJAX/dragdealer/0.9.5/dragdealer.min.js
+
+  # jsDelivr: http://jsdelivr.com, https://github.com/jsdelivr/jsdelivr/tree/master/files
+
+  # The latest version does not work: http://stackoverflow.com/questions/20542309/using-masonry-with-imagesloaded/22448679#22448679
+  #jquery.imagesloaded: http://cdn.jsdelivr.net/imagesloaded/3.1.4/imagesloaded.min.js
+  #jquery.imagesloaded: http://cdn.jsdelivr.net/imagesloaded/3.1.0/imagesloaded.min.js
+  jquery.imagesloaded: http://cdn.jsdelivr.net/imagesloaded/3.0.4/imagesloaded.pkgd.min.js
+  jquery.ui: http://cdn.jsdelivr.net/jquery.ui/1.11.4/jquery-ui.min.js
+
+  bootstrap.growl: $PWD/../AJAX/github/bootstrap-growl.min.js
+
+  bootstrap.switch: $PWD/../AJAX/github/bootstrap-switch.min.js
+  #bootstrap.switch: http://www.bootstrap-switch.org/dist/js/bootstrap-switch.min.js # 3.0.1, block user agent
+  #bootstrap.switch: http://cdn.jsdelivr.net/bootstrap.switch/3.0.0/js/bootstrap-switch.min.js
+  bootstrap.switch.css: $PWD/../AJAX/github/bootstrap-switch.min.css
+  #bootstrap.switch.css: http://www.bootstrap-switch.org/dist/css/bootstrap3/bootstrap-switch.min.css # 3.0.1
+  #bootstrap.switch.css: http:'//cdn.jsdelivr.net/bootstrap.switch/3.0.0/css/bootstrap3/bootstrap-switch.min.css
+
+  sprintf: $PWD/../AJAX/github/sprintf.min.js
+
+  masonry: http://cdn.jsdelivr.net/masonry/3.3.2/masonry.pkgd.min.js
+
+  moment: http://cdn.jsdelivr.net/momentjs/2.10.6/moment-with-locales.min.js
+  #underscore: http://cdn.jsdelivr.net/underscorejs/1.6.0/underscore-min.js
+  underscore: http://cdn.jsdelivr.net/lodash/3.10.1/lodash.min.js
+  # Underscore.string has been outdated
+  underscore.string: http://cdn.jsdelivr.net/underscore.string/2.3.3/underscore.string.min.js
+
+  spin: http://cdn.jsdelivr.net/spinjs/2.3.2/spin.min.js
+  jquery.spin: http://cdn.jsdelivr.net/spinjs/2.3.2/jquery.spin.min.js
+
+  # CDNJS: http://cdnjs.com
+
+  # staticfile: http://staticfile.org
+
+  # MAXCDN: http://osscdn.com/
+
+  # Github
+  # JQuery.QuickSearch has been dead??
+  # Use local version which is more stable
+  #jquery.quicksearch: http://rawgithub.com/riklomas/quicksearch/master/jquery.quicksearch.js
+  #jquery.quicksearch: http://rawgithub.com/structureddynamics/Semantic-Components-Open-Semantic-Framework/master/js/sWebMap/js-min/jquery.quicksearch.min.js
+  #jquery.quicksearch: $PWD/ajax/jquery.quicksearch/jquery.quicksearch.min.js
+
+  # NPM
+  # Append version to force update js
+  # But use local versions which are more stable than github branches
+
+  #dateformat: http://rawgithub.com/felixge/node-dateformat/master/lib/dateformat.js?1.2.3
+  #dateformat: $PWD/../AJAX/npm/dateformat.min.js
+
+  jquery.raty.path: $PWD/../AJAX/raty/images
+  jquery.raty: $PWD/../AJAX/raty/jquery.raty.min.js
+
+  #haml: http://rawgithub.com/creationix/haml-js/master/lib/haml.js?0.4.3
+  haml: $PWD/../AJAX/haml/haml.min.js
+
+  bbcode: $PWD/../AJAX/npm/bbcode.min.js
+
+  # CSS
+  dragdealer.css: $PWD/rb/compass/web/css/dragdealer.min.css
+  metro.css: $PWD/rb/compass/web/css/metro.min.css
+  #iframe.css: $PWD/rb/compass/web/css/iframe.min.css
+
+  # My own sass and coffeescript
+
+  libs/choco: $PWD/coffee/libs/choco.min.js
+  libs/linkify: $PWD/coffee/libs/linkify.min.js
+
+  share/annot: $PWD/coffee/share/annot.min.js
+  share/growl: $PWD/coffee/share/growl.min.js
+  share/nogrowl: $PWD/coffee/share/nogrowl.min.js
+  share/rest: $PWD/coffee/share/rest.min.js
+  share/util: $PWD/coffee/share/util.min.js
+
+  # Reader
+  reader/widgets: $PWD/coffee/reader/widgets.min.js
+
+  reader/gameview: $PWD/coffee/reader/gameview.min.js
+  reader/gameview.css: $PWD/rb/compass/web/css/gameview.min.css
+  reader/gameboard: $PWD/coffee/reader/gameboard.min.js
+  reader/gameboard.css: $PWD/rb/compass/web/css/gameboard.min.css
+  reader/topicview: $PWD/coffee/reader/topicview.min.js
+  reader/topicview.css: $PWD/rb/compass/web/css/topicview.min.css
+  reader/topicsview: $PWD/coffee/reader/topicsview.min.js
+  reader/topicsview.css: $PWD/rb/compass/web/css/topicsview.min.css
+
+  reader/forum/posts: $PWD/coffee/reader/forum/posts.min.js
+  reader/forum/posts.css: $PWD/rb/compass/web/css/forum/posts.min.css
+  reader/forum/topics: $PWD/coffee/reader/forum/topics.min.js
+  reader/forum/topics.css: $PWD/rb/compass/web/css/forum/topics.min.css
+  reader/forum/topic: $PWD/coffee/reader/forum/topic.min.js
+  reader/forum/topic.css: $PWD/rb/compass/web/css/forum/topic.min.css
+
+  #amazon.css: $PWD/rb/compass/web/css/sites/amazon.min.css
+  #getchu.css: $PWD/rb/compass/web/css/sites/getchu.min.css
+  #gyutto.css: $PWD/rb/compass/web/css/sites/gyutto.min.css
+  #digiket.css: $PWD/rb/compass/web/css/sites/digiket.min.css
+  #dlsite.css: $PWD/rb/compass/web/css/sites/dlsite.min.css
+  #dmm.css: $PWD/rb/compass/web/css/sites/dmm.min.css
+
+  # Browser
+  dmm/localized_welcome: $PWD/coffee/dmm/localized_welcome.min.js
+
+  inject-annot: $PWD/coffee/browser/inject-annot.min.js
+  client-annot: $PWD/coffee/browser/client-annot.min.js
+  client-annot.css: $PWD/rb/compass/web/css/browser-annot.min.css
+
+  inject-site: $PWD/coffee/browser/inject-site.min.js
+  client-site: $PWD/coffee/browser/client-site.min.js
+  client-site.css: $PWD/rb/compass/web/css/browser-site.min.css
+
+# Qt
+
+qt:
+  tr: $PWD/../Qt/translations
+
+# urls
+
+apis:
+  host: http://vnr.aniclan.com
+  #host: http://153.121.54.194
+  #host: http://localhost:8080
+  #
+  rest: http://vnr.aniclan.com/connection.php?
+  #rest: http://153.121.54.194/api/xml
+  #rest: http://sakuradite.com/api/xml
+  #rest: http://localhost:5000/api/xml
+  #
+  cache: http://vnr.aniclan.com/connection.php?
+  #cache: http://153.121.54.194/cache/api
+  #
+  ajax: http://vnr.aniclan.com/connection.php? # must end with '/'
+  #ajax: http://153.121.54.194/api/json/ # must end with '/'
+  #ajax: http://localhost:8080/api/json/
+  #ajax: http://localhost:8080/json/
+  #ajax: http://localhost:5000/json/
+  #
+  push: http://vnr.aniclan.com/connection.php? # must end with '/'
+  #push: http://153.121.54.194/push/ # must end with '/'
+  #push: http://sakuradite.com/push/
+  #push: http://localhost:8080/push/
+
+forum:
+  topics:
+    global: 50
+    term: 51
+  subjects:
+    global: 101
+
+urls:
+  reader_demo: "http://www.youtube.com/watch?v=KxRGwS4gkW4"
+  #reader_demo: "http://www.youtube.com/watch?v=MCwqRHoEjIU"
+
+emails:
+  help: "annotcloud@gmail.com"
+
+proxies:
+  host: 153.121.52.138 # sakuradite.org
+  #host: 153.121.54.194 # sakuradite.com
+
+  jpwebproxy: http://153.121.52.138/proxy/jpwebproxy
+  uswebproxy: http://153.121.52.138/proxy/uswebproxy
+
+  baidufanyi:   http://153.121.52.138/proxy/baidu/fanyi
+  baidutts:     http://153.121.52.138/proxy/baidu/tts
+  iciba:        http://153.121.52.138/proxy/iciba/jp
+
+  twittersearch: http://websearch.excite.co.jp/
+  googlesearch: http://websearch.excite.co.jp/
+  googlesr:     http://153.121.52.138/proxy/gg/speech/v2/recognize
+  googletrans:  http://153.121.52.138/proxy/gg/trans/translate_a/t
+  googletts:    http://153.121.52.138/proxy/gg/trans/translate_tts
+  ytimg:
+    i:          http://153.121.52.138/proxy/ytimg/i2
+    s:          http://153.121.52.138/proxy/ytimg/s
+  twimg:
+    a:          http://153.121.52.138/proxy/twimg/a0
+    pbs:        http://153.121.52.138/proxy/twimg/pbs
+  # See: http://erogamescape.dyndns.org/usage/usage_201411.html
+  erogamescape: http://122.219.66.141/~ap2/ero/toukei_kaiseki
+  dmm_jp:       http://153.121.52.138/proxy/dmm
+  dmm_com:      http://153.121.52.138/proxy/dmmcom/www
+  #dmm_com_p:    http://153.121.52.138/proxy/dmmcom/p
+  dlsite:       http://153.121.52.138/proxy/dlsite/www
+  dlsite_img:   http://153.121.52.138/proxy/dlsite/img
+  toranoana:    http://153.121.52.138/proxy/toranoana/www
+  toranoana_img: http://153.121.52.138/proxy/toranoana/img
+
+  # http://sakuradite.com/topic/140
+  # http://9gal.com/read.php?tid=417812&page=e
+  getchu:       http://210.155.150.152
+
+  # http://kancolle.wikia.com/wiki/Tutorial:_Proxy_Connection
+  kancolle:     http://203.104.209.7
+
+  domains: # persistent DNS
+    #sakuradite.com: 153.121.54.194
+    sakuradite.org: 153.121.52.138
+    getchu.com:     210.155.150.152
+    erogamescape.dyndns.org: 122.219.66.141
+
+  sites:
+    #adlib-software: www.adlib-software.com
+    akabeesoft2: www.akabeesoft2.com
+    akabeesoft2-try: www.akabeesoft2-try.com
+    akabeesoft3: www.akabeesoft3.com
+    akabei-akane: www.akabei-akane.com
+    akatsukiworks: www.akatsukiworks.com
+    alicesoft: www.alicesoft.com
+    alicesoft-co: www.alicesoft.co.jp
+    alicesoft-enquete: enquete.alicesoft.co.jp
+    applique-soft: www.applique-soft.com
+    collaborations2005: www.collaborations2005.com
+    cosmiccute: www.cosmiccute.com
+    #effordomsoft: www.effordomsoft.com
+    effordomsoft: effordomsoft.com
+    hibiki: www.hibiki-site.com
+    melty-plus: melty-plus.com
+    minori: www.minori.ph
+    nostalgicchord: www.nostalgicchord.com
+    tenco: tenco.cc
+    #shallotsoft: www.shallotsoft.com   # DOWN
+    #spermaniax: www.spermaniax.net     # DOWN
+    #spielsoft: spielsoft.1000.tv       # Do not need proxy
+    #sprite: sprite.gr.jp               # Do not need proxy
+    #syangrila: www.syangrila.com       # DOWN
+    #wheel-soft: www.wheel-soft.com     # DOWN
+    #witchflame: www.witchflame.jp      # Do not need proxy
+    sun-magazine: www.sun-magazine.jp
+
+    # Only needed by Mainland China
+    c-queen: www.c-queen.net
+    muzintou: muzintou.sakura.ne.jp
+    ojaru: drs.ojaru.jp
+
+    # Example:
+    # http://www.dmm.co.jp/mono/pcgame/-/detail/=/cid=1715apc10593/
+    # http://sakuradite.org/proxy/dmm/mono/pcgame/-/detail/=/cid=1715apc10593/
+    dmm: dmm.co.jp
+    dmmcom/www: dmm.com
+    dmmcom/make: make.dmm.com
+    dmmcom/chariloto: chariloto.dmm.com
+    #dmmcom/log-netgame: log-netgame.dmm.com
+    #dmmcom/osapi: osapi.dmm.com
+
+    twimg/pbs:  pbs.twimg.com
+    twimg/a0:   a0.twimg.com
+    twimg/a1:   a1.twimg.com
+    twimg/a2:   a2.twimg.com
+    twimg/a3:   a3.twimg.com
+
+    ytimg/s:    s.ytimg.com
+    ytimg/s1:   s1.ytimg.com
+    ytimg/s2:   s2.ytimg.com
+    ytimg/i:    i.ytimg.com
+    ytimg/i1:   i1.ytimg.com
+    ytimg/i2:   i2.ytimg.com
+
+    kancolle:   203.104.209.7
+    #scape:     erogamescape.dyndns.org
+
+google:
+  search:       https://google.co.jp/search
+  ytimg:
+    i:          http://i2.ytimg.com
+    s:          http://s.ytimg.com
+
+twitter:
+  search:       https://twitter.com/search
+  twimg:
+    a:          http://a0.twimg.com
+    pbs:        http://pbs.twimg.com
+
+# Amazon
+
+amazon: # AWS
+  accessKey: AKIAJSUDXZVM3TXLJXPQ
+  secretKey: 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
+  associateTag: sakuradite-20 # Not used
+  region: jp
+
+dmm: # DMM
+  apiId: ezuc1BvgM0f74KV4ZMmS
+  affiliateId: sakuradite-999
+
+# i18n
+
+# http://msdn.microsoft.com/en-us/library/windows/desktop/dd317756%28v=vs.85%29.aspx
+encodings:
+ - shift-jis    # cp932, ja
+ - utf-16
+ - utf-8
+ - big5         # cp950, zht
+ - gbk          # cp936, zhs
+ - euc-kr       # cp949, ko
+ - windows-1258 # cp1258, vi
+ - tis-620      # cp874, th
+ - windows-1256 # cp1256, ar
+ - windows-1255 # cp1255, he
+ - windows-1254 # cp1254, tr
+ - windows-1253 # cp1253, el
+ - windows-1257 # cp1257, baltic, north europe
+ - windows-1250 # cp1250, central/eastern europe
+ - windows-1251 # cp1251, cyrillic
+ - latin1       # cp1252, latin
+
+languages:
+  all:
+  - ja
+  - en
+  - zht
+  - zhs
+  - ko # Korean
+  - vi # Vietnamese
+  - tl # Filipino (Tagalog)
+  - id # Indonesian
+  - ms # Malaysian
+  - th # Thai
+  - he # Hebrew
+  - ar # Arabic
+  - cs # Czech
+  - da # Danish
+  - de # German
+  - el # Greek
+  - es # Spanish
+  - et # Estonian
+  - fi # Finnish
+  - fr # French
+  - hu # Hungarian
+  - it # Italian
+  - lt # Lithuanian
+  - lv # Latvian
+  - nl # Dutch
+  - 'no' # Norwegian
+  - pl # Polish
+  - pt # Portuguese
+  - ro # Romanian
+  - sl # Slovenian
+  - sk # Slovak
+  - sv # Swedish
+  - tr # Turkish
+  - bg # Bulgarian
+  - be # Belarusian
+  - ru # Russian
+  - uk # Ukrainian
+  latin:
+  - en
+  - cs
+  - da
+  - de
+  - es
+  - et
+  - fi
+  - fr
+  - hu
+  - it
+  - lt
+  - lv
+  - nl
+  - 'no'
+  - pl
+  - pt
+  - ro
+  - sl
+  - sk
+  - sv
+  - tr
+  # Asian, though
+  - vi
+  - tl
+  - id
+  - ms
+  # Different alphabet, though
+  - el
+  - ru
+  - uk
+  cyril:
+  - ru
+  - be
+  - bg
+  - uk
+  asian: # on contrast of latin+cyril
+  - ja
+  - zht
+  - zhs
+  - ko
+  - th
+  - he
+  - ar
+  kanji:
+  - ja
+  - zht
+  - zhs
+  - ko
+  wordspace: # non-latin/cyril languages that have spaces between words
+  - ar
+  - he
+  space: # non-latin languages that might have spaces
+  - ar
+  - he
+  - ko
+  - th
+  reversed: # right-to-left
+  - ar
+  - he
+  ocr: # The order is consistent with modiocr's definition
+  - ja  # 1041: Japanese - Japan
+  - zhs # 2052: Chinese (Simplified) - People's Republic of China
+  - zht # 1028: Chinese - Republic of China (Taiwan), 3076: Chinese - Hong Kong (S.A.R.)
+  - ko  # 1042: Korean - Korea
+  - cs  # 1029: Czech - Czech Republic
+  - da  # 1030: Danish - Denmark
+  - de  # 1031: German - Germany
+  - fi  # 1035: Finnish - Finland
+  - fr  # 1036: French - France
+  - el  # 1032: Greek - Greece
+  - es  # 3082: Spanish (Modern Sort) - Spain
+  - hu  # 1038: Hungarian - Hungary
+  - it  # 1040: Italian - Italy
+  - nl  # 1043: Dutch - Netherlands
+  - 'no'  # 1044: Norwegian (Bokmål) - Norway
+  - pl  # 1045: Polish - Poland
+  - pt  # 1046: Portuguese - Brazil
+  - ru  # 1049: Russian - Russia
+  - sv  # 1053: Swedish - Sweden
+  - tr  # 1055: Turkish - Turkey
+  - en  # 1033: English - United States
+
+  yomi: # Yomigana languages
+    - en
+    - ru
+    - uk
+    #- be
+    #- bg
+    - el
+    - th
+    - ar
+    #- he
+    - ko
+
+  # Languages supported by transliterate
+  # https://github.com/barseghyanartur/transliterate
+  alphabet:
+    - el
+    - he
+    - ru
+    - bg
+    - uk
+    # Not supported languages
+    #- hi
+    #- hy
+    #- ka
+
+  names:
+    zh: 中文
+    zht: 中文
+    zhs: 简体中文
+    en: English
+    ja: 日本語
+    ko: 한국어
+    vi: Tiếng Việt
+    tl: Tagalog
+    id: Indonesia
+    ms: Bahasa Melayu
+    th: ภาษาไทย
+    he: עברית
+    ar: العربية
+    cs: Čeština
+    da: Dansk
+    de: Deutsch
+    el: Ελληνικά
+    es: Españo
+    et: Eesti
+    fr: Française
+    hu: Magyar
+    it: Italiano
+    lt: Lietuvių
+    lv: Latviešu
+    'no': Norsk bokmål
+    nl: Nederlands
+    pl: Polski
+    pt: Português
+    ro: Română
+    sl: Slovenščina
+    sk: Slovenčina
+    fi: Suomi
+    sv: Svenska
+    tr: Türkçe
+    be: Беларуская
+    bg: Български
+    ru: Русский
+    uk: Українська
+
+# See: http://msdn.microsoft.com/en-us/library/aa369771%28v=vs.85%29.aspx
+# See: http://www.science.co.il/language/locale-codes.asp
+locales:
+  ja: ja_JP
+  en: en_US
+  zht: zh_TW
+  zhs: zh_CN
+  ko: ko_KR
+  ms: ms_MY
+  sv: sv_SE
+  uk: uk_UA
+  et: et_EE
+  vi: vi_VN
+  ar: ar_SA # Arabic - Saudi Arabia, there are lots of ar, and the one with smallest locale is lcode
+  he: he_IL # Hebrew - Israel
+  #nb: nb_NO # Norwegian - Bokml
+
+spells:
+  en: en_US
+  de: de_DE
+  fr: fr_FR
+
+#image_fonts:
+#  mac:
+#    en: /Library/Fonts/Tahoma.ttf
+#    ja: /Library/Fonts/Tahoma.ttf
+#  win:
+#    en: arial.ttf       # Arial
+#    ja: msgothic.ttf    # MS Gothic
+
+fonts:
+  text:
+    '*': DFGirl    #Helvetica
+    ja: MS Gothic
+    ko: NanumBarunGothic
+  ui:
+    ko: NanumBarunGothic
+
+font-family:
+  default:  $PWD/../../Fonts
+  hanazono: $PWD/../../../Caches/Fonts/Hanazono
+  #nanum:    $PWD/../../../Caches/Fonts/Nanum
+
+opencc:
+  s2t:      $PWD/../../Dictionaries/opencc/STCharacters.txt
+  t2s:      $PWD/../../Dictionaries/opencc/TSCharacters.txt
+  t2tw:     $PWD/../../Dictionaries/opencc/TWVariants.txt
+  t2hk:     $PWD/../../Dictionaries/opencc/HKVariants.txt
+  t2ja:     $PWD/../../Dictionaries/opencc/JPVariants.txt
+  t2ko:     $PWD/../../Dictionaries/hanja/dic0.txt
+
+hanzi:
+  decomp:   $PWD/../../Dictionaries/hanzi/cjk-decomp-0.4.0.txt
+  radical:  $PWD/../../Dictionaries/hanzi/radicalListWithMeaning.js
+
+hanja:
+  path:     $PWD/../../Dictionaries/hanja
+
+pinyin:
+  path:     $PWD/../../Dictionaries/pinyin/Mandarin.dat
+
+hanviet:
+  word:     $PWD/../../Dictionaries/hanviet/ChinesePhienAmWords.txt
+  phrase:   $PWD/../../Dictionaries/hanviet/VietPhrase.txt
+
+# Module options
+
+jinja:
+  line_statement_prefix: '%'
+  line_comment_prefix: '%%'
+  extensions:
+    - jinjax.xml.XmlCompressor
+
+jinja_haml:
+  extensions:
+    - pyhaml_jinja.HamlExtension
+
+# Resources locations
+
+ntlea:
+  location:         $PWD/../NTLEA/ntleac.exe
+
+lsc:
+  location:         $PWD/../LocaleSwitch/lsc.exe
+
+yaml:
+  blacklist:        $PWD/yaml/blacklist.yaml
+  brands:           $PWD/yaml/brands.yaml
+  messages:         $PWD/yaml/messages.yaml
+
+templates:
+  location:         $PWD/templates
+  entries:
+    qml/opengame:   qml/opengame.qml
+    qml/userplugin: qml/userplugin.qml
+    html/furigana:  html/furigana.html
+    html/alignment: html/alignment.html
+    html/shiori:    html/shiori.html
+    html/term:      html/term.html
+    xml/comments:   xml/comments.xml
+    xml/games:      xml/games.xml
+    xml/gamefiles:  xml/gamefiles.xml
+    xml/gameitems:  xml/gameitems.xml
+    xml/refs:       xml/refs.xml
+    #xml/refdigest:  xml/refdigest.xml
+    xml/terms:      xml/terms.xml
+    xml/users:      xml/users.xml
+    xml/voices:     xml/voices.xml
+
+    xml/subs:       xml/subs.xml
+    yaml/subs:      yaml/subs.yaml
+
+    #haml/reader/credits:    haml/reader/credits.haml
+    haml/reader/help:       haml/reader/help.haml
+    haml/reader/gameview:   haml/reader/gameview.haml
+    haml/reader/gameboard:  haml/reader/gameboard.haml
+    haml/reader/topicview:  haml/reader/topicview.haml
+    haml/reader/topicsview: haml/reader/topicsview.haml
+    haml/reader/userview:   haml/reader/userview.haml
+
+    haml/browser/about:     haml/browser/about.haml
+    haml/browser/help:      haml/browser/help.haml
+    haml/browser/error:     haml/browser/error.haml
+    haml/browser/start:     haml/browser/start.haml
+    haml/browser/settings:  haml/browser/settings.haml
+
+avatars:
+  location:         $PWD/images/avatars
+  count:            132
+  #format:          jpg
+
+#dictionaries:
+#  ipadic:           $PWD/../../Dictionaries/ipadic
+#  #edict:            $PWD/../../../Caches/Dictionaries/EDICT/edict.db
+#  #lingoes:          $PWD/../../../Caches/Dictionaries/Lingoes
+#
+#  #edict:            $PWD/../../Dictionaries/edict.db
+#  #user_edict:       $APPDATA/cjklib/edict.db
+#  #enamdict:         $PWD/../../Dictionaries/enamdict.db
+#  #lingoes:          $APPDATA/org.sakuradite.reader/db/lingoes
+
+tahscript:
+  atlas:            $PWD/../../Dictionaries/tahscript/atlas.txt
+  lec:              $PWD/../../Dictionaries/tahscript/lec.txt
+
+#trdb:
+#  baidu:            $PWD/../../../Caches/Translations/Baidu
+#  bing:             $PWD/../../../Caches/Translations/Microsoft
+#  excite:           $PWD/../../../Caches/Translations/Excite
+#  google:           $PWD/../../../Caches/Translations/Google
+#  naver:            $PWD/../../../Caches/Translations/Naver
+#  infoseek:         $PWD/../../../Caches/Translations/Infoseek
+#  lecol:            $PWD/../../../Caches/Translations/LEC
+#  transru:          $PWD/../../../Caches/Translations/PROMT
+
+# Must be consistent with python scripts and dicts.py
+#mecab:
+#  dicdir:           $PWD/../../../Caches/Dictionaries/UniDic
+#  rcfile:           $PWD/../../Dictionaries/mecabrc/unidic.rc
+
+#cabocha:
+#  dicdir:
+#    ipadic:         $PWD/../../../Caches/Dictionaries/CaboCha/ipadic
+#    unidic:         $PWD/../../../Caches/Dictionaries/CaboCha/unidic
+#    #juman:          $PWD/../../../Caches/Dictionaries/CaboCha/juman
+#  rcfile:
+#    ipadic:         $PWD/../../Dictionaries/cabocharc/ipadic.rc
+#    unidic:         $PWD/../../Dictionaries/cabocharc/unidic.rc
+#    #juman:          $PWD/../../Dictionaries/cabocharc/juman.rc
+
+lingoes: # language
+  - zh
+  - zh-gbk # not really a language, though
+  - ko
+  - en
+  #- vi
+
+stardict:
+  ja-vi: $PWD/../../../Caches/Dictionaries/OVDP/NhatViet #star_nhatviet
+  hanja: $PWD/../../../Caches/Dictionaries/StarDict/hanja
+
+jmdict: # language
+  - fr
+  - nl
+  - ru
+
+kanjidic: # language
+  - en
+  - fr
+  - es
+  - pt
+
+jcuserdic: # The preferences will be from top to down
+  - $PWD/../../Dictionaries/jb/@najizhimo/JcUserdic/Jcuser
+  #- $PWD/../../Dictionaries/jb/@djz020815/JcUserdic/Jcuser
+  #- $PWD/../../Dictionaries/jb/@jichi/JcUserdic/Jcuser
+  #- $PWD/../../Dictionaries/JBeijing/@Hdgdyl/JcUserdic/Jcuser
+  #- $PWD/../../Dictionaries/JBeijing/@Zhugeqiu/JcUserdic/Jcuser
+  #- $PWD/../../Dictionaries/JBeijing/@Goodboyye/JcUserdic/Jcuser
+
+gaiji:
+  plist/daijirin:   $PWD/../../Dictionaries/gaiji/DAIJIRIN.plist    # 三省堂 大辞林
+  plist/daijisen:   $PWD/../../Dictionaries/gaiji/DAIJISEN.plist    # 小学館 大辞泉 
+  plist/kojien:     $PWD/../../Dictionaries/gaiji/KOJIEN.plist      # 岩波書店 広辞苑
+  plist/zhong_ri:   $PWD/../../Dictionaries/gaiji/ZHONG_RI.plist    # 小学館 中日・日中辞書
+  plist/wadoku:     $PWD/../../Dictionaries/gaiji/WADOKU.plist      # 和独辞書
+
+apps:
+  updater:          $PWD/../../../Update.exe
+
+qml:
+  springboard:      $PWD/qml/apps/reader/springboard.qml
+  kagami:           $PWD/qml/apps/reader/kagami.qml
+  submaker:         $PWD/qml/apps/reader/submaker.qml
+  subview:          $PWD/qml/apps/reader/subview.qml
+  refview:          $PWD/qml/apps/reader/refview.qml
+  termview:         $PWD/qml/apps/reader/termwindow.qml
+  voiceview:        $PWD/qml/apps/reader/voiceview.qml
+  #omajinai:         $PWD/qml/applets/omajinai.qml
+
+qss:
+  share:            $PWD/rb/compass/qt/css/share.min.css
+  browser:          $PWD/rb/compass/qt/css/browser.min.css
+  reader:           $PWD/rb/compass/qt/css/reader.min.css
+
+icons:
+  logo-browser:     $PWD/images/browser.png
+  logo-installer:   $PWD/images/installer.png
+  logo-reader:      $PWD/images/reader.png
+  logo-youtube:     $PWD/images/youtube.png
+  pref-config:      $PWD/images/config.png
+  pref-app:         $PWD/images/app.png
+  pref-download:    $PWD/images/download.png
+  pref-dev:         $PWD/images/dev.png
+  pref-text:        $PWD/images/doc.png
+  pref-script:      $PWD/images/dock/edit.png
+  pref-font:        $PWD/images/dock/font.png
+  pref-dict:        $PWD/images/dock/dict.png
+  pref-feature:     $PWD/images/gear.png
+  pref-i18n:        $PWD/images/earth.png
+  pref-internet:    $PWD/images/net.png
+  pref-library:     $PWD/images/library.png
+  pref-locale:      $PWD/images/dock/launch.png
+  pref-ocr:         $PWD/images/camera.png
+  pref-ocr-path:    $PWD/images/dock/camera.png
+  pref-roman:       $PWD/images/dock/yaku.png
+  pref-rec:         $PWD/images/camera.png
+  pref-share:       $PWD/images/share.png
+  pref-shortcuts:   $PWD/images/passage.png
+  pref-sr:          $PWD/images/music.png
+  pref-tr:          $PWD/images/people.png
+  pref-tr-path:     $PWD/images/dock/yaku.png
+  pref-user:        $PWD/images/user.png
+  pref-ui:          $PWD/images/window.png
+  pref-tts:         $PWD/images/music.png
+  pref-tts-path:    $PWD/images/sound.png
+  pref-zh:          $PWD/images/china.png
+  window-bbcode:    $PWD/images/dock/bb.png
+  window-dict:      $PWD/images/dock/dict.png
+  window-jdict:     $PWD/images/dock/jdict.png
+  window-forum:     $PWD/images/dock/messages.png
+  window-gameboard: $PWD/images/dock/reader.png
+  window-gamefinder: $PWD/images/dock/compass.png
+  window-gameview:  $PWD/images/dock/reader.png
+  window-gamewiz:   $PWD/images/dock/spotlight.png
+  window-mttest:    $PWD/images/dock/yaku.png
+  window-name:      $PWD/images/dock/yaku.png
+  window-prefs:     $PWD/images/dock/prefs.png
+  window-refinput:  $PWD/images/reader.png
+  window-refview:   $PWD/images/dock/edit.png
+  window-regexp:    $PWD/images/dock/exp.png
+  window-review:    $PWD/images/dock/messages.png
+  window-srtest:    $PWD/images/dock/speech.png
+  window-shortcuts: $PWD/images/passage.png
+  window-syntax:    $PWD/images/dock/tree.png
+  window-submaker:  $PWD/images/dock/edit.png
+  window-subview:   $PWD/images/dock/edit.png
+  window-textedit:  $PWD/images/dock/edit.png
+  window-topicview: $PWD/images/dock/reader.png # TODO: Change to a different image
+  window-hookprefs: $PWD/images/dock/edit.png
+  window-user:      $PWD/images/contact.png
+  window-update:    $PWD/images/updater.png
+  window-voice:     $PWD/images/sound.png
+
+images:
+  empty:            $PWD/images/null.png
+  logo-browser:     $PWD/images/browser.png
+  logo-reader:      $PWD/images/reader.png
+  app-update:       $PWD/images/updater.png
+  avatar:           $PWD/images/avatar.png
+  game-cover:       $PWD/images/cover.png
+  arrow-down:       $PWD/images/arrow.png
+  dock-bbcode:      $PWD/images/dock/bb.png
+  dock-browser:     $PWD/images/dock/browser.png
+  dock-chat:        $PWD/images/dock/messages.png
+  dock-dict:        $PWD/images/dock/dict.png
+  dock-jdict:       $PWD/images/dock/jdict.png
+  dock-gameboard:   $PWD/images/dock/reader.png
+  dock-gamefinder:  $PWD/images/dock/compass.png
+  dock-gamewiz:     $PWD/images/dock/spotlight.png
+  dock-launch:      $PWD/images/dock/launch.png
+  dock-mttest:      $PWD/images/dock/yaku.png
+  dock-prefs:       $PWD/images/dock/prefs.png
+  dock-regexp:      $PWD/images/dock/exp.png
+  dock-srtest:      $PWD/images/dock/speech.png
+  dock-syntax:      $PWD/images/dock/tree.png
+  dock-textedit:    $PWD/images/dock/edit.png
+  dock-textreader:  $PWD/images/dock/magnifier.png
+  dock-youtube:     $PWD/images/dock/youtube.png
+  splash-ready:     $PWD/images/smile.png
+  splash-wait:      $PWD/images/hourglass.png
+  stripes:          $PWD/images/stripes.png
+  wallpaper:        $PWD/images/wallpaper/desktop.jpg
+  background:       $PWD/images/textures/marble.jpg
+  background-black: $PWD/images/textures/marble-black.jpg
+  #texture-white:    $PWD/images/textures/white.jpg
+  #texture-black:    $PWD/images/textures/black.jpg
+
+cursors:
+  IDC_ARROW:        $PWD/cursors/blue_B/01.cur
+  IDC_HELP:         $PWD/cursors/blue_B/02.cur
+  IDC_APPSTARTING:  $PWD/cursors/blue_B/03.ani
+  IDC_WAIT:         $PWD/cursors/blue_B/04.ani
+  IDC_CROSS:        $PWD/cursors/blue_B/05.cur
+  IDC_IBEAM:        $PWD/cursors/blue_B/06.cur
+  #IDC_WAIT:         $PWD/cursors/blue_B/#07.ani
+  IDC_NO:           $PWD/cursors/blue_B/08.cur
+  IDC_SIZENS:       $PWD/cursors/blue_B/09.cur
+  IDC_SIZEWE:       $PWD/cursors/blue_B/10.cur
+  IDC_SIZENWSE:     $PWD/cursors/blue_B/11.cur
+  IDC_SIZENESW:     $PWD/cursors/blue_B/12.cur
+  IDC_SIZEALL:      $PWD/cursors/blue_B/13.cur
+  IDC_UPARROW:      $PWD/cursors/blue_B/14.cur
+  IDC_HAND:         $PWD/cursors/blue_B/15.cur
+
+dlls:
+  vnragent:
+  - $PWD/../Python/msvcr100.dll         # depends on kernel
+  - $PWD/../Python/msvcp100.dll         # depends on msvcr
+  - $PWD/../Qt/PySide/QtCore4.dll       # depends on msvcr, msvcp
+  - $PWD/../Qt/PySide/QtNetwork4.dll    # depends on qtcore
+  - $PWD/bin/vnragent.dll
+  vnrboot:
+  - $PWD/../Python/msvcr100.dll         # depends on kernel
+  - $PWD/../Python/msvcp100.dll         # depends on msvcr
+  - $PWD/bin/vnrboot.dll
+  vnrhook:
+  - $PWD/../Python/msvcr100.dll         # depends on kernel
+  - $PWD/../Python/msvcp100.dll         # depends on msvcr
+  #- $PWD/bin/vnrhook.dll
+
+# EOF
+
+#plugins:
+#  python:
+#    location:       $PWD/userplugin/py/1
+#    entry:          myplugin.py
+#  javascript:
+#    location:       $PWD/userplugin/js/1
+#    entry:          myplugin.js

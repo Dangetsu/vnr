@@ -1,0 +1,7 @@
+cjk-decomp 0.4.0
+5/7/2015
+http://cjkdecomp.codeplex.com
+
+hanzijs radical
+5/7/2015
+https://github.com/nieldlr/hanzi

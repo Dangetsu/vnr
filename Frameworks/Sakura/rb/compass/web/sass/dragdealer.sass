@@ -1,0 +1,48 @@
+/* dragdealer.sass
+   9/23/2013 jichi
+   See: https://dragdealer.googlecode.com/svn/tags/0.9.5/dragdealer.css
+   See: http://code.ovidiu.ch/css/dragdealer-main.css
+   See: http://code.ovidiu.ch/css/main.css
+   See: http://code.ovidiu.ch/dragdealer/
+   See: http://code.google.com/p/dragdealer/
+   See: http://archive.ovidiu.ch/v2/dragdealer-js
+
+@import compass/css3/border-radius
+//@import compass/css3/transform
+
+.dragdealer
+  position: relative
+  height: 30px
+  background: #eee
+  .handle
+    position: absolute
+    cursor: pointer
+  .red
+    width: 100px
+    height: 30px
+    background: red
+    color: white
+    line-height: 30px
+    text-align: center
+  .disabled
+    background: #898989
+
+  &.vertical
+    width: 22px
+    //height: 160px
+    height: 180px
+    background: rgba(250,250,250,0.6) // white
+    & .handle
+      width: 22px
+      //height: 54px
+      // large enough to contain two Japanese kanji
+      height: 60px
+      font-size: 12px
+      //+rotate(90deg) // vertical text
+      //writing-mode: lr-tb // does not work
+
+  &.rounded,
+  &.rounded .handle
+    +border-radius(3px)
+
+// EOF

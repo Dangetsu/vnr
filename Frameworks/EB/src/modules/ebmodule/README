@@ -1,0 +1,108 @@
+ebmodule 2.0
+============
+Tamito KAJIYAMA <25 September 2001>
+
+This package is a suite of Python wrapper modules of the EB
+library, a C library for accessing electronic dictionaries.
+Using this package Python programs can easily retrieve
+information from electronic dictionaries of the EB and EPWING
+formats.
+
+The latest version of this package is available at the following
+location:
+
+  http://pseudo.grad.sccs.chukyo-u.ac.jp/~kajiyama/python/
+
+Requirements
+------------
+
+This package requires the EB library (version 3.1 and later).
+The source distribution of the EB library is available at the
+following location:
+
+  http://www.sra.co.jp/people/m-kasahr/eb/
+
+This package supports Python 1.5.2 and later.
+
+Installation
+------------
+
+This package provides two installation procedures.
+
+o Using Distutils
+
+The users of Python 2.0 and later can choose this option.  It
+uses Distutils, the standard installer modules adopted in Python
+2.0.  Run commands as follows:
+
+  $ python setup.py build
+  $ su
+  # python setup.py install
+
+o Using Makefile
+
+Another option is provided for the users of Python 1.5.2.  Run
+commands as follows:
+
+  $ make
+  $ su
+  # make install
+
+You can specify the version of Python that you want to use as
+follows, if you have multiple versions:
+
+  $ make PYTHON=python1.5
+  $ su
+  # make PYTHON=python1.5 install
+
+Usage
+-----
+
+This package provides two Python modules.
+
+o The eb module
+
+This module has almost the same API with the underlying EB
+library.  See the EB library reference for the use of the
+functions and constants in the eb module.  The library reference
+is included in the source distribution of the EB library, and is
+also available at the following location:
+
+  http://www.sra.co.jp/people/m-kasahr/eb/doc/eb_toc.html
+
+o The eblib module
+
+This module provides a set of classes that encapsulate the
+low-level API of the eb module.  See the source file (eblib.py)
+for the use of the eblib module.  There is a simple application
+code at the bottom of the source file.
+
+History
+-------
+
+o Version 2.0 <25 September 2001>
+  - Supported the EB library version 3.X
+
+o Version 1.0 <18 September 2001>
+  - First public release
+  - Supported the EB library version 2.X
+
+License
+-------
+
+This is free software; you can freely redistribute it and/or
+modify it under the terms of the GNU General Public License
+(version 2 or later).
+
+This software is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY.  Use it at your own risk.
+
+Author
+------
+
+Tamito KAJIYAMA <kajiyama@grad.sccs.chukyo-u.ac.jp>
+
+Any comments, suggestions, and/or patches are very welcome.
+Thank you for using the ebmodule package!
+
+$Id: README.en,v 1.2 2001/09/24 03:21:06 kajiyama Exp $

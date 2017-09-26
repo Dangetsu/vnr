@@ -1,0 +1,3 @@
+# bootstrap/qmldir
+# 5/17/2013 jichi
+Button      button.qml

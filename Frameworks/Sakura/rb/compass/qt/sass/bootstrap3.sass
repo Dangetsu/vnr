@@ -1,0 +1,211 @@
+/* bootstrap.sass
+ * 5/17/2013 jichi
+ * See: bootstrap.scss
+ *
+ * Map:
+ * linear-gradient => qlineargradient
+ * :active => :pressed,:checked
+ *
+ * See: http://qt-project.org/doc/qt-4.8/stylesheet-examples.html
+ * Syntax examples::
+ * - ClassName { ... }     // ClassName:   QObject.metaObject.className
+ * - #objectName { ... }   // objectName:  QObject.objectName
+ * - #className { ... }    // className:   QObject.property('class')
+ * - [name="value"] { ... }// name, value: QObject.property('name'), QString
+ * - *                     // match any QWidget
+
+// Text
+
+.text-muted
+  color: #999
+  &:hover, &:focus
+    color: gray
+
+.text-warning
+  color: #c09853
+  &:hover, &:focus
+    color: #a47e3c
+
+.text-error
+  color: #b94a48
+  &:hover, &:focus
+    color: #953b39
+
+.text-primary
+  color: #428bca
+  &:hover, &:focus
+    color: #3071a9
+
+.text-info
+  color: #3a87ad
+  &:hover, &:focus
+    color: #2d6987
+
+.text-success
+  color: #468847
+  &:hover, &:focus
+    color: #356635
+
+// Buttons
+// I mangled the color theme of bootstrap 2 and 3 together
+
+.btn
+  padding: 5px 12px // bootstrap default is: 4px 12px
+  //border-radius: 4px
+  border-radius: 0px // flat
+  border: 1px solid transparent
+  //font-size: 14px
+
+/*
+ .btn-default:pressed,
+ .btn-primary:pressed,
+ .btn-warning:pressed,
+ .btn-danger:pressed,
+ .btn-success:pressed,
+ .btn-info:pressed,
+ .btn-inverse:pressed
+   color: rgba(255,255,255,0.75)
+
+.btn-default
+  color: #333
+  border-color: #ccc
+  background-color: #fff
+  &:hover, &:focus, &:checked, &:pressed
+    color: #333
+    border-color: #adadad
+    //background-color: #ebebeb
+  &:hover
+    background-color: #e6e6e6
+  &:checked, &:pressed
+    background-color: #ccc
+
+.btn-primary
+  color: #fff
+  border-color: #357ebd
+  background-color: #428bca
+  &:hover, &:focus, &:checked, &:pressed
+    color: #fff
+    border-color: #285e8e
+    //background-color: #3276b1
+  &:hover
+    background-color: #3276b1
+    //background-color: #04c
+  &:checked, &:pressed
+    background-color: #2266a1 // = #3276b1 - #101010, darker then focused
+    //background-color: #039
+
+.btn-success
+  color: #fff
+  border-color: #4cae4c
+  background-color: #5cb85c
+  &:hover, &:focus, &:checked, &:pressed
+    color: #fff
+    border-color: #398439
+    //background-color: #47a447
+  &:hover
+    background-color: #47a447
+    //background-color: #51a351
+  &:checked, &:pressed
+    background-color: #408140
+
+.btn-info
+  color: #fff
+  border-color: #46b8da
+  background-color: #5bc0de
+  &:hover, &:focus, &:checked, &:pressed
+    color: #fff
+    border-color: #269abc
+    //background-color: #39b3d7
+  &:hover
+    background-color: #2f96b4
+  &:checked, &:pressed
+    background-color: #24748c
+
+.btn-warning
+  color: #fff
+  border-color: #eea236
+  background-color: #f0ad4e
+  &:hover, &:focus, &:checked, &:pressed
+    color: #fff
+    border-color: #d58512
+    //background-color: #ed9c28
+  &:hover
+    background-color: #f89406
+  &:checked, &:pressed
+    background-color: #c67605
+
+.btn-danger
+  color: #fff
+  border-color: #d43f3a
+  background-color: #d9534f
+  &:hover, &:focus, &:checked, &:pressed
+    color: #fff
+    border-color: #ac2925
+    //background-color: #d2322d
+  &:hover
+    background-color: #bd362f
+  &:checked, &:pressed
+    background-color: #942a25
+
+.btn-link
+  font-weight: normal
+  color: #428bca
+  cursor: pointer
+  border-radius: 0
+  border-color: transparent
+  &:hover, &:focus, &:checked, &:pressed
+    border-color: transparent
+  &:hover, &:focus
+    color: #2a6496
+    text-decoration: underline
+    background-color: transparent
+
+// These does not exist in bootstrap
+
+.btn-inverse
+  color: snow
+  background-color: #444
+  &:hover
+    color: snow
+    background-color: #222
+  &:checked, &:pressed
+    background-color: #090909
+
+// Rules not from Bootstrap
+.btn
+  // Since !important does not work, put this rule at the end
+  //:hover,
+  &:focus
+    border-color: rgba(82,168,236,0.8) // blue, steal from bootstrap input[text] color
+
+  &:disabled
+    color: #777
+    border-color: #ccc
+    background-color: none
+
+// Used in textprefs and prefs
+
+.btn-sm
+  //font-size: 11.9px
+  padding: 1px 5px
+  //border-radius: 4px
+  border-radius: 0px // flat
+
+// Used in prefs
+.btn-xs
+  padding: 1px 5px      // the same as btn-sm
+  //border-radius: 4px    // the same as btn-sm
+  border-radius: 0px // flat
+  max-height: 18px
+  font-size: 10px
+
+// Used in prefs
+.btn-toggle
+  padding: 1px 5px      // the same as btn-sm
+  border-radius: 4px    // the same as btn-sm
+  //max-height: 18px // sometimes does not work ...
+  //max-width: 18px // sometimes does not work ...
+  //border-radius: 0px // flat
+  //font-size: 10px
+
+// EOF

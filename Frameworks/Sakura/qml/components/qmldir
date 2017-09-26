@@ -1,0 +1,4 @@
+# components/qmldir
+# 9/25/2012 jichi
+ScrollBar   scrollbar.qml
+WigglyText  wigglytext.qml

@@ -1,0 +1,186 @@
+{# term.html 11/25/2012 jichi
+ # @param  td  _Term
+ # @param* userName  unicode
+ # @param* updateUserName  unicode
+ # @param* source  unicode
+ # @param* target  unicode
+ # @param  i18n  module
+ # @param  tr  function
+-#}
+<html>
+	<head>
+		<style type="text/css">
+/*a{color:lightblue}*/
+a{color:#add8ff}
+.pp-name{color:silver}
+.text-error{background-color:rgba(255,0,0,40%)}
+.text-success{background-color:rgba(128,225,0,30%)}
+		</style>
+	</head>
+	<body align="center">
+    <br/>
+		<table class="pp-table">
+			<tr class="pp-row">
+				<td class="pp-name" align="right">{{tr('ID')}}: </td>
+%if td.id
+				<td class="pp-value id">
+					{{td.id}}
+					{{' '}}<a href="javascript://main.searchDictionary('{{td.id}}','id')">({{tr('Show')}})</a>
+				</td>
+%else
+				<td class="pp-value pp-empty">({{tr('unknown')}})</td>
+%endif
+			</tr>
+			<tr class="pp-row">
+				<td class="pp-name" align="right">{{tr('Pattern')}}: </td>
+%if td.pattern
+				<td class="pp-value">
+					{{td.pattern|e}}
+					{{' '}}<a href="javascript://main.searchDictionary('{{td.pattern|e}}','pattern')">({{tr('Search')}})</a>
+				</td>
+%else
+				<td class="pp-value pp-empty">({{tr('unknown')}})</td>
+%endif
+			</tr>
+			<tr class="pp-row">
+				<td class="pp-name" align="right">{{tr('Translation')}}: </td>
+%if not td.text
+				<td class="pp-value pp-empty">({{tr('delete')}})</td>
+%elif td.text == td.pattern
+				<td class="pp-value pp-empty">({{tr('equal')}})</td>
+%else
+				<td class="pp-value">
+					{{td.text|e}}
+					{{' '}}<a href="javascript://main.searchDictionary('{{td.text|e}}','text')">({{tr('Search')}})</a>
+				</td>
+%endif
+			</tr>
+%if td.ruby
+			<tr class="pp-row">
+				<td class="pp-name" align="right">{{tr('Ruby')}}: </td>
+				<td class="pp-value">
+					{{td.ruby|e}}
+					{{' '}}<a href="javascript://main.searchDictionary('{{td.ruby|e}}','ruby')">({{tr('Search')}})</a>
+				</td>
+			</tr>
+%endif
+			<tr class="pp-row">
+				<td class="pp-name" align="right">{{tr('Language')}}: </td>
+%if td.language == 'ja'
+				<td class="pp-value">{{tr('All')}}</td>
+%else
+				<td class="pp-value">{{i18n.language_name(td.language)}}</td>
+%endif
+			</tr>
+			<tr class="pp-row">
+				<td class="pp-name" align="right">{{tr('Type')}}: </td>
+				<td class="pp-value">{{i18n.term_type_name(td.type)}}</td>
+			</tr>
+%if td.private
+			<tr class="pp-row">
+				<td class="pp-name" align="right">{{tr('Private')}}: </td>
+				<td class="pp-value text-error">{{tr('yes')}}</td>
+			</tr>
+%endif
+%if td.host
+			<tr class="pp-row">
+				<td class="pp-name" align="right">{{tr('Translator')}}: </td>
+				<td class="pp-value text-success">{{td.host}}</td>
+			</tr>
+%endif
+%if td.regex
+			<tr class="pp-row">
+				<td class="pp-name" align="right">{{tr('Regex')}}: </td>
+				<td class="pp-value text-success">{{tr('yes')}}</td>
+			</tr>
+%endif
+%if td.phrase
+			<tr class="pp-row">
+				<td class="pp-name" align="right">{{tr('Boundary')}}: </td>
+				<td class="pp-value text-success">{{tr('yes')}}</td>
+			</tr>
+%endif
+			<tr class="pp-row">
+				<td class="pp-name" align="right">{{tr('Game-specific')}}: </td>
+%if td.special
+				<td class="pp-value">{{tr('yes')}}</td>
+%else
+				<td class="pp-value text-error">{{tr('no')}}</td>
+%endif
+			</tr>
+			<tr class="pp-row">
+				<td class="pp-name" align="right">{{tr('Game')}}: </td>
+%if td.gameId
+				<td class="pp-value"><a href="javascript://main.showGameView({{td.gameId}})">{{td.getGameName()|e}}</a></td>
+%else
+				<td class="pp-value">{{tr('empty')}}</td>
+%endif
+			</tr>
+			<tr class="pp-row">
+				<td class="pp-name" align="right">{{tr('User')}}: </td>
+%if userName
+				<td class="pp-value user"><a href="javascript://main.showUser('{{userName|e}}')">@{{userName|e}}</a></td>
+%else
+				<td class="pp-value pp-empty">({{tr('unknown')}})</td>
+%endif
+			</tr>
+			<tr class="pp-row">
+				<td class="pp-name" align="right">{{tr('Creation')}}: </td>
+%if td.timestamp
+				<td class="pp-value">{{i18n.timestamp2datetime(td.timestamp)}}</td>
+%else
+				<td class="pp-value pp-empty">({{tr('unknown')}})</td>
+%endif
+			</tr>
+			<tr class="pp-row">
+				<td class="pp-name" align="right">{{tr('Comment')}}: </td>
+%if td.comment
+				<td class="pp-value">{{td.comment|e}}</td>
+%else
+				<td class="pp-value pp-empty">({{tr('none')}})</td>
+%endif
+			</tr>
+			<tr class="pp-row">
+				<td class="pp-name" align="right">{{tr('Update')}}: </td>
+%if updateUserName and td.updateTimestamp > td.timestamp
+				<td class="pp-value">
+%	if td.updateUserId != td.userId
+					<a class="user" href="javascript://main.showUser('{{updateUserName|e}}')">@{{updateUserName|e}}</a>
+					{{' '}}
+%	endif
+					{{i18n.timestamp2datetime(td.updateTimestamp)}}
+				</td>
+%else
+				<td class="pp-value pp-empty">({{tr('none')}})</td>
+%endif
+			</tr>
+%if td.updateComment
+			<tr class="pp-row">
+				<td class="pp-name" align="right">{{tr('Update comment')}}: </td>
+				<td class="pp-value">{{td.updateComment|e}}</td>
+			</tr>
+%endif
+			<hr>
+%if source
+			<tr class="pp-row">
+				<td class="pp-name" align="right">{{tr('Matched text')}}: </td>
+				<td class="pp-value">
+					{{source|e}}
+					{{' '}}<a href="javascript://main.searchDictionary('{{source|e}}','pattern')">({{tr('Search')}})</a>
+				</td>
+			</tr>
+%endif
+			<tr class="pp-row">
+				<td class="pp-name" align="right">{{tr('Replaced text')}}: </td>
+%if target
+				<td class="pp-value">
+					{{target|e}}
+					{{' '}}<a href="javascript://main.searchDictionary('{{target|e}}','text')">({{tr('Search')}})</a>
+				</td>
+%else
+				<td class="pp-value pp-empty">({{tr('unknown')}})</td>
+%endif
+			</tr>
+		</table>
+	</body>
+</html>

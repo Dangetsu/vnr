@@ -1,0 +1,93 @@
+/* forum/topics.sass
+   12/31/2014 jichi
+   See: http://isotope.metafizzy.co/css/style.css
+
+@import main/color
+@import main/cursor
+@import main/shadow
+@import main/transition
+
+$avatar-width: 40px
+
+.forum-topics
+  //a[class*="link-"]
+  //  @extend .cursor-pointer
+  img.avatar
+    width: $avatar-width
+    //height: $avatar-width
+    @extend .avatar-shadow
+  .topic
+    padding-top: 15px // include the height of footer
+    min-height: $avatar-width
+    > a > img.avatar
+      float: left
+      width: $avatar-width
+      //height: $topic-avatar-width
+      @extend .avatar-shadow
+    > .right
+      margin-left: $avatar-width + 9px
+      > .line
+        font-size: 90%
+        //[class*="text-"]
+        //  display: inline
+        .item
+          display: inline
+          margin-right: 10px
+        padding: 3px 0 3px 10px
+        .index
+          display: inline
+          margin-right: 5px
+        .type
+          display: inline
+        .user,
+        .time,
+        .lang
+          display: inline
+          margin-left: 9px
+        .lang
+          color: purple
+      > .header
+        background-color: rgba(128,0,128,0.05) // purple
+        .score
+          display: inline
+          float: right
+      //> .header
+      //  //  color: darkblue // TODO: Use linke instead
+      //  //  display: inline
+      //  .time
+      //    //@extend .text-minor
+      //    display: inline
+      //    margin-left: 9px
+      //    font-size: 90%
+      //  .lang
+      //    //@extend .text-minor
+      //    color: purple
+      //    display: inline
+      //    margin-left: 9px
+      //    font-size: 90%
+      > .image
+        margin: 5px
+        > a > img
+          @extend .img-shadow
+          max-width: 100%
+      > .title
+        font-size: 100%
+        margin: -3px
+        a.link-game
+          @extend .text-minor
+          font-size: 90%
+      > .content
+        margin-left: 5px
+        font-size: 95%
+        img
+          @extend .img-shadow
+          max-width: 100%
+      >.footer
+        //margin: -5px 0 0
+        height: 18px // larger than the height of buttons
+        .fade-in
+          opacity: 0
+    &:hover > .right > .footer .fade-in
+      opacity: 1
+
+// EOF

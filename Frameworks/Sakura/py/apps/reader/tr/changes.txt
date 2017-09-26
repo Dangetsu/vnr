@@ -1,0 +1,4 @@
+3/30/2013 jichi
+Manual changes, as sed does not support wide chars.
+
+%s/戀と選挙/恋と選挙/g|%s/広辭苑/広辞苑/g|%s/大辭林/大辞林/g|%s/和獨/和独/g|%s/獨佔/独占/g

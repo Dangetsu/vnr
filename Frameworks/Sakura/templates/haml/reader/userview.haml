@@ -1,0 +1,69 @@
+; userview.haml
+; 6/29/2013 jichi
+; @param  user  dataman.UserDigest
+; @param  avatar  url
+; @param  tr  sktr.tr_
+; @param  mytr  reader.mytr_
+; @param  rc  rc
+; @param  i18n  i18n
+;!!! 5
+%html
+  %head
+    %title #{tr('User information')} - #{user.name}
+    %link(rel="stylesheet",href="#{rc.cdn_url('bootstrap3.css')}")
+    :css
+      body {
+        margin: 15px;
+        font-family: youyuan,geneva,arial,helvetica,clean,sans-serif;
+        background-repeat: repeat;
+        background-image: url("#{rc.image_url('background').toString()}");
+      }
+      .avatar {
+        width: 120px;
+        height: 120px;
+        box-shadow:0 0 5px #333;
+      }
+  %body
+    -if avatar
+      %img.avatar.img-rounded.pull-right(src="#{avatar}",title="#{tr('Avatar')}")
+    -else
+      %p.pull-right
+        #{tr('Avatar')}:
+        %span.muted (#{tr('Not specified')})
+    %p
+      #{tr('Name')}:
+      -set url = "http://sakuradite.com/user/" + user.name
+      %a(href="#{url}",title="#{url}")
+        @#{user.name}
+    %p
+      #{tr('Homepage')}:
+      -if user.homepage
+        %b: %a(href="#{user.homepage}",title="#{user.homepage}") #{user.homepage}
+      -else
+        %span.muted (#{tr('Not specified')})
+    %p
+      #{tr('Gender')}:
+      -if user.gender
+        %b #{i18n.gender_name(user.gender)}
+      -else
+        %span.muted (#{tr('Not specified')})
+    %p
+      #{tr('Language')}:
+      %b #{i18n.language_name(user.language)}
+    %p
+      #{tr('Color')}:
+      -if user.color
+        %b: %span(style="color:#{user.color}") #{user.color}
+      -else
+        %span.muted (#{tr('Default')})
+    %p
+      #{tr('Privilege')}:
+      -if not user.termLevel and not user.commentLevel
+        %span.muted (#{tr('None')})
+      -else
+        -if user.commentLevel
+          .text-success - #{mytr('Moderate anonymous subs')}
+        -if user.termLevel
+          .text-success - #{mytr('Moderate anonymous terms')}
+
+; EOF

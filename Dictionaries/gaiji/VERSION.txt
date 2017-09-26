@@ -1,0 +1,44 @@
+EBMac1.27
+1/17/2014 jichi
+
+http://ebstudio.info/home/MacOS/Mac.html
+http://hishida.s271.xrea.com/manual/EBPocket_android/pgs/60unicode.html
+
+外字Unicodeマップ名		内容
+CHUJITEN		EPWING「研究社新英和(第6版)・新和英中辞典」(Super統合辞書・PC Success版)
+COLLOC		EPWING「研究社新編英和活用大辞典」
+CROWN		EPWING「クラウン独和」 EPWING「クラウン仏和」
+電子ブック「クラウン独和」 電子ブック「クラウン仏和」
+CHUJITEN	EPWING「研究社新英和(第6版)・新和英中辞典」(Super統合辞書・PC Success版)
+CHUJITEN_EB1993	電子ブック「研究社新英和(第6版)・新和英中辞典」
+CHUJITEN_FMV	EPWING「研究社新英和(第6版)・新和英中辞典」(初期のFMV付属品)
+COLLOC	EPWING「研究社新編英和活用大辞典」(LogoVistaも共通)
+CROWN	EPWING「クラウン独和」 EPWING「クラウン仏和」
+電子ブック「クラウン独和」 電子ブック「クラウン仏和」
+DAIJIRIN_FULL	EPWING大辞林第2版
+DAIJISEN_FULL	大辞泉(EBStudio+Toolkit)
+EBSTUDIO	EBStudio変換辞書用
+EBSTUDIO_FULL	（同）EBWin FULL版
+EIDAI6	EPWING「研究社新英和大辞典第6版」
+GENIUS	EPWING「ジーニアス英和[第3版]・和英辞典」、およびジーニアスシリーズ共通
+GENIUS4	EPWING「ジーニアス英和[第4版]・和英辞典DVD」
+GENIUS43	(LogoVista版)「ジーニアス英和[第4版]・和英[第3版]」
+GENIUS_DAIEIWA	EPWING「ジーニアス大英和辞典」
+IBE01	電子ブック「岩波仏教辞典」
+KANJIGEN	EPWING 「漢字源」(Super統合辞書)
+KANJIGEN_EB	電子ブック 「漢字源」
+KANJIGN5	(LogoVista版)「漢字源第5版」
+KENE7J5	(LogoVista版)研究社英和中7版・和英中5版
+KOJIEN	EPWING 「広辞苑第五版」「広辞苑第六版」
+KOJIEN_FULL	（同）EBWin FULL版
+MEIKYOU_FULL	(LogoVista版)明鏡国語辞典
+NEWANC	電子ブック「ニューアンカー英和・和英辞典」
+NEWANC_FULL	（同）EBWin FULL版
+READERS1	EPWING「研究社リーダーズ英和辞典第1版」
+READERS2	EPWING「研究社リーダーズ英和辞典第２版」(LogoVistaも共通)、
+「研究社新和英大辞典第5版」「研究社新英和大辞典第6版」
+READERS2_FULL	（同）EBWin FULL版
+RIKAGAKU_FULL	EPWING「岩波理化学辞典」
+SRD_FULL	ランダムハウス英語辞典(ランダムハウス英語辞典Toolkit+EBStudio)
+WADAI5	EPWING「研究社新和英大辞典第5版」
+ZHONG_RI	EBXA-C 小学館日中・中日辞典

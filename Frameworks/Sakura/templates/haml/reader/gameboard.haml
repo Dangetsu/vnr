@@ -1,0 +1,284 @@
+; gameboard.haml
+; 7/31/2013 jichi
+; @param  games  [GameInfo]
+; @param  tr  sktr.tr_
+; @param  rc  rc
+; @param  py  py
+;!!! 5
+%html(lang="ja")
+  %head
+    -for it in 'bootstrap2.css', 'dragdealer.css', 'metro.css', 'font-awesome3.css', 'reader/gameboard.css'
+      %link(rel="stylesheet",href="#{rc.cdn_url(it)}")
+    :css
+      body {
+        margin: 18px 4px 18px 9px;
+        font-family: youyuan,geneva,arial,helvetica,clean,sans-serif;
+        background-repeat: repeat;
+        background-image: url("#{rc.image_url('background').toString()}");
+      }
+
+  %body
+    -if not games
+      .blocker: #{tr('Empty') + ' ><'}
+    -else
+      %section#sort.options.clearfix
+        ; Search
+        .search.pull-right
+          %btn.close(title="#{tr('Clear')}") &times;
+          %input#search.search-query.input-mini(type="search", \
+              placeholder="#{tr('Search')} ...", \
+              title="ex. BALDR 201502. Ctrl+F: #{tr('Press Enter to submit')} (#{tr('title')}, #{tr('brand')}, #{tr('date')}, #{tr('regular expression')}, #{tr('case-insensitive')})")
+
+        ; Sort
+        %ul#sort-by.option-set(data-option-key="sort")
+          ;%li: %a.selected(href="#sort=none",title="#{tr('Order')}")
+          ;  #{tr("Order")}
+          %li: %a.selected(href="#sort=date",data-option-value="date",title="#{tr('Release date')}")
+            発売
+          %li: %a(href="#sort=timestamp",data-option-value="timestamp",title="#{tr('Update time')}")
+            更新
+          ;%li: %a(href="#sort=title",data-option-value="title",title="#{tr('Title')}")
+          ;  名前
+          %li: %a(href="#sort=brand",data-option-value="brand",title="#{tr('Brand')}")
+            会社
+          %li: %a(href="#sort=visits",data-option-value="visitCount",title="#{tr('Visits')}")
+            訪問
+          %li: %a(href="#sort=comments",data-option-value="commentCount",title="#{tr('Danmaku')}")
+            弾幕
+          %li: %a(href="#sort=subtitles",data-option-value="subtitleCount",title="#{tr('Subtitles')}")
+            字幕
+          %li: %a(href="#sort=overallScore",data-option-value="overallScore",title="総合得点の平均値",style="text-decoration:overline")
+            &#9734;
+          %li: %a(href="#sort=overallScoreSum",data-option-value="overallScoreSum",title="総合得点総量")
+            &Sigma;&#9734;
+          %li: %a(href="#sort=ecchiScore",data-option-value="ecchiScore",title="えっち得点の平均値",style="text-decoration:overline")
+            H
+          %li: %a(href="#sort=ecchiScoreSum",data-option-value="ecchiScoreSum",title="えっち得点総量")
+            &Sigma;H
+          %li: %a(href="#sort=scapeMedian",data-option-value="scapeMedian",title="批評空間得点の中位数")
+            得点
+          %li: %a(href="#sort=scapeCount",data-option-value="scapeCount",title="批評空間全ての点数")
+            点数
+
+        %ul#sort-direction.option-set(data-option-key="reverse")
+          %li: %a.selected#init-sort(href="#reverse=true",data-option-value="true",title="#{tr('Descending')}")
+            降順
+          %li: %a(href="#reverse=false",data-option-value="false",title="#{tr('Ascending')}")
+            昇順
+
+      ; Filers
+      %section#filter.options.clearfix
+        ; Local
+        %ul.pull-right.option-set(data-option-key="filter",data-option-group="local")
+          %li: %a.selected(href="#",title="#{tr('All')}")
+            全て
+          %li: %a(href="#",data-option-value="true",title="所持ち")
+            所持
+        ; Year
+        %ul.option-set(data-option-key="filter",data-option-group="year")
+          %li: %a.selected(href="#",title="#{tr('All')}")
+            年
+          -for year in py.range(2016,1998,-1)
+            %li: %a(href="#",data-option-value="#{year}",title="#{year}年")
+              -if year >= 2015
+                #{year}
+              -elif year >= 2010
+                #{year - 2000}
+              -elif year >= 2000
+                0#{year - 2000}
+              -else
+                9x
+                ;9#{year - 1990}
+
+      %section#filter.options.clearfix
+        ; Upcoming
+        %ul.pull-right.option-set(data-option-key="filter",data-option-group="time")
+          %li: %a.selected(href="#",title="#{tr('All')}")
+            全て
+          %li: %a(href="#",data-option-value="recent",title="新作")
+            新作
+          %li: %a(href="#",data-option-value="upcoming",title="未発売")
+            未発売
+        ; Tags
+        %ul.pull-right.option-set(data-option-key="filter",data-option-group="genre")
+          %li: %a.selected(href="#",title="#{tr('All')}")
+            全て
+          %li: %a(href="#",data-option-value="junai",title="純愛系（青）")
+            純愛
+          %li: %a(href="#",data-option-value="nuki",title="抜きゲー（紫）")
+            抜き
+          %li: %a(href="#",data-option-value="otome",title="女性向け（緑）")
+            乙女
+        ; Month
+        %ul.option-set(data-option-key="filter",data-option-group="month")
+          %li: %a.selected(href="#",title="#{tr('All')}")
+            月
+          -for month in py.range(1, 13)
+           %li: %a(href="#",data-option-value="#{month}",title="#{month}月")
+              #{month}
+
+      ;%section#keyword.metro
+      %section#keyword
+        %btn.close(title="#{tr('Clear')}") &times;
+        .btn-toolbar
+          ;.badge.badge-info(title="#{tr('Clear')}") &times;
+          .btn-group.first
+            .label(title="Fan Disc") FD
+          .btn-group
+            .label(title="3DCG") 3D
+            .label(title="動画, Animation") 動画
+          .btn-group
+            .label(title="RPG") RPG
+            .label(title="Simulation") SLG
+            .label(title="Action") ACT
+            .label(title="麻雀, Mahjong") 麻雀
+          .btn-group
+            .label(title="Comedy, Parody, ラブコメ") コメディ
+            .label(title="ハーレム, Harem") ハーレム
+            .label(title="泣きゲー, 感動, 鬱") 泣き
+            .label(title="癒し系, Heal") 癒し
+            .label(title="燃え, Hard-boiled") 燃え
+            .label(title="恐怖, Horror") 恐怖
+            .label(title="狂気, 猟奇, 過激") 狂気
+          .btn-group
+            ;.label(title="ショタ, Shota") ショタ
+            .label(title="女装, 男の娘, 性転換, 女体化") 女装
+            .label(title="百合, レズ, Lesbian") 百合
+            .label(title="Boys Love, Gay, 耽美") BL
+          .btn-group
+            .label(title="Science Fiction, 近未来") SF
+            .label(title="ロボット, Robot") ロボ
+            .label(title="Android") アンドロイド
+            .label(title="幻想, Fantasy") 幻想
+            .label(title="伝奇, Legend") 伝奇
+            .label(title="戦う, 戦争, Battle") 戦う
+            .label(title="推理, 探偵, 謎, Suspense, Mystery, Puzzle") 推理
+            .label(title="時代劇, 歴史劇") 時代劇
+            .label(title="銃撃戦, ガンアクション") 銃撃戦
+            .label(title="三角関係, Triangle") 三角関係
+            ;.label(title="部活, サークル") 部活
+            ;.label(title="黙示録, 世界の終わり, Apocalypsis") 黙示録
+            ;.label(title="復讐") 復讐
+          .btn-group
+            .label(title="JK, 女子高生") JK
+            .label(title="妹") 妹
+            .label(title="姉") 姉
+            .label(title="ロリータ, 幼女, Lolita") ロリ
+            .label(title="貧乳, 微乳, ぺたんこ") 貧乳
+            .label(title="巨乳, 超乳, おっぱい星人") 巨乳
+            ;.label(title="姉妹, 双子") 姉妹
+            ;.label(title="幼馴染, 幼なじみ") 幼馴染
+          ;.btn-group
+          ;  .label(title="中出し, Creampie") 中出し
+          ;  .label(title="顔射, 汁, ぶっかけ, Facial") 顔射
+          ;  .label(title="縛り, 緊縛") 縛り
+          ;  .label(title="アナル, 穴る, 掘る, Anal") アナル
+          ;  .label(title="フェラ, フェラチオ, Fellatio") フェラ
+          ;  .label(title="パイズリ, 乳首ズリ, 胸フェチ") パイズリ
+          .btn-group
+            .label(title="Maid, 冥土") メイド
+            .label(title="Nurse, 看護婦") ナース
+            .label(title="学園もの,  青春群像") 学園
+            .label(title="極道, ヤクザ, 不良娘") 極道
+            .label(title="忍者, くノ一") 忍者
+            .label(title="巫女") 巫女
+            .label(title="水着, スク水") 水着
+            ;.label(title="浴衣, 和服") 浴衣
+            ;.label(title="制服, セーラー服") 制服
+            ;.label(title="天使っ娘") 天使
+            .label(title="神様, 女神, 死神") 神様
+            .label(title="悪魔っ娘") 悪魔
+            .label(title="吸血鬼, Vampire") 吸血鬼
+            .label(title="女戦士, 騎士") 女戦士
+            .label(title="魔法少女, 変身ヒロイン") 魔法少女
+            ;.label(title="会長, 委員長") 会長
+            ;.label(title="修女, Sister") 修女
+            ;.label(title="アイドル, Idol") アイドル
+            ;.label(title="捜査官, 警察, Police") 捜査官
+            ;.label(title="アナウンサー, Announcer") アナ
+            ;.label(title="水商売, 売春婦, Prostitute") 水商売
+            ;.label(title="妖精, Elf") 妖精
+            ;.label(title="魔法, 魔術") 魔法
+            ;.label(title="母乳, Milk") 母乳
+            ;.label(title="死神") 死神
+            ;.label(title="獣耳") 獣耳
+            ;.label(title="China Dress") チャイナドレス
+            ;.label(title="冒険, Adventure") 冒険
+            ;.label(title="コスプレ, Cosplay") コスプレ
+          .btn-group
+            .label(title="お嬢様") お嬢様
+            .label(title="姫様, 女王, Princess") 姫様
+          .btn-group
+            .label(title="NTR, 寝取り, 寝取られ") NTR
+            .label(title="催眠, 洗脳") 催眠
+            .label(title="調教, 育成, 奴隷, 肉体改造") 調教
+            .label(title="凌辱, 鬼畜, 脅迫, 強姦") 凌辱
+            .label(title="乱交, 3P, 輪姦, Merry-go-round") 乱交
+            .label(title="監禁, 幽閉") 監禁
+            .label(title="痴漢, 撮影, セクハラ") 痴漢
+            .label(title="露出, 野外, 羞恥") 露出
+            .label(title="妊娠, 孕ませ") 妊娠
+          .btn-group
+            ;.label(title="Office Lady") OL
+            .label(title="禁断, 背徳, 近親相姦, Immoral") 禁断
+            .label(title="人妻, 母娘") 人妻
+            ;.label(title="痴女") 痴女
+            .label(title="女教師, 先生") 女教師
+          .btn-group
+            ;.label(title="SM, サド, マゾ, Sadism, Masochism") SM
+            .label(title="触手") 触手
+            .label(title="人外, 魔物娘, 異種姦") 人外
+            .label(title="放尿, おしっこ") 放尿
+            .label(title="食糞, スカトロ, Scatology, Coprophagy") 食糞
+            ;.label(title="両性具有, ふたなり") 両性具有
+
+      ; Spinner
+      ;#spinner(style="display:none")
+
+      ; Not sure why bootstrap .hidden does not work
+      .blocker(style="display:none")
+        #{tr('Empty') + ' ><'}
+
+      ; containter
+      ; http://masonry.desandro.com/
+      ; http://codepen.io/desandro/pen/cojvD
+      ;#games.js-masonry(data-masonry-options="{'itemSelector':'.game',transitionDuration:'0'}")
+      #games.masonry
+
+      #toolbar.metro
+        #zoomSlider.dragdealer.rounded.vertical
+          .handle.red(title="#{tr('Zoom')}"): 拡大
+        .btn.btn-block.btn-mini.btn-top(title="#{tr('Scroll to top')}")
+          %i.icon-chevron-up
+        .btn.btn-block.btn-mini.btn-bottom(title="#{tr('Scroll to bottom')}")
+          %i.icon-chevron-down
+        .btn.btn-block.btn-mini.btn-refresh(title="#{tr('Refresh')}")
+          %i.icon-undo
+
+      ; Scripts
+      -for it in 'jquery', \
+          'underscore', 'underscore.string', \
+          'dragdealer', 'masonry', \
+          'haml', 'moment', 'sprintf', \
+          'libs/choco', \
+          'reader/widgets', 'reader/gameboard'
+        %script(src="#{rc.cdn_url(it)}")
+
+; EOF
+; Elements
+;%section#games.hide
+;  -for game in games
+;    -if game.image
+;      .game( \
+;          data-local="#{'t' if game.local else 'f'}", \
+;          data-title="#{game.title|e}", \
+;          data-brand="#{game.brand|e}", \
+;          data-timestamp="#{game.timestamp}", \
+;          data-date="#{game.datetime.strftime('%Y%m%d')}", \
+;          data-year="#{game.datetime.year}", \
+;          data-visits="#{game.visitCount}", \
+;          data-comments="#{game.commentCount}")
+;        %a(href="javascript:bean.showItem(#{game.itemId})")
+;          %img.img-rounded(src="#{game.imageUrl}",\
+;              title="#{game.title|e} @#{game.brand if game.brand else tr('unknown')|e} (#{i18n.unparsedate(game.datetime) if game.date else tr('unknown')}) #{'#'}#{game.itemId}")
+

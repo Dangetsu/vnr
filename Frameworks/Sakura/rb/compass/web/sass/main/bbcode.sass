@@ -1,0 +1,27 @@
+/* bbcode.sass
+   2/4/2014 jichi
+
+//@import main/color
+@import main/defs
+
+.bbcode
+  img
+    max-width: 95%
+  pre
+    font-size: $text-sm
+    //font-size: $text-xs
+    background-color: #fbfbfd // the same as jamwiki code
+    //background-color: #fafafa // whiter than bootstrap
+    //background-color: #f5f5f5 // bootstrap default
+    //background-color: rgba(245,245,245,0.5) // the same color as bootstrap but with transparency
+
+    border: 1px dashed #7b85c9 // the same as jamwiki
+    //border: 1px solid #999 // bootstrap default
+  blockquote
+    font-size: inherit
+    //@extend .text-minor
+    color: #555
+    &:hover
+      color: #000
+
+// EOF

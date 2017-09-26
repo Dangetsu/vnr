@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<!-- update.hta jichi 3/1/2014
+Examples:
+http://www.teanow4pm.co.uk/hta.htm
+http://www.visualbasicscript.com/HTA-Monitor-CMD-output-m40342.aspx
+http://www.visualbasicscript.com/objShellExec-minimized-m47185.aspx
+http://social.technet.microsoft.com/Forums/scriptcenter/en-US/63802c32-fec3-4d83-8036-b37f46d3fe75/gui-for-vbs?forum=ITCG
+http://blog.achikoko.net/2013/11/htatwitter-bootstrap.html
+
+XHTML: https://github.com/Christines/Test/blob/master/test.hta
+-->
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <title>Software Update</title>
+    <hta:application
+        applicationname="Update"
+        border="thick"
+        borderstyle="normal"
+        caption="Software Update"
+        icon="update.ico"
+        contextmenu="yes"
+        maximizebutton="yes"
+        minimizebutton="yes"
+        navigable="no"
+        scroll="no"
+        selection="no"
+        showintaskbar="yes"
+        singleinstance="yes"
+        sysmenu="yes"
+        version="1.0"
+        windowstate="normal"
+    />
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" />
+    <style>
+body {
+  background-color: #fefefe;
+  margin: 10px;
+}
+.head {
+  margin: 0 20px;
+}
+.head .text {
+  margin-left: 130px;
+  font-style: italic;
+}
+.foot .dt {
+  text-align: right;
+}
+textarea {
+  width: 90% !important;
+  margin: 10px auto;
+  font-size: 90%;
+  word-wrap: normal;
+}
+    </style>
+  </head>
+  <body>
+    <div class="content">
+      <div class="head">
+        <button id="startButton" class="btn btn-primary" role="button" title="Start update">
+          Start
+        </button>
+        <span class="text text-muted">Internet access is required!</span>
+      </div>
+      <div class="body">
+        <textarea id="outputArea" class="form-control" rows="12" title="Output text"></textarea>
+      </div>
+      <div class="foot">
+        <div class="dl">
+          <span class="dt col-xs-4">Download links:</span>
+          <a class="dd col-xs-4" target="_blank" href="http://goo.gl/t31MqY" title="http://goo.gl/t31MqY">Google Drive</a>
+          <a class="dd col-xs-4" target="_blank" href="http://pan.baidu.com/s/1jGftD9W" title="http://pan.baidu.com/s/1jGftD9W">Baidu Disk</a>
+        </div>
+        <div class="dl">
+          <span class="dt col-xs-4">Bug report:</span>
+          <a class="dd col-xs-4" target="_blank" href="http://sakuradite.com/subject/100" title="http://sakuradite.com/subject/100">Sakuradite</a>
+          <a class="dd col-xs-4" target="_blank" href="mailto:annotcloud@gmail.com" title="annotcloud@gmail.com">Email</a>
+        </div>
+      </div>
+    </div>
+
+    <script language="javascript">
+window.onload = function() {
+  window.resizeTo(455, 360);
+};
+
+function refresh(shell) { // shell -> refresh shell
+  shell.Run("cmd /c", 0, true);
+}
+
+(function() {
+
+  var area = document.getElementById('outputArea');
+  area.focus(); // because the focused button is very ugly
+
+  var btn = document.getElementById('startButton');
+
+  var output = '';
+  btn.onclick = function() {
+    btn.disable = true;
+    btn.className = 'btn btn-default'
+    btn.value = "Updating";
+
+    var shell = new ActiveXObject("WScript.Shell");
+    //alert(objShell.CurrentDirectory);
+
+    //var cmd = ""cmd /c ping -n 7 www.google.com"; // debug
+
+    var path = "update.cmd";
+    var cmd = shell.CurrentDirectory + "/" + path; // I cannot invoke other batch file if do it this way
+
+    //var path = shell.CurrentDirectory + "/update.cmd";
+    //var cmd = 'cmd /c "' + path + '"';
+
+    var proc = shell.Exec(cmd);
+    var linenum = 0;
+    var refreshInterval = 20;
+    while (!proc.status) {
+      var line = proc.StdOut.ReadLine();
+      output += line + "\n";
+      linenum++;
+      area.value = output;
+      // Scroll to be bottom: http://stackoverflow.com/questions/9170670/how-do-i-set-textarea-scroll-bar-to-bottom-as-a-default
+      area.scrollTop = area.scrollHeight;
+
+      if (0 == linenum % refreshInterval)
+        refresh(shell);
+    }
+
+    btn.disable = false;
+    btn.className = 'btn btn-success';
+    btn.value = "Done";
+
+    area.focus(); // because the focused button is very ugly
+  };
+
+})();
+
+     </script>
+
+  </body>
+</html>
+
+<!--
+    <script language="vbscript">
+
+Sub Window_onLoad()
+  self.resizeTo 350,300
+  'self.Moveto 450,250
+End Sub
+
+Sub startButton_OnClick()
+'strHTML="<font face=Courier size=2>"
+'
+'Dim objCap
+'Dim objShell
+'Dim objStdOut
+'
+'Set objShell=CreateObject("wscript.shell")
+'
+'Set objCap=objShell.Exec("cmd /c ping -n 7 www.google.com")
+'
+'Do Until objCap.Status
+'strHtml=objCap.StdOut.ReadLine
+'frmData.document.write "<font face=Courier size=2>" & strHtml & "</font><br>"
+'Call ForceRefresh()
+' Loop
+'
+MsgBox "Finished"
+'End Sub
+'
+'Function ForceRefresh()
+'Set oShell = CreateObject("WScript.Shell")
+'oShell.Run "cmd /c", 0, True
+'
+'End Function
+
+    </script>
+-->

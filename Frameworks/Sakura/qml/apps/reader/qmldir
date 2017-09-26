@@ -1,0 +1,11 @@
+# qmldir
+# 2/19/2014 jichi
+#Kagami         kagami.qml
+PostView        postview.qml
+#RefView        refview.qml
+#SpringBoard    springboard.qml
+#SubMaker       submaker.qml
+#SubView        subview.qml
+TermView        termview.qml
+#TermWindow     termwindow.qml
+#VoiceView      voiceview.qml

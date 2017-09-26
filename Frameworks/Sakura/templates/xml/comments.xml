@@ -1,0 +1,44 @@
+{# comments.xml 11/1/2012 jichi
+ # @param  now  datetime.datetime
+ # @param  comments  iter[dataman.Comment]
+ # @param  contexts  {hash:unicode} or None
+-#}
+<?xml version="1.0" encoding="utf-8"?>
+<!-- comments.xml {{now.strftime("%Y-%m-%d %H:%M")}} -->
+<grimoire version="1.0">
+	<comments>
+%for it in comments
+%	if it.id
+		<comment id="{{it.id}}" type="{{it.type}}"
+{%- if it.disabled %} disabled="true" {%- endif %}
+{%- if it.locked %} locked="true" {%- endif %}>
+			<gameId>{{it.gameId or 0}}</gameId>
+			<userId>{{it.userId}}</userId>
+%		if it.userHash
+			<userHash>{{it.userHash}}</userHash>
+%		endif
+			<language>{{it.language or 'en'}}</language>
+			<timestamp>{{it.timestamp or 0}}</timestamp>
+%		if it.updateTimestamp
+			<updateTimestamp>{{it.updateTimestamp}}</updateTimestamp>
+			<updateUserId>{{it.updateUserId}}</updateUserId>
+%		endif
+			<text>{{it.text|e}}</text>
+			<context hash="{{it.hash}}" size="{{it.contextSize}}">{{it.context|e if it.context else contexts[it.hash]|e if contexts and it.hash in contexts else ""}}</context>
+%		if it.comment
+			<comment>{{it.comment|e}}</comment>
+%		endif
+%		if it.updateComment
+			<updateComment>{{it.updateComment|e}}</updateComment>
+%		endif
+%		if it.likeCount
+			<likeCount>{{it.likeCount}}</likeCount>
+%		endif
+%		if it.dislikeCount
+			<dislikeCount>{{it.dislikeCount}}</dislikeCount>
+%		endif
+		</comment>
+%	endif
+%endfor
+	</comments>
+</grimoire>

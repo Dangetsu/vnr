@@ -1,0 +1,57 @@
+; about.haml
+; 3/31/2014 jichi
+; @param  cdn
+; @param  tr  i18n.tr
+; @param  version  str
+!!! 5
+%html
+  %head
+    %title #{tr('About')}
+    %link(rel="stylesheet",href="#{rc.cdn_url('bootstrap3.css')}")
+    :css
+      /* Global */
+      body {
+        /*background-color: #ececec;*/
+        background-repeat: repeat;
+        background-image: url("#{rc.image_url('background-black')}");
+        color: snow;
+        font: 120% arial,helvetica,clean,sans-serif;
+      }
+      .portal {
+        border-radius: 4px;
+        border: 1px solid snow;
+        /*background-color: rgba(0,0,0,0.1);*/
+        margin: 50px auto;
+        max-width: 300px;
+        padding: 9px;
+      }
+      img.logo {
+        width: 80px;
+        height: 80px;
+        margin-left: 20px;
+      }
+      hr { margin: 10px 0 }
+      label { text-align: right }
+      .head a { margin-left: 20px }
+      .links a.first { margin-right: 10px }
+  %body
+    .portal
+      .row.head
+        %img.logo(src="#{rc.image_url('logo-browser')}")
+        #{tr('About')}
+        -set url = "http://sakuradite.com/app/vnr/changes"
+        %a(target="_blank",href="#{url}",title="#{url}")
+          #{tr('Recent Changes')}
+      %hr
+      .body.form-horizontal
+        .form-group
+          %label.control-label.col-xs-4 #{tr('Version')}:
+          .form-control-static.col-xs-8 #{version}
+        .form-group
+          %label.control-label.col-xs-4 #{tr('Download')}:
+          .form-control-static.col-xs-8.links
+            -set url = "http://goo.gl/t31MqY"
+            %a.first(target="_blank",href="#{url}",title="#{url}") Google Drive
+            -set url = "https://mega.co.nz/#F!g00SQJZS!pm3bAcS6qHotPzJQUT596Q"
+            %a(target="_blank",href="#{url}",title="#{url}") Megashares
+; EOF

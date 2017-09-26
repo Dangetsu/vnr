@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+<key>hA121</key><string>ā</string>
+<key>hA122</key><string>á</string>
+<key>hA123</key><string>ǎ</string>
+<key>hA124</key><string>à</string>
+<key>hA125</key><string>ē</string>
+<key>hA126</key><string>é</string>
+<key>hA127</key><string>ě</string>
+<key>hA128</key><string>è</string>
+<key>hA129</key><string>ī</string>
+<key>hA12A</key><string>í</string>
+<key>hA12B</key><string>ǐ</string>
+<key>hA12C</key><string>ì</string>
+<key>hA12D</key><string>ō</string>
+<key>hA12E</key><string>ó</string>
+<key>hA12F</key><string>ǒ</string>
+<key>hA130</key><string>ò</string>
+<key>hA131</key><string>ū</string>
+<key>hA132</key><string>ú</string>
+<key>hA133</key><string>ǔ</string>
+<key>hA134</key><string>ù</string>
+<key>hA135</key><string>ǖ</string>
+<key>hA136</key><string>ǘ</string>
+<key>hA137</key><string>ǚ</string>
+<key>hA138</key><string>ǜ</string>
+<key>hA139</key><string>ü</string>
+<key>zA13B</key><string>❶</string>
+<key>zA13C</key><string>❷</string>
+<key>zA13D</key><string>❸</string>
+<key>zA13E</key><string>❹</string>
+<key>zA13F</key><string>❺</string>
+<key>zA140</key><string>❻</string>
+<key>zA141</key><string>❼</string>
+<key>zA142</key><string>❽</string>
+<key>zA143</key><string>❾</string>
+<key>zA144</key><string>❿</string>
+<key>zA14E</key><string>①</string>
+<key>zA14F</key><string>②</string>
+<key>zA150</key><string>③</string>
+<key>zA151</key><string>④</string>
+<key>zA152</key><string>⑤</string>
+</dict>
+</plist>

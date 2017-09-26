@@ -1,0 +1,38 @@
+{# subs.yaml 12/11/2014 jichi
+ # @param  ys  yaml string escape function
+ # @param  subs  [Subtitle]
+ # @param  subCount  int
+ # @param  options  dict
+ # @param  gameId  long
+ # @param  now  datetime
+ # @param  timestamp  long
+-#}
+# Generated: {{now.strftime("%Y-%m-%d %H:%M")}}
+# Game: /game/{{gameId}}
+# Global options
+-
+{%- if options.textLang %}
+  textLang: {{options.textLang}}
+{%- endif %}
+{%- if options.subLang %}
+  subLang: {{options.subLang}}
+{%- endif %}
+  #timestamp: {{timestamp}}
+# Subtitles ({{subCount}})
+{%- for it in subs %}
+- id: {{it.textId}}
+  subLang: {{it.subLang}}
+  text: {{ys(it.text)}}
+{%- if it.textName %}
+  textName: {{ys(it.textName)}}
+{%- endif %}
+  sub: {{ys(it.sub)}}
+{%- if it.subName %}
+  subName: {{ys(it.subName)}}
+{%- endif %}
+{%- if it.comment %}
+  comment: {{ys(it.comment)}}
+{%- endif %}
+  #userId: {{it.userId}}
+{%- endfor %}
+# End of file

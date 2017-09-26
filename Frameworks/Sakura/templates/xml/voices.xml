@@ -1,0 +1,20 @@
+{# voices.xml 6/21/2013 jichi
+ # @param  now  datetime.datetime
+ # @param  voices  iter[dataman.Character]
+-#}
+<?xml version="1.0" encoding="utf-8"?>
+<!-- voices.xml {{now.strftime("%Y-%m-%d %H:%M")}} -->
+<grimoire version="1.0">
+	<voices>
+%for it in voices
+%	if not it.name or it.ttsEngine or it.ttsEnabled or it.gender
+		<voice {%- if not it.ttsEnabled %} disabled="true" {%- endif %}>
+			<name>{{it.name|e if it.name else ''}}</name>
+			<gender>{{it.gender or ''}}</gender>
+			<ttsEngine>{{it.ttsEngine or ''}}</ttsEngine>
+			<timestamp>{{it.timestamp}}</timestamp>
+		</voice>
+%	endif
+%endfor
+	</voices>
+</grimoire>

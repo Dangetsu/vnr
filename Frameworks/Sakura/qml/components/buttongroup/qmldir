@@ -1,0 +1,4 @@
+# buttongroup/qmldir
+# 6/20/2014 jichi
+ButtonColumn    buttoncolumn.qml
+ButtonRow       buttonrow.qml

@@ -1,0 +1,49 @@
+10/11/2014 jichi
+
+CS files are exported from AITalkSynth.dll in zunko 1.6 using .NET Reflector 8.3.3.115 on .NET 4.5.
+Library has dependence on both VC 8.0 and VB 8.0.
+
+* VOICEROID 1.6.0.0
+
+* Common 1.0.1.0
+* LangEditModelLib 1.0.1.0
+* AITalkTuning 1.0.1.0
+* AITalkSynth 1.0.1.0
+
+Exported functions in aitalked.dll are as follows got using Dependency Walker.
+
+??0_Mutex@std@@QAE@W4_Uninitialized@1@@Z
+??4_Init_locks@std@@QAEAAV01@ABV01@@Z
+?AITalkAPI_ReplaceWordDic_small@@YGHPBD@Z
+_AIAudioAPI_ClearData@0
+_AIAudioAPI_Close@0
+_AIAudioAPI_Open@4
+_AIAudioAPI_PushData@12
+_AIAudioAPI_PushEvent@12
+_AIAudioAPI_Resume@0
+_AIAudioAPI_SaveWave@16
+_AIAudioAPI_Suspend@0
+_AITalkAPI_BLoadWordDic@0
+_AITalkAPI_CloseKana@8
+_AITalkAPI_CloseSpeech@8
+_AITalkAPI_End@0
+_AITalkAPI_GetData@16
+_AITalkAPI_GetJeitaControl@8
+_AITalkAPI_GetKana@20
+_AITalkAPI_GetParam@8
+_AITalkAPI_GetStatus@8
+_AITalkAPI_Init@4
+_AITalkAPI_LangClear@0
+_AITalkAPI_LangLoad@4
+_AITalkAPI_LicenseDate@4
+_AITalkAPI_LicenseInfo@16
+_AITalkAPI_ModuleFlag@0
+_AITalkAPI_ReloadPhraseDic@4
+_AITalkAPI_ReloadSymbolDic@4
+_AITalkAPI_ReloadWordDic@4
+_AITalkAPI_SetParam@4
+_AITalkAPI_TextToKana@12
+_AITalkAPI_TextToSpeech@12
+_AITalkAPI_VersionInfo@16
+_AITalkAPI_VoiceClear@0
+_AITalkAPI_VoiceLoad@4

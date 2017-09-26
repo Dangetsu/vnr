@@ -1,0 +1,87 @@
+/* forum/posts.sass
+   12/30/2014 jichi
+   See: http://isotope.metafizzy.co/css/style.css
+
+@import main/color
+@import main/cursor
+@import main/shadow
+@import main/transition
+
+// Copied from my bootstrap/color.sass
+$bg-warning-color: #fcf8e3
+$bg-warning-hover-color: #faf2cc
+.bg-warning
+  background-color: $bg-warning-color
+  &:hover
+    background-color: $bg-warning-hover-color
+
+$avatar-width: 40px
+$reply-avatar-width: $avatar-width * 0.8
+
+.forum-posts
+  img.avatar
+    width: $avatar-width
+    //height: $avatar-width
+    @extend .avatar-shadow
+
+  .post
+    padding-top: 9px // include the height of footer
+    min-height: $avatar-width
+    &.highlight
+      @extend .bg-warning
+    > a > img.avatar
+      float: left
+      width: $avatar-width
+      //height: $topic-avatar-width
+      @extend .avatar-shadow
+    > .right
+      margin-left: $avatar-width + 9px
+      > .header
+        //  color: darkblue // TODO: Use linke instead
+        //  display: inline
+        .time
+          //@extend .text-minor
+          display: inline
+          margin-left: 9px
+          font-size: 90%
+        .lang
+          //@extend .text-minor
+          color: purple
+          display: inline
+          margin-left: 9px
+          font-size: 90%
+      > .image
+        margin: 5px
+        > a > img
+          @extend .img-shadow
+          max-width: 100%
+      > .content
+        margin-left: 5px
+        font-size: 95%
+        img
+          @extend .img-shadow
+          max-width: 100%
+      >.footer
+        margin-top: -5px
+        height: 18px // larger than the height of buttons
+        .fade-in
+          opacity: 0
+    &:hover > .right > .footer .fade-in
+      opacity: 1
+
+    // only highlight the first post
+    &:not([data-type='reply']) > .right > .header
+      background-color: rgba(0,0,255,0.05) // blue
+
+  .post .reply
+    margin-top: 9px
+    > .post
+      margin-left: 5%
+      min-height: $reply-avatar-width
+      img.avatar // smaller
+        width: $reply-avatar-width
+        //height: $reply-avatar-width
+      > .right
+        margin-left: $reply-avatar-width + 9px
+
+// EOF

@@ -1,0 +1,355 @@
+/* gameview.sass
+   8/15/2013 jichi
+   See: http://isotope.metafizzy.co/css/style.css
+
+@import bootstrap/fa
+@import bootstrap/form
+@import bootstrap/nav
+@import main/blocker
+@import main/color
+@import main/cursor
+@import main/i18n
+//@import main/ruby
+@import main/shadow
+@import main/transition
+@import main/text
+@import sites/youtube
+@import widgets/annot
+@import widgets/toolbar
+
+@import sites/amazon
+@import sites/digiket
+@import sites/dlsite
+@import sites/dmm.css
+@import sites/getchu
+@import sites/gyutto
+@import sites/steam
+
+//@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700)
+//*
+//  font-family: 'Source Sans Pro', sans-serif
+
+//.img-rounded // the same as bootstrap
+//  border-radius: 6px
+
+a[class*="link-"]
+  @extend .cursor-pointer
+
+// bootstrap-switch bug
+.bootstrap-switch
+  // for min size
+  max-height: 30px
+  margin-top: -5px
+
+// search button
+a.search
+  @extend .cursor-pointer
+
+//$yt-img-scale: 0.5
+$yt-img-scale: 1.0
+
+// Game descriptions
+.description,
+.character
+  margin: 9px
+  img
+    max-width: 95%
+  a > img
+    @extend .avatar-shadow
+    //@extend .img-rounded
+
+// Game reviews
+.contents > .review
+  margin: 9px
+  *
+    // disable all borders
+    border: 0 !important
+
+// ErogameScape reviews
+.scape.review .entry
+  font-size: 90%
+  margin: 9px
+  > .header
+    border-radius: 3px
+    padding: 5px
+    background-color: rgba(0,0,255,0.05) // blue
+    .field
+      margin-right: 9px
+    //.count
+    //  @extend .text-minor
+  >.body
+    .title
+      font-weight: bold
+    .content
+      margin-top: 9px
+      &.inactive
+        display: none
+
+// Game view
+
+.game.view
+  //margin: 6px
+  //padding: 12px
+  //border-radius: 4px
+  padding: 18px
+  background-color: rgba(255,255,255,0.9)
+  //background-color: rgba(255,255,255,0.95)
+  //max-width: 800px
+
+  > .cover
+    z-index: 999 // draggable
+    //float: right  // does not work well with bootstrap table
+    position: absolute
+    top: 18px
+    right: 18px
+    img
+      // getchu image width
+      width: 230px
+      //margin: 0 0 4px 9px
+      @extend .img-shadow
+    //.close
+    //  float: left
+    //  //z-index: 999+1
+
+  > .header
+    margin-top: 10px
+    margin-left: 5%
+    > .title a
+      @extend .text-lg
+    > .title-romaji a
+      margin-left: 20px
+      @extend .text-minor
+    > .buttons
+      margin-top: 10px
+      //opacity: 0.5
+      //&:hover
+      //  opacity: 1
+
+  > .content
+    //> .stats
+    //  @extend .text-sm
+    //  position: absolute
+    //  top: 120px
+    //  right: 50px
+    //  width: 100px
+    section
+      margin: 10px 0
+      .contents .empty
+        @extend .text-minor
+        margin-left: 20px
+      > .body.form-horizontal
+        margin-top: 9px
+      &.info
+        .tts
+          @extend .icon-margin-left
+          @extend .fade-in
+          @extend .cursor-pointer
+          opacity: 0
+        &:hover .tts
+          opacity: 1
+      &.cg .images
+        margin: 0 auto // align center, isFitWidth: true
+        img
+          @extend .img-shadow
+          //@extend .img-zoom
+          //vertical-align: top
+          margin: 5px 4px
+          width: 220px // 220 is consistent with zoom in game.coffee
+          max-width: 95%
+          //min-height: 140px // = 220 * 2/3
+      &.twitter .widgets
+        margin-top: 20px
+        > .timeline
+          display: inline
+          margin: 20px
+          //text-align: center
+      &.youtube .video
+        display: inline-block
+        &.play // iframe is displayed
+          display: block
+        width: $yt-img-width * $yt-img-scale
+        margin: 9px
+        //margin: 15px 4px
+        //text-align: center
+        //display: inline-block
+        &.play .image
+          display: none
+        &:not(.play) .close
+          display: none
+        .tts
+          @extend .cursor-pointer
+          @extend .fade-in
+          opacity: 0
+          float: left
+          //margin-left: -20px
+        &:hover .tts
+          opacity: 1
+        .date
+          display: inline
+          margin-left: 15px
+          @extend .text-minor
+        // http://stackoverflow.com/questions/493296/css-display-an-image-resized-and-cropped
+        > .image
+          img
+            max-height: ($yt-img-height + 50px) * $yt-img-scale
+            min-height: ($yt-img-wide-height - 50px) * $yt-img-scale
+          &:not(.crop)
+            img
+              @extend .img-shadow
+              @extend .cursor-pointer
+              width: $yt-img-width * $yt-img-scale
+          &.crop
+            @extend .img-shadow
+            @extend .cursor-pointer
+            width: $yt-img-width * $yt-img-scale
+            height: ($yt-img-height - 2 * $yt-crop-height) * $yt-img-scale
+            overflow: hidden
+            //margin: 0 auto
+            img
+              margin: -$yt-crop-height*$yt-img-scale auto
+              width: 100%
+      &.stats
+        position: relative
+        // .raty
+        .rating
+          // display:block + float-left is needed to use margin-top, see: http://stackoverflow.com/questions/16570110/add-margin-top-or-padding-top-to-a-series-of-display-inline-div-tags
+          float: left
+          margin-top: -5px
+          margin-right: 10px
+        .score-label
+          //@extend .score-color
+          display: inline
+        //.score-hint
+        //  margin-left: 9px
+        //.count
+        //  @extend .score-color
+        .btn-review
+          margin-top: -5px
+        //  position: absolute
+        //  right: 10px
+        //  bottom: 10px
+        > .footer
+          margin-top: 20px
+      &.intro
+        .toolbar
+          margin-left: 20px // margin left to the title content
+          margin-top: -4px // move higher
+        .game-intro
+          margin: 20px
+      > .title,
+      > .footer
+        //@extend .pill
+        margin-left: 15px
+        .title-content
+          display: inline
+        > .switch-group
+          display: inline
+          margin-left: 10px
+          opacity: 0.9
+          > .msg
+            @extend .text-minor
+            margin-left: 10px
+      &:hover > .title .title-content
+        @extend .title-hl
+        //@extend .text-hl
+      > .body
+        @extend .text-sm
+      &.banner img
+        display: block
+        margin: 5px auto
+        max-width: 100%
+        //max-height: 200px
+        //max-height: 150px
+      &.users > .contents
+        margin: 20px
+        .user
+          display: inline-block
+          margin: 4px
+          width: 75px
+          text-align: center
+          img
+            @extend .img-shadow
+            max-width: 100%
+          a.user-link
+            @extend .cursor-pointer
+      &.info
+        .links a,
+        .urls a
+          margin-right: 9px
+
+// Topic reviews
+
+$topic-avatar-width: 40px
+$post-avatar-width: $topic-avatar-width * 0.8
+
+.topic,
+.post
+  img.avatar
+    width: $topic-avatar-width
+    //height: $topic-avatar-width
+    @extend .avatar-shadow
+
+  padding-top: 9px // include the height of footer
+  min-height: $topic-avatar-width
+  > .left
+    float: left
+    width: 0px
+  > .right
+    margin-left: $topic-avatar-width + 9px
+    > .header
+      background-color: rgba(0,0,255,0.05) // blue
+      padding-left: 5px
+      padding-right: 5px
+      .user
+        @extend .cursor-pointer
+        //color: darkblue // TODO: Use linke instead
+        //display: inline
+      .score
+        display: inline
+        margin-left: 9px
+      .time
+        //@extend .text-minor
+        float: right
+        display: inline
+        margin-right: 9px
+        font-size: 90%
+      .lang
+        //@extend .text-minor
+        float: right
+        color: purple
+        display: inline
+        margin-right: 9px
+        font-size: 90%
+    > .image
+      margin: 5px
+      > a > img
+        @extend .img-shadow
+        max-width: 100%
+    > .content
+      font-size: 95%
+      img
+        @extend .img-shadow
+        max-width: 100%
+    > .footer
+      margin-top: -5px
+      height: 18px // larger than the height of buttons
+      .fade-in
+        opacity: 0
+  &:hover > .right > .footer .fade-in
+    opacity: 1
+
+  .reply
+    margin-top: 9px
+    > .post
+      margin-left: 5%
+      min-height: $post-avatar-width
+      img.avatar // smaller
+        width: $post-avatar-width
+        //height: $post-avatar-width
+      > .right
+        margin-left: $post-avatar-width + 9px
+
+  //.post .header
+  //  background-color: transparent // hide background color
+
+// EOF

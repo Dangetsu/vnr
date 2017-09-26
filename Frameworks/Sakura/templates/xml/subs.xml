@@ -1,0 +1,42 @@
+{# subs.xml 12/17/2014 jichi
+ # @param  now  datetime.datetime
+ # @param  timestamp  long
+ # @param  subs  iter[dataman.Subtitle]
+-#}
+<?xml version="1.0" encoding="utf-8"?>
+<!-- subs.xml {{now.strftime("%Y-%m-%d %H:%M")}} -->
+<grimoire version="1.0">
+	<trs timestamp="{{timestamp}}">
+%for it in subs
+		<tr>
+%	if it.userId
+ 			<userId>{{it.userId}}</userId>
+%	endif
+%	if it.textId
+ 			<textId>{{it.textId}}</textId>
+%	endif
+%	if it.text
+ 			<text>{{it.text|e}}</text>
+%	endif
+%	if it.textName
+ 			<textName>{{it.textName|e}}</textName>
+%	endif
+%	if it.textTime
+ 			<textTime>{{it.textTime}}</textTime>
+%	endif
+%	if it.sub
+ 			<sub>{{it.sub|e}}</sub>
+%	endif
+%	if it.subName
+ 			<subName>{{it.subName|e}}</subName>
+%	endif
+%	if it.subTime
+ 			<subTime>{{it.subTime}}</subTime>
+%	endif
+%	if it.subLang
+ 			<subLang>{{it.subLang}}</subLang>
+%	endif
+		</tr>
+%endfor
+	</trs>
+</grimoire>

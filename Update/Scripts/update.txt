@@ -1,0 +1,10 @@
+1/16/2013
+
+update workflow
+
+update => migrate => upgrade
+safeupdate => upgrade
+
+au3 => safeupdate
+Debug Update => safeupdate
+update.ps1 => update  # so that the checkout is done twice

@@ -1,0 +1,134 @@
+; start.haml
+; 3/21/2014 jichi
+; @param  tr  i18n.tr
+; @param  rc
+!!! 5
+%html
+  %head
+    %title #{tr('Start')}
+    :css
+      /* Bootstrap */
+      a {
+        color: #428bca;
+        text-decoration: none;
+      }
+      a:hover,
+      a:focus {
+        color: #2a6496;
+        text-decoration: underline;
+      }
+      a:focus {
+        outline: thin dotted;
+        outline: 5px auto -webkit-focus-ring-color;
+        outline-offset: -2px;
+      }
+      /* Global */
+      body {
+        background-image: url("#{rc.wallpaper_url()}");
+        background-size: cover;
+        font: 1em arial,helvetica,clean,sans-serif;
+        text-align: center;
+        /* Remove bootstrap margin-top */
+        margin-top: -20px;
+      }
+      .site { margin-bottom: 15px; }
+      .col { width: 25%; display: inline-block; }
+      .col-1,.col-2 { float: left }
+      .col-3,.col-4 { float: right }
+      .background {
+        position: fixed;
+        z-index: -999;
+        left: 0; right: 0; top: 0; bottom: 0;
+        background-color: rgba(255,255,255,0.85);
+      }
+      /* text-minor */
+      .title { color: #888 }
+      .title:hover { color: #555 }
+  %body
+    .background
+    .container
+      ; http://stackoverflow.com/questions/1964297/split-div-into-2-columns-using-css
+      %br(style="clear:both")
+      .col.col-1
+        %section
+          %h3.title Wikipedia
+          ; Candidates:
+          ; http://ja.wikipedia.org/wiki/ちよれん
+          ; http://ja.wikipedia.org/wiki/埼玉連合
+          ; http://ja.wikipedia.org/wiki/Category:北海道えろげー組合
+          -for url,name in \
+              ("ja.wikipedia.org/wiki/Category:2014年のアダルトゲーム", "2014年のゲーム"), \
+              ("ja.wikipedia.org/wiki/Category:2013年のアダルトゲーム", "2013年のゲーム"), \
+              ("ja.wikipedia.org/wiki/Category:2012年のアダルトゲーム", "2012年のゲーム"), \
+              ("ja.wikipedia.org/wiki/Category:未発売のアダルトゲーム", "未発売のゲーム"), \
+              ("ja.wikipedia.org/wiki/Category:各年のアダルトゲーム", "各年のゲーム一覧"), \
+              ("ja.wikipedia.org/wiki/Category:テレビアニメ化されたアダルトゲーム", "アニメ化されたゲーム"), \
+              ("ja.wikipedia.org/wiki/アダルトゲームメーカー一覧", "ゲームメーカー"), \
+              ("ja.wikipedia.org/wiki/Category:アダルトゲームブランドの歴史", "解散されたブランド"), \
+              ("ja.wikipedia.org/wiki/アダルトゲーム関連人物一覧", "関連人物一覧"), \
+              ("ja.wikipedia.org/wiki/Category:アダルトゲームライター", "ライター"), \
+              ("ja.wikipedia.org/wiki/Category:ゲームのグラフィッカー・原画家", "原画家"), \
+              ("ja.wikipedia.org/wiki/Category:ゲーム音楽グループ", "音楽グループ"),
+            %div(class="site")
+              %a(href="http://#{url}",title="#{url}") #{name}
+      .col.col-2
+        %section
+          %h3.title Getchu
+          -for url,name in \
+              ("www.getchu.com/pc/salesranking2013.html", "セールス2013"), \
+              ("www.getchu.com/pc/2013_g_ranking/", "ランキング2013"), \
+              ("www.getchu.com/pc/2012_g_ranking/", "ランキング2012"), \
+              ("www.getchu.com/pc/2011_g_ranking/", "ランキング2011"), \
+              ("www.getchu.com/pc/2010_g_ranking/", "ランキング2010"), \
+              ("www.getchu.com/pc/2009_g_ranking/", "ランキング2009"), \
+              ("www.getchu.com/pc/2008_g_ranking/", "ランキング2008"), \
+              ("www.getchu.com/pc/2007_g_ranking/2007_g_ranking_all.html", "ランキング2007"), \
+              ("www.getchu.com/pc/2006_g_ranking/result/2006_ur_result_all.html", "ランキング2006"), \
+              ("www.getchu.com/pc/ranking2005/all.html", "ランキング2005"), \
+              ("www.getchu.com/pc/rank.phtml?rank_flag=1", "ランキング2004"), \
+              ("www.getchu.com/ranking/2003sougou.html", "ランキング2003"),
+            %div(class="site")
+              %a(href="http://#{url}",title="#{url}") #{name}
+      .col.col-4
+        %section
+          %h3.title AKABEiSOFT2
+          -for url,name in \
+              ("www.akabeesoft2.com", "あかべぇそふとつぅ"), \
+              ("www.akabeesoft2-try.com/top/top.php", "あかべぇそふとつぅTRY"), \
+              ("www.akabeesoft3.com/top.html", "あかべぇそふとすりぃ"), \
+              ("www.akabei-akane.com", "あかね"), \
+              ("www.applique-soft.com/main.html", "あっぷりけ"), \
+              ("www.tigresoft.com/top.htm", "てぃ～ぐる"), \
+              ("www.effordomsoft.com", "エフォルダムソフト"), \
+              ("www.akatsukiworks.com/top.html", "暁WORKS"), \
+              ("www.collaborations2005.com/index02.html", "CollaborationS"), \
+              ("www.cosmiccute.com/top.html", "COSMIC CUTE"), \
+              ("www.hibiki-site.com/top.html", "hibiki"), \
+              ("www.nostalgicchord.com/top.html", "NostalgicChord"),
+            %div(class="site")
+              %a(href="http://#{url}",title="#{url}") #{name}
+      .col.col-3
+        %section
+          %h3.title ErogameScape
+          -for url,name in \
+              ("erogamescape.dyndns.org/~ap2/ero/toukei_kaiseki", "エロゲ批評空間"),
+            %div(class="site")
+              %a(href="http://#{url}",title="#{url}") #{name}
+        %section
+          %h3.title Shops
+          -for url,name in \
+              ("www.getchu.com/top.html", "Getchu"), \
+              ("www.dlsite.com", "DLsite"), \
+              ("www.dmm.co.jp/top", "DMM"), \
+              ("www.toranoana.jp", "とらのあな"),
+            %div(class="site")
+              %a(href="http://#{url}",title="#{url}") #{name}
+        %section
+          %h3.title Makers
+          -for url,name in \
+              ("www.alicesoft.com/main.html", "アリスソフト"), \
+              ("tenco.cc/home/top", "天狐"), \
+              ("www.minori.ph/index_02.html", "minori"),
+            %div(class="site")
+              %a(href="http://#{url}",title="#{url}") #{name}
+; EOF

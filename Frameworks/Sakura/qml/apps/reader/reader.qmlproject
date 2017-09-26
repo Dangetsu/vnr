@@ -1,0 +1,18 @@
+// reader.qmlproject
+// 9/28/2012 jichi
+import QmlProject 2.0
+
+Project {
+  mainFile: "springboard.qml"
+  QmlFiles {
+    directory: "."
+  }
+  JavaScriptFiles {
+    directory: "."
+  }
+  ImageFiles {
+    directory: "."
+  }
+  // List of plugin directories passed to QML runtime
+  //importPaths: [ " ./plugin " ]
+}

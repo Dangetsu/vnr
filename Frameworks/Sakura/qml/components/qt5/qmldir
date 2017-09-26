@@ -1,0 +1,4 @@
+# qt5/qmldir
+# 1/8/2015 jichi
+Text5       text5.qml
+TextEdit5   textedit5.qml

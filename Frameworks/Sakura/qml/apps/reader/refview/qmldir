@@ -1,0 +1,5 @@
+# refview/qmldir
+# 2/20/2013 jichi
+Inspector   inspector.qml
+Table       table.qml
+ToolBar     toolbar.qml

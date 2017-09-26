@@ -1,0 +1,100 @@
+{# gameitems.xml 9/11/2013 jichi
+ # @param  now  datetime.datetime
+ # @param  items  iter[dataman.GameItem]
+-#}
+<?xml version="1.0" encoding="utf-8"?>
+<!-- gameitems.xml {{now.strftime("%Y-%m-%d %H:%M")}} -->
+<grimoire version="1.0">
+	<items>
+%for it in items
+		<item id="{{it.id}}">
+%	if it.timestamp
+			<timestamp>{{it.timestamp}}</timestamp>
+%	endif
+%	if it.title
+			<title>{{it.title|e}}</title>
+%	endif
+%	if it.romajiTitle
+			<romajiTitle>{{it.romajiTitle|e}}</romajiTitle>
+%	endif
+%	if it.brand
+			<brand>{{it.brand|e}}</brand>
+%	endif
+%	if it.series
+			<series>{{it.series|e}}</series>
+%	endif
+%	if it.image
+			<image>{{it.image|e}}</image>
+%	endif
+%	if it.banner
+			<banner>{{it.banner|e}}</banner>
+%	endif
+%	if it.wiki
+			<wiki>{{it.wiki|e}}</wiki>
+%	endif
+%	if it.fileSize
+			<fileSize>{{it.fileSize}}</fileSize>
+%	endif
+%	if it.tags
+			<tags>{{it.tags|e}}</tags>
+%	endif
+%	if it.date
+			<date>{{it.date.strftime("%Y%m%d")}}</date>
+%	endif
+%	if it.artists
+			<artists>{{it.artists|e}}</artists>
+%	endif
+%	if it.sdartists
+			<sdartists>{{it.sdartists|e}}</sdartists>
+%	endif
+%	if it.writers
+			<writers>{{it.writers|e}}</writers>
+%	endif
+%	if it.musicians
+			<musicians>{{it.musicians|e}}</musicians>
+%	endif
+%	if it.otome
+			<otome>true</otome>
+%	endif
+%	if it.ecchi
+			<ecchi>true</ecchi>
+%	else
+			<ecchi>false</ecchi>
+%	endif
+%	if it.okazu
+			<okazu>true</okazu>
+%	endif
+%	if it.topicCount
+			<topicCount>{{it.topicCount}}</topicCount>
+%	endif
+%	if it.annotCount
+			<annotCount>{{it.annotCount}}</annotCount>
+%	endif
+%	if it.subtitleCount
+			<subtitleCount>{{it.subtitleCount}}</subtitleCount>
+%	endif
+%	if it.playUserCount
+			<playUserCount>{{it.playUserCount}}</playUserCount>
+%	endif
+%	if it.scapeMedian
+			<scapeMedian>{{it.scapeMedian}}</scapeMedian>
+%	endif
+%	if it.scapeCount
+			<scapeCount>{{it.scapeCount}}</scapeCount>
+%	endif
+%	if it.overallScoreCount
+			<overallScoreCount>{{it.overallScoreCount}}</overallScoreCount>
+%	endif
+%	if it.overallScoreSum
+			<overallScoreSum>{{it.overallScoreSum}}</overallScoreSum>
+%	endif
+%	if it.ecchiScoreCount
+			<ecchiScoreCount>{{it.ecchiScoreCount}}</ecchiScoreCount>
+%	endif
+%	if it.ecchiScoreSum
+			<ecchiScoreSum>{{it.ecchiScoreSum}}</ecchiScoreSum>
+%	endif
+		</item>
+%endfor
+	</items>
+</grimoire>

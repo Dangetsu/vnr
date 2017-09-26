@@ -1,0 +1,286 @@
+# gameboard.coffee
+# 7/31/2013 jichi
+# Required by gameboard.haml
+# Bean: gameboard.GameBoardBean
+
+# CHECKPOINT: Calculate recent games
+# By subtracting current date
+#$('.game[data-local="'true']').addClass('local');
+
+#dprint = -> console.log.apply console,  arguments
+dprint = ->
+
+## Isotope game flow ##
+
+class GameFlow
+  id: 'games'
+  constructor: (@games) ->
+    # @param  games  JSON  {itemId:GameInfo}
+    @filters = {} # key: jquery selector
+
+    dprint 'render: entering'
+    h = @render()
+    dprint 'render: left'
+
+    #$('body').append h
+    $(h).hide().appendTo $ 'body'
+    @$container = $ '#' + @id # cached
+    @bind()
+
+  bind: =>
+    dprint 'bind: enter'
+    self = @
+    _get = (el) => @games[el.dataset.id]
+    _get$ = ($el) => @games[$el.data 'id']
+
+    #$('.label').tooltip title: -> @innerHTML
+
+    setTimeout (->
+      $('.game').each ->
+        g = _get @
+        @dataset.year = g.dateObject.getFullYear()
+        @dataset.month  = g.dateObject.getMonth() + 1
+        @classList.add 'local' if g.local
+        @classList.add 'otome' if g.otome
+        @classList.add 'okazu' if g.okazu
+    ), 3000 # initialize later
+
+    #$('.game img').tooltip()
+    $('.game img').click ->
+      bean.showItem @parentNode.dataset.id
+
+    $('.game .label').click ->
+      $this = $ @
+      if $this.hasClass 'label-inverse'
+        $this.removeClass 'label-inverse'
+        text = ''
+      else
+        $this.addClass 'label-inverse'
+        text = $this.text()
+      self.search text
+
+    #$('.label.cursor-pointer').click ->
+
+    @isotope
+      itemSelector: '.game'
+      sortBy: 'timestamp'
+      sortAscending: false # this might cause slow startup
+      #filter: @getFilter()
+      getSortData:
+        title: ($el) -> _get$($el).title
+        #brand: ($el) -> _get$($el).brand   # not used
+        timestamp: ($el) -> _get$($el).timestamp
+        date: ($el) ->  _get$($el).date
+        visits: ($el) ->  _get$($el).visitCount
+        comments: ($el) -> _get$($el).commentCount
+        scapeMedian: ($el) -> _get$($el).scapeMedian
+        scapeCount: ($el) -> _get$($el).scapeCount
+
+    $optionSets = $ '.options .option-set'
+    $optionLinks = $optionSets.find 'a'
+    $optionLinks.click ->
+      $this = $ @
+      # don't proceed if already selected
+      return false if $this.hasClass 'selected'
+
+      $optionSet = $this.parents '.option-set'
+      $optionSet.find('.selected').removeClass 'selected'
+      $this.addClass 'selected'
+
+      # make option object dynamically, i.e. { filter: '.my-filter-class' }
+      options = {}
+      group = $optionSet.data 'option-group'
+      key = $optionSet.data 'option-key'
+      value = $this.data 'option-value'
+
+      # parse 'false' as false boolean
+      value = if value is 'false' then false else value
+      if key is 'filter'
+        self.filters[group] = value
+        #options.filter = _.values(self.filters).join ''
+        options.filter = self.getFilter()
+      else
+        options[key] = value
+      if key is 'layoutMode' and typeof changeLayoutMode is 'function'
+        changeLayoutMode $this, options # changes in layout modes need extra logic
+      else # otherwise, apply new options
+        self.isotope options
+      false
+
+    $('.search .close').click ->
+      self.search '' # clear
+
+    # https://github.com/desandro/isotope/issues/107
+    # https://github.com/riklomas/quicksearch
+    styleClass = 'quicksearch-match'
+    @filters.quicksearch = '.' + styleClass
+    setTimeout (->
+      $('#search').quicksearch '#games .game',
+        delay: 100
+        onAfter: -> setTimeout self.refreshFilter, 100
+
+        show: -> $(@).addClass styleClass
+        hide: -> $(@).removeClass styleClass
+
+        prepareQuery: (val) ->
+          val = _.str.trim val
+          unless val then null
+          else if val[0] is '#' then val
+          else if val.length >= 4 and /^20\d+$/.test val then val
+          else new RegExp val, 'i'
+
+        testQuery: (query, text, el) ->
+          if not query
+            true
+          else
+            g = _get el
+            if typeof query is 'string'
+              if query[0] is '#'
+                query is '#' + g.itemId
+              else
+                _.str.startsWith g.dateString, query
+            else # type of query is RegExp object
+              query.test(g.title) or g.brand and query.test(g.brand) or g.series and query.test(g.series)
+    ), 2000
+
+    dprint 'bind: leave'
+
+  ## Actions ##
+
+  show: =>
+    @$container.show()
+    $('#init-sort').click()
+
+  isotope: (v) => @$container.isotope v
+
+  search: (text) ->
+    $input = $ '#search'
+    $input.val text
+    $input.trigger 'keyup' # invoke quicksearch
+
+  getFilter: => _.values(@filters).join ''
+    #sel = if @filters then _.values(@filters).join '' else '.game'
+    #"#{sel}:gt(-#{@limit})" # count backward
+
+  refreshFilter: =>
+    @isotope
+      filter: @getFilter()
+
+  render: =>
+    hx = Haml '''\
+.game(data-id="#{g.itemId}")
+  .head
+    :for it in labels
+      %a.label(title="#{it}") = it
+    :if g.series
+      %a.label.label-info(title="#{g.series}シリーズ") = g.series
+    :if color
+      :if color === 'o'
+        %a.badge.badge-warning(title="得点×点数") #{g.scapeMedian}x#{g.scapeCount}
+      :if color === 'r'
+        %a.badge.badge-important(title="得点×点数") #{g.scapeMedian}x#{g.scapeCount}
+      :if color === 'g'
+        %a.badge.badge-success(title="得点×点数") #{g.scapeMedian}x#{g.scapeCount}
+      :if color === 'b'
+        %a.badge.badge-inverse(title="得点×点数") #{g.scapeMedian}x#{g.scapeCount}
+  %img.img-rounded(src="#{g.imageUrl}" title="#{tip}")
+'''
+    h = (@_renderGame(hx, g) for k,g of @games).join ''
+    "<div id='#{@id}'>#{h}</div>"
+
+  _renderGame: (hx, g) ->
+    date = if g.date then dateFormat g.dateObject, 'm/d/yyyy' else ''
+    tip = "#{g.title} @#{g.brand or ''} #{date}"
+    tip = tip.replace(/"/g, "'") # escape quotes
+
+    #tip += " #{g.scapeMedian}%" if g.scapeMedian
+
+    tags = []
+    tags.push "所持" if g.local
+    tags.push "女性向け" if g.otome
+    tags.push "抜きゲー" if g.okazu
+    tip += " (#{tags.join "、"})" if tags.length
+
+    color = (
+      if not g.scapeMedian then ''
+      else if g.scapeCount < 10 then 'b'
+      else if g.scapeMedian >= 90 or g.scapeCount > 500 then 'o'
+      else if g.scapeMedian >= 80 or g.scapeCount > 300 then 'r'
+      else if g.scapeMedian >= 70 or g.scapeCount > 100 then 'g'
+      else 'b'
+    )
+
+    labels = if g.brand then g.brand.split ',' else []
+    # I don't know why, but zh font looked better than ja
+    hx
+      g: g
+      labels: labels
+      tip: tip
+      color: color
+
+## Quick search initialization function
+
+## Main ##
+
+init = ->
+  if not bean?
+    dprint 'init: wait'
+    setTimeout init, 100 # Wait until bean is ready
+  else
+    dprint 'init: enter'
+
+    # CHECKPOINT: does not work fluently
+    # I mean, it works. But does not save memory or loading time.
+    #fixIsotope()
+
+    # ImagesLoaded is not used, which is too slow
+    #$('#games').imagesLoaded ->
+    list = JSON.parse bean.games()
+    dict = {}
+    for g in list # indexed by itemId
+      d = new Date g.date * 1000
+      g.dateObject = d
+      g.dateString = dateFormat d, 'yyyymmdd'
+      #g.series += "シリーズ" if g.series
+      dict[g.itemId] = g
+    list = undefined # Delete list to save memory
+
+    setTimeout (new GameFlow(dict).show), 200
+    #setTimeout _.partial(quicksearch, styleClass, gf.refreshFilter),  2000
+    dprint 'init: leave'
+
+$ -> init()
+
+# EOF
+
+#fixIsotope = ->
+#  # See: https://github.com/desandro/isotope/blob/master/jquery.isotope.js
+#  # Version: 1.5.25
+#  #
+#  #   _init : function( callback ) {
+#  #     this.$filteredAtoms = this._filter( this.$allAtoms );
+#  #     this._sort();
+#  #     this.reLayout( callback );
+#  #   },
+#  #
+#  #isotope_init = $.Isotope::_init
+#  $.Isotope::_init = (callback) ->
+#    # Original logic in 1.5.25:
+#    #@$filteredAtoms = @_filter @$allAtoms
+#    #@_sort()
+#    #@reLayout callback
+#
+#    @$filteredAtoms = @_filter @$allAtoms
+#    @_sort()
+#
+#    # See: Isotope::_filter
+#    max = 20 - 1
+#    $atomsToHide = @$filteredAtoms.filter ":gt(#{max})" # hide > max
+#    $atomsToHide.addClass @options.hiddenClass
+#    @$filteredAtoms = @$filteredAtoms.not @options.hiddenClass
+#
+#    @styleQueue.push
+#      $el: $atomsToHide
+#      style: @options.hiddenStyle
+#
+#    @reLayout callback

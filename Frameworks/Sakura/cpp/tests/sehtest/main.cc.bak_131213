@@ -1,0 +1,110 @@
+// main.cc
+// 12/2/2013 jichi
+// See: http://msdn.microsoft.com/en-us/library/ha52ak6a.aspx
+// link with: /SAFESEH:NO
+//
+// Disable SafeSEH table
+// http://stackoverflow.com/questions/19722308/exception-handler-not-called-in-c/20344222
+// Alternative way: Register handler using MASM
+// http://stackoverflow.com/questions/12019689/custom-seh-handler-with-safeseh
+
+# pragma warning (disable:4733)   // C4733: Inline asm assigning to 'FS:0' : handler not registered as safe handler
+
+#include <windows.h>
+#include <cstdio>
+
+enum { seh_capacity = 10 };
+static DWORD seh_esp[seh_capacity], // current stack
+             seh_eip[seh_capacity], // current IP address
+             seh_count;
+EXCEPTION_DISPOSITION seh_handler(
+  EXCEPTION_RECORD *ExceptionRecord,
+  void * EstablisherFrame,
+  CONTEXT *ContextRecord,
+  void * DispatcherContext )
+{
+  ContextRecord->Esp = ::seh_esp[::seh_count - 1];
+  ContextRecord->Eip = ::seh_eip[::seh_count - 1];
+  printf("seh_handler:%i,%x,%x\n", ::seh_count, ContextRecord->Esp, ContextRecord->Eip);
+  return ExceptionContinueExecution;
+}
+
+#define seh_push() \
+  { \
+    __asm mov eax, seh_except \
+    __asm mov ecx, seh_count \
+    __asm mov DWORD PTR seh_eip[ecx*4], eax \
+    __asm push seh_handler \
+    __asm push fs:[0] \
+    __asm mov DWORD PTR seh_esp[ecx*4], esp \
+    __asm mov fs:[0], esp \
+    __asm inc seh_count \
+  }
+
+#define seh_pop() \
+  { \
+    __asm seh_except: \
+    __asm dec seh_count \
+    __asm mov eax, [esp] \
+    __asm mov fs:[0], eax \
+    __asm add esp, 8 \
+  }
+
+//#define seh_push_front() \
+//  { \
+//    __asm mov eax, seh_except \
+//    __asm mov seh_eip, eax \
+//    __asm push seh_handler \
+//    __asm push fs:[0] \
+//    __asm mov seh_esp, esp \
+//    __asm mov fs:[0], esp \
+//  }
+//
+//#define seh_pop_front() \
+//  { \
+//    __asm seh_except: \
+//    __asm mov eax, [esp] \
+//    __asm mov fs:[0], eax \
+//    __asm add esp, 8 \
+//  }
+//
+//#define seh_push_back() \
+//  { \
+//    __asm mov eax, seh_except \
+//    __asm mov ecx, seh_capacity - 1 \
+//    __asm mov DWORD PTR seh_eip[ecx*4], eax \
+//    __asm push seh_handler \
+//    __asm push fs:[0] \
+//    __asm mov DWORD PTR seh_esp[ecx*4], esp \
+//    __asm mov fs:[0], esp \
+//  }
+//
+//#define seh_pop_back() \
+//  { \
+//    __asm seh_except: \
+//    __asm mov eax, [esp] \
+//    __asm mov fs:[0], eax \
+//    __asm add esp, 8 \
+//  }
+
+void f() {
+  seh_push();
+  printf("%x,%x\n", seh_eip[0], seh_eip[1]);
+ *(int*)0 = 0;
+  seh_pop();
+  printf("f:passed\n");
+}
+
+int main()
+{
+  f();
+  seh_push();
+
+ *(int*)0 = 0;
+
+  seh_pop();
+
+  printf("main:passed:%i\n",sizeof(DWORD));
+}
+
+// EOF

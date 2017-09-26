@@ -1,0 +1,40 @@
+/* bootstrap/pill.sass
+   11/8/2014 jichi
+
+@import bootstrap/defs
+
+// Pill
+
+// The same as bootstrap text-*
+//$pill-color-info: #31708f
+//$bs-highlight-default: #428bca
+$pill-color-info: #428bca   // sky blue
+$pill-color-success: #449d44 // = .text-success:hover
+$pill-color-danger: #d9534f // = .text-danger
+.btn-pill
+  //border-radius: 6px // disable border
+  padding: 4px
+  border-width: 2px
+  &.pill-info
+    color: $pill-color-info
+    border-color: $pill-color-info
+    //&:hover,
+    //&:focus,
+    //&:active,
+    //&.active
+    //  color: $pill-color-info
+    //  border-color: $pill-color-info
+  &.pill-success
+    color: $pill-color-success
+    border-color: $pill-color-success
+  &.pill-danger
+    color: $pill-color-danger
+    border-color: $pill-color-danger
+
+  &.btn-checkable
+    &.checked
+      @extend .pill-success
+    &:not(.checked)
+      @extend .pill-danger
+
+// EOF

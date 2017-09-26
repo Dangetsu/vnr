@@ -1,0 +1,1426 @@
+/* amazon.sass
+   10/3/2013 jichi
+   See: productDescription in http://www.amazon.co.jp/dp/B009SIZJRO/
+
+.amazon // 10/3/2013: add amazon class
+  &.technicalProductFeatures ul
+    list-style-type: disc
+    margin: 1.12em 0
+    margin-left: 20px
+  &.productDescription
+    h2.productDescriptionHeader
+      margin-bottom: 0em
+    .emptyClear
+      clear: left
+      height: 0px
+      font-size: 0px
+    div.productDescriptionWrapper
+      margin: 0 0 1em 0
+    h3.productDescriptionSource
+      font-weight: normal
+      color: #333333
+      font-size: 1.23em
+      margin: 0.75em 0 0.375em -15px
+      clear: left
+    .seeAll
+      margin-top: 1.25em
+      margin-left: -15px
+    ul
+      list-style-type: disc
+      margin: 1.12em 0
+      margin-left: 20px
+      li
+        margin: 0 0 0 20px
+        ul
+          list-style-type: disc
+          margin-left: 20px
+          li
+            margin: 0 0 0 20px
+    .aplus
+      h4, h5
+        margin: 0 0 .75em 0
+        font-size: 1em
+      h4
+        color: #cc6600
+      p
+        margin: 0 0 1em 0
+      .break
+        clear: both
+        height: 0px
+        font-size: 0px
+      .spacer
+        margin-bottom: 13px
+      img
+        border: none
+      .leftImage, .rightImage, .centerImage
+        margin-bottom: 1em
+        margin-top: 0
+        text-align: center
+        vertical-align: top
+      .leftImage
+        margin-right: 15px
+        float: left
+        clear: left
+      .rightImage
+        margin-left: 15px
+        float: right
+        clear: right
+      .imageCaption
+        clear: both
+        padding: .5em .5em 0 .5em
+        font-size: .846em
+        display: block
+      table.data
+        border-collapse: collapse
+        margin-bottom: 1.25em
+        th
+          font-weight: bold
+          background: #f7f7f7
+          border-style: solid
+          border-color: #cccccc
+          border-width: 0 0 1px 1px
+        td
+          border-left: 1px solid #ccc
+          border-bottom: 1px dotted #cccccc
+        th, td
+          padding: 3px 10px
+          text-align: left
+        tfoot
+          font-style: italic
+        caption
+          background: #eee
+          font-size: .8125em
+        tr
+          td:first-child, th:first-child
+            border-left-width: 0px
+      ul
+        margin: 0 0 1em 0
+      .center
+        text-align: center
+      .right
+        text-align: right
+      .sixth-col, .fourth-col, .third-col, .half-col, .two-third-col, .three-fourth-col, .one-col
+        float: left
+        margin-right: 1.6760%
+        overflow: hidden
+      .last
+        margin-right: 0px
+      .sixth-col
+        width: 15.080%
+      .fourth-col
+        width: 23.4637%
+      .third-col
+        width: 31.8436%
+      .half-col
+        width: 48.6034%
+      .two-third-col
+        width: 65.3631%
+      .three-fourth-col
+        width: 73.7430%
+      .one-col
+        width: 98.8827%
+        margin-right: 0
+      .last
+        margin-right: 0
+      // 10/3/2013: removed
+      //width: 100%
+      //min-width: 895px
+
+//* html .amazon.productDescription .aplus
+//  width: expression((document.body.clientWidth < 936) ? "895px" : "100%" )
+
+.amazon.review
+  // Remvoe
+  //.crIFrame').css 'margin-left', '-0.8em' # remove left margin
+  .crIFrameLogo,
+  .crIframeHeaderTitle,
+  .crIFrameCreateReview,
+  .reviews-voting-stripe,
+  .votingPrompt,
+  .reportingButton
+    display: none // remove amazon logo and titles and create/vote buttons
+  //#$body.find('crIFrameReviewList').addClass 'ruby'
+
+  .serif
+    font-family: times,serif
+    font-size: medium
+
+  .sans
+    font-family: arial,helvetica,osaka,"MS PGothic",sans-serif
+    font-size: medium
+
+  .small
+    font-family: arial,helvetica,osaka,"MS PGothic",sans-serif
+    font-size: small
+
+  .h1
+    font-family: arial,helvetica,osaka,"MS PGothic",sans-serif
+    color: #E47911
+    font-size: medium
+
+  .h3color
+    font-family: arial,helvetica,osaka,"MS PGothic",sans-serif
+    color: #E47911
+    font-size: small
+
+  h2
+    &.small, &.h1, &.h3color
+      margin-bottom: 0em
+
+  .tiny
+    font-family: arial,helvetica,osaka,"MS PGothic",sans-serif
+    font-size: x-small
+
+  .listprice
+    font-family: arial,helvetica,osaka,"MS PGothic",sans-serif
+    text-decoration: line-through
+
+  .attention
+    background-color: #FFFFD5
+
+  .price
+    font-family: arial,helvetica,osaka,"MS PGothic",sans-serif
+    color: #990000
+
+  .tinyprice
+    font-family: arial,helvetica,osaka,"MS PGothic",sans-serif
+    color: #990000
+    font-size: x-small
+
+  .highlight
+    font-family: arial,helvetica,osaka,"MS PGothic",sans-serif
+    color: #990000
+    font-size: small
+
+  .alertgreen
+    color: #009900
+    font-weight: bold
+
+  .active-nav
+    background-color: #000000
+    color: #FFFFFF
+
+  .inactive-nav
+    background-color: #FFFFFF
+    color: #000000
+
+  .tigerBox
+    .head
+      border: 1px solid #CCCC99
+      border-bottom-width: 0px
+      background-color: #EEEECC
+    .body
+      border: 1px solid #CCCC99
+
+  .tigerBoxWithEyebrow
+    .head
+      border-width: 0px
+    .body
+      border: 1px solid #CCCC99
+
+  .detailPageTigerBox
+    .head
+      border-width: 0px
+    .body
+      border: 1px solid #CCCC99
+    .darkCell
+      background-color: #EEEECC
+
+  .eyebrow
+    font-family: arial,helvetica,osaka,"MS PGothic",sans-serif
+    font-size: 10px
+    font-weight: bold
+    text-transform: uppercase
+    text-decoration: none
+    color: #FFFFFF
+
+  div
+    &#page-wrap
+      min-width: 980px
+    &#leftcol, &#leftcolhidden
+      float: left
+      width: 180px
+      margin: 5px 0px 0px 5px
+      display: inline
+    &#rightcol, &#rightcolhidden
+      float: right
+      width: 300px
+      margin-top: 5px
+    &#leftcolhidden
+      clear: left
+    &#rightcolhidden
+      clear: right
+    &#center1, &#centercol, &#centerrightspancol
+      overflow: hidden
+
+  * html div#center1
+    width: 100%
+
+  div
+    &#centercol, &#centerrightspancol
+      overflow: hidden
+
+  * html div
+    &#centercol, &#centerrightspancol
+      width: 100%
+
+  div#page-footer
+    clear: both
+
+  * html div
+    &#page-wrap
+      border-right: 980px solid #fff
+      width: 100%
+      margin-right: 25px
+    &#content
+      float: left
+      position: relative
+      margin-right: -980px
+
+  a
+    &:active
+      font-family: arial,helvetica,osaka,"MS PGothic",sans-serif
+      color: #FF9933
+    &:visited
+      font-family: arial,helvetica,osaka,"MS PGothic",sans-serif
+      color: #996633
+    &:link
+      font-family: arial,helvetica,osaka,"MS PGothic",sans-serif
+      color: #004B91
+    &.noclick
+      color: #000000
+      &:visited
+        color: #000000
+
+  .noLinkDecoration a
+    text-decoration: none
+    border-bottom: none
+    &:hover
+      text-decoration: underline
+    &.dynamic:hover
+      text-decoration: none
+      border-bottom: 1px dashed
+    &.noclick:hover
+      color: #000000
+      text-decoration: none
+      border-bottom: 1px dashed
+
+  .amabot_right
+    .h1
+      color: #E47911
+      font-size: .92em
+    .amabot_widget .headline
+      color: #E47911
+      font-size: .92em
+      display: block
+      font-weight: bold
+
+  .amabot_left .amabot_widget .headline
+    color: #E47911
+    font-size: .92em
+    display: block
+    font-weight: bold
+
+  .amabot_widget .headline
+    color: #E47911
+    font-size: medium
+    display: block
+    font-weight: bold
+
+  .amabot_right .amabot_widget
+    padding-top: 8px
+    padding-bottom: 8px
+    padding-left: 8px
+    padding-right: 8px
+    border-bottom: 1px solid #C9E1F4
+    border-left: 1px solid #C9E1F4
+    border-right: 1px solid #C9E1F4
+    border-top: 1px solid #C9E1F4
+
+  .amabot_left
+    .h1
+      color: #E47911
+      font-size: .92em
+    .amabot_widget
+      padding-top: 8px
+      padding-bottom: 8px
+      padding-left: 8px
+      padding-right: 8px
+      border-bottom: 1px solid #C9E1F4
+      border-left: 1px solid #C9E1F4
+      border-right: 1px solid #C9E1F4
+      border-top: 1px solid #C9E1F4
+
+  .amabot_center
+    div.unified_widget, .amabot_widget
+      font-size: 12px
+
+  .amabot_right
+    div.unified_widget, .amabot_widget
+      font-size: 12px
+
+  .amabot_left
+    div.unified_widget, .amabot_widget
+      font-size: 12px
+
+  .nobullet
+    list-style-type: none
+
+  .homepageTitle
+    font-size: 28pt
+    font-family: 'Arial Bold', Arial, sans-serif
+    font-weight: 800
+    font-variant: normal
+    color: #80B6CE
+    line-height: 1em
+
+  div.unified_widget
+    p
+      margin: 0 0 0.5em 0
+      line-height: 1.4em
+    h2
+      color: #E47911
+      padding: 0
+
+  .amabot_right div.unified_widget .headline, .amabot_left div.unified_widget .headline
+    color: #E47911
+    font-size: .92em
+    display: block
+    font-weight: bold
+
+  div.unified_widget
+    .headline
+      color: #E47911
+      font-size: medium
+      display: block
+      font-weight: bold
+    sup
+      font-weight: normal
+      font-size: 75%
+    h2 sup
+      font-size: 50%
+
+  td
+    &.amabot_left div.unified_widget h2, &.amabot_right div.unified_widget h2
+      font-size: 100%
+      margin: 0 0 0.5em 0
+
+  div
+    &.amabot_left div.unified_widget h2, &.amabot_right div.unified_widget h2
+      font-size: 100%
+      margin: 0 0 0.5em 0
+
+  td.amabot_center div.unified_widget h2, div.amabot_Center div.unified_widget h2
+    font-size: 135%
+    font-weight: bold
+    margin: 0 0 0.35em 0px
+
+  td.amabot_center
+    padding: 5px 15px 5px 10px
+
+  div
+    &.amabot_center
+      padding: 5px 15px 5px 10px
+    &.unified_widget
+      ul
+        margin: 1em 0
+        padding: 0 0 0 15px
+        list-style-position: inside
+      ol
+        margin: 0
+        padding: 0 0 0 2.5em
+      a
+        &:link, &:visited, &:hover
+          text-decoration: underline
+      p.seeMore
+        clear: both
+        font-family: arial,helvetica,osaka,"MS PGothic",sans-serif
+        margin: 0
+        padding-left: 1.15em
+        text-indent: -1.15em
+        font-size: 100%
+        font-weight: normal
+        a
+          &:link, &:visited, &:hover
+            text-decoration: underline
+      .carat
+        font-weight: bold
+        font-size: 120%
+        font-family: arial,helvetica,osaka,"MS PGothic",sans-serif
+        color: #E47911
+        margin-right: 0.20em
+    &.left_nav .carat
+      font-weight: bold
+      font-size: 120%
+      font-family: arial,helvetica,osaka,"MS PGothic",sans-serif
+      color: #E47911
+      margin-right: 0.20em
+    &.unified_widget a img
+      border: 0
+    &.h_rule
+      clear: both
+    &#centerrightspancol div.h_rule
+      clear: right
+    &.unified_widget
+      margin-bottom: 2em
+      clear: both
+      div
+        &.col1
+          width: 100%
+        &.col2
+          width: 49%
+        &.col3
+          width: 32%
+        &.col4
+          width: 24%
+        &.col5
+          width: 19%
+      table
+        border: 0
+        border-collapse: collapse
+        width: 100%
+      td
+        padding: 0 8px 8px 0
+        vertical-align: top
+      table
+        &.col1 td
+          width: 100%
+        &.col2 td
+          width: 49%
+        &.col3 td
+          width: 32%
+        &.col4 td
+          width: 24%
+        &.col5 td
+          width: 19%
+      td.bottom
+        vertical-align: baseline
+      table h4, h4
+        color: #000
+        font-size: 100%
+        font-weight: normal
+        margin: 0
+        padding: 0
+    &.rcmBody div.prodImage
+      float: left
+      margin: 0px 0.5em 0.25em 0px
+
+  amabot_widget div.prodImage
+    float: left
+    margin: 0px 0.5em 0.25em 0px
+
+  td
+    &.amabot_right div.unified_widget, &.amabot_left div.unified_widget
+      border: 1px solid #C9E1F4
+      padding: 8px
+      margin-bottom: 20px
+
+  div
+    &.amabot_right div.unified_widget, &.amabot_left div.unified_widget
+      border: 1px solid #C9E1F4
+      padding: 8px
+      margin-bottom: 20px
+
+  * html
+    td.amabot_right div.unified_widget, div.amabot_right div.unified_widget, td.amabot_left div.unified_widget, div.amabot_left div.unified_widget
+      height: 100%
+
+  div.rcmBody, amabot_widget div.rcmBody
+    line-height: 1.4em
+
+  div.rcmBody
+    a
+      &:link, &:visited
+        text-decoration: underline
+    p.seeMore
+      margin-top: 0.5em
+
+  amabot_widget div.rcmBody p.seeMore
+    margin-top: 0.5em
+
+  div.rcmBody
+    div.bannerImage
+      text-align: center
+    h2
+      span.homepageTitle
+        display: block
+        margin-bottom: -0.3em
+        margin-top: -0.12em
+        line-height: 1em
+      img
+        float: none
+
+  table
+    &.coopTable div.rcmBody
+      .headline
+        font-size: 110%
+      h2
+        font-size: 110%
+        font-weight: bold
+    &.promo div.rcmBody h2
+      font-size: 100%
+      font-weight: bold
+
+  div
+    &.blurb div.title
+      font-weight: bold
+      padding-top: 5px
+      padding-bottom: 2px
+    &.left_nav
+      font-family: arial,helvetica,osaka,"MS PGothic",sans-serif
+      font-size: 100%
+      margin: 0
+      line-height: 1.05em
+      width: 100%
+      border: 1px solid #C9E1F4
+      padding-bottom: 10px
+      h2
+        margin: 0 0 0 0
+        color: #000000
+        font-weight: bold
+        line-height: 1.25em
+        font-size: 100%
+        font-family: arial,helvetica,osaka,"MS PGothic",sans-serif
+        padding: 3px 6px
+        background-color: #EAF3FE
+      h3
+        font-family: arial,helvetica,osaka,"MS PGothic",sans-serif
+        margin: 0.5em 0 0.4em 0.5em
+        color: #E47911
+        font-weight: bold
+        line-height: 1em
+        font-size: 100%
+        padding-right: 0.5em
+      ul
+        margin: 0
+        padding: 0
+      li, p
+        list-style: none
+        margin: 0.5em 0.5em 0 1em
+        line-height: 1.2em
+      hr
+        margin: 1em 0.5em
+        border-top: 0
+        border-left: 0
+        border-right: 0
+        border-bottom: 1px dashed #cccccc
+      a
+        &:link, &:visited
+          color: #003399
+          text-decoration: none
+          font-family: arial,helvetica,osaka,"MS PGothic",sans-serif
+        &:hover
+          color: #2a70fc
+          text-decoration: underline
+      p.seeMore
+        padding-left: 0.9em
+        text-indent: -0.9em
+        margin-top: 0.35em
+        margin-bottom: 1em
+        a
+          &:link, &:visited
+            text-decoration: none
+          &:hover
+            text-decoration: underline
+    &.asinItem
+      float: left
+      margin-bottom: 1em
+      width: 32%
+    &.asinTextBlock
+      padding: 0 8px 8px 0
+    &.asinItem
+      div
+        &.prodImage
+          height: 121px
+          display: table-cell
+          vertical-align: bottom
+        &.localImage
+          display: table-cell
+          vertical-align: bottom
+      span
+        margin: 0.5em 0 0.25em 0
+      ul
+        margin: 0
+        padding: 0 0 0.5em 1.3em
+        text-indent: -1.3em
+        font-size: 90%
+    &.asinTitle
+      padding-top: 3px
+      padding-bottom: 2px
+    &.row
+      clear: both
+
+  body.dp div
+    &.h_rule, &.unified_widget
+      clear: none
+
+  div
+    &.asinCoop div.asinItem
+      float: none
+      width: 100%
+    //&.asinCoop_header!, &.asinCoop_footer!
+    &.newAndFuture
+      div.asinItem
+        ul
+          font-size: 100%
+        li
+          list-style-position: outside
+          margin: 0 0 0.35em 20px
+          padding: 0
+          text-indent: 0
+      h3
+        font-size: 100%
+        margin: 1em 0
+      a
+        &:link, &:visited, &:hover
+          text-decoration: underline
+      p.seeMore
+        margin: -0.75em 0 0 35px
+    &.unified_widget ol.topList
+      margin: 0
+      padding: 0
+      list-style: none
+      li
+        list-style: none
+        clear: both
+        display: list-item
+        padding-top: 6px
+      .productImage
+        display: block
+        float: left
+        vertical-align: top
+        text-align: center
+        width: 60px
+      .productText
+        display: block
+        float: left
+        padding-left: 10px
+        vertical-align: top
+
+  \:root div.unified_widget span
+    &.productImage, &.productText
+      display: table-cell
+      float: none
+
+  div.unified_widget
+    dl.priceBlock
+      margin: 0 0 0.45em 0
+      dt
+        clear: left
+        font-weight: bold
+        float: left
+        margin: 0 0.3em 0 0
+      dd
+        margin: 0 0 0.2em 0
+    .bold
+      font-weight: bold
+    .byline
+      font-size: 95%
+      font-weight: normal
+
+  table.thirdLvlNavContent div.blurb
+    margin: 10px
+
+  div.pageBanner
+    h1
+      font-family: Arial, Helvetica, sans-serif
+      font-weight: normal
+      font-size: 225%
+      color: #e47911
+      letter-spacing: -0.03em
+      margin: 0
+    p
+      font-size: 90%
+      color: #888888
+      margin: 0
+    h1.bkgnd
+      background-repeat: no-repeat
+      background-color: #FFFFFF
+      overflow: hidden
+      text-indent: -100em
+
+  INPUT
+    font-family: fixed
+
+  BODY, TD, TH
+    font-family: arial,helvetica,osaka,"MS PGothic",sans-serif
+    font-size: small
+
+  .crAuthorInfo
+    font-family: verdana
+    font-size: 0.86em
+    margin-left: 80px
+
+  .crAuthorInfoCredibility
+    font-family: verdana
+    font-size: 0.86em
+
+  .crBlue-bevel
+    background: url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/reviews/sliced-box-tbevel.jpg) repeat-x top
+    height: 1.45em
+
+  .crBlueBorder-tl
+    background: url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/reviews/border-box-tl._V192261773_.gif) no-repeat top left
+    width: 1em
+
+  .crBlueBorder-tc
+    background: url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/reviews/border-box-tc._V192261774_.gif) repeat-x top
+
+  .crBlueBorder-tr
+    background: url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/reviews/border-box-tr._V192261810_.gif) no-repeat top right
+    width: 1em
+
+  .crBlueBorder-bl
+    background: url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/reviews/border-box-bl._V192261810_.gif) no-repeat bottom left
+
+  .crBlueBorder-bc
+    background: url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/reviews/border-box-bc._V192261808_.gif) repeat-x bottom
+
+  .crBlueBorder-br
+    background: url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/reviews/border-box-br._V192261810_.gif) no-repeat bottom right
+
+  .crBox
+    background: #DFEDF7
+    padding: 0.2em 1.5em 0.2em 1.5em
+
+  .crBox-tl
+    background: #dfedf7 url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/reviews/box-tl._V192261810_.gif) no-repeat top left
+
+  .crBox-tc
+    background: url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/reviews/box-tc._V192261773_.gif) repeat-x top
+
+  .crBox-tr
+    background: url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/reviews/box-tr._V192261775_.gif) no-repeat top right
+
+  .crBox-bl
+    background: #dfedf7 url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/reviews/box-bl._V192261773_.gif) no-repeat bottom left
+
+  .crBox-bc
+    background: url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/reviews/box-bc._V192261773_.gif) repeat-x bottom
+
+  .crBox-br
+    background: url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/reviews/box-br._V192261774_.gif) no-repeat bottom right
+
+  .crColumnEndMarker
+    clear: both
+    height: 13px
+    background-image: url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/people/column-bottom-edge._V192261842_.gif)
+    background-repeat: no-repeat
+    .rightEdge
+      float: right
+      background-image: url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/people/column-bottom-edge-right._V192261805_.gif)
+      background-position: right top
+      background-repeat: no-repeat
+      width: 13px
+      height: 13px
+
+  .crCdDotsBottom
+    clear: both
+    padding: 1px
+    font-size: 0.0625em
+    margin: 0 0 5px 0
+    background-image: url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/people/dotborder._V192261842_.gif)
+    background-repeat: repeat-x
+    background-position: center
+
+  .crDescription
+    font-family: verdana
+    margin-left: 80px
+
+  .crErrorMsg
+    color: red
+    font-weight: bold
+
+  .crFanlink
+    text-decoration: none
+    border-top-width: 0
+    border-right-width: 0
+    border-bottom-width: 1px
+    border-left-width: 0
+    border-top-color: #146EB4
+    border-right-color: #146EB4
+    border-bottom-color: #146EB4
+    border-left-color: #146EB4
+    border-top-style: none
+    border-right-style: none
+    border-bottom-style: dashed
+    border-left-style: none
+    color: #003399
+
+  .crFinePrint
+    font-size: 0.7em
+    margin-top: 0.7em
+
+  .crForm
+    width: 100%
+    display: block
+
+  .crHeaderText
+    color: #CC6600
+    padding-left: 0
+    padding-bottom: 5px
+    font-family: helvetica
+    font-size: 13px
+    font-weight: bold
+    float: top
+    float: left
+
+  h2.crHeading
+    color: #E47911
+    font-family: Verdana,Helvetica,sans-serif
+    font-size: 130%
+    margin: 0 0 3px
+    padding-left: 0px
+
+  h3.crHeading
+    color: #E47911
+    font-family: Verdana,Helvetica,sans-serif
+    font-size: 100%
+    margin: 0 0 10px
+
+  .crHeading
+    color: #c60
+    font-family: sans-serif
+    font-size: 1.5em
+    font-weight: bold
+    padding-bottom: 0.5em
+    padding-left: 0.5em
+
+  .crInnerBox
+    padding: 0.6em 2em 0.6em 2em
+    background: #EFF5F9
+    clear: both
+
+  .crInnerBox-tl
+    background: #eff5f9 url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/reviews/innerbox-tl._V192261789_.gif) no-repeat top left
+    clear: both
+
+  .crInnerBox-tr
+    background: #eff5f9 url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/reviews/innerbox-tr._V192261789_.gif) no-repeat top right
+    clear: both
+
+  .crInnerBox-bl
+    background: #eff5f9 url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/reviews/innerbox-bl._V192261789_.gif) no-repeat bottom left
+
+  .crInnerBox-br
+    background: url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/reviews/innerbox-br._V192261762_.gif) no-repeat bottom right
+
+  .crInputTitle
+    font-weight: bold
+    vertical-align: middle
+
+  .crInputFinePrint
+    color: #6E6E6E
+    font-size: 0.7em
+    padding-bottom: 1.5em
+
+  .crInput
+    padding: 0em 0em 1.5em 0em
+    vertical-align: middle
+
+  .crInputFormField
+    font-family: arial, helvetica, sans-serif
+
+  .crInstruction
+    padding-bottom: 0.4em
+    float: left
+
+  .crProductLinks
+    padding-bottom: 0.4em
+    float: right
+    vertical-align: top
+
+  .crLargerTitle
+    font-family: verdana, arial, helvetica, sans-serif
+    font-size: 1.6em
+    color: #c60
+    padding-bottom: 5px
+    padding-top: 10px
+
+  .crLine
+    clear: both
+    border: 0
+    height: 2px
+    color: #CADFE9
+    background-color: #CADFE9
+    noshade: noshade
+
+  .crPrevLeftButton
+    padding-left: 15px
+    margin-bottom: 0px
+
+  .crPrevRightButton
+    margin-bottom: 0px
+
+  .crPicture
+    clear: both
+    float: left
+    text-align: center
+    width: 80px
+    overflow: hidden
+    padding-top: 0.2em
+
+  .crReviewHeader
+    font-family: Verdana, Arial, Helvetica, sans-serif
+    font-size: 1.5em
+    font-weight: bold
+    color: #e47911
+    margin-top: 5px
+
+  .crReviewSumBox
+    height: 36px
+    background-image: url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/people/column-eyebrow-visitor._V192261842_.gif)
+    background-repeat: no-repeat
+    font-family: verdana
+    font-size: 36px
+    .titleText
+      float: left
+      font-weight: bold
+      padding-left: 10px
+      padding-top: 10px
+      font-size: 13px
+      font-family: verdana
+      color: #000000
+      white-space: nowrap
+    .rightEdge
+      background-image: url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/people/column-eyebrow-visitor-right._V192261805_.gif)
+      width: 12px
+      height: 36px
+      background-repeat: no-repeat
+      padding: 0
+      float: right
+
+  .crSectionTitle
+    color: #E57310
+    font-size: 16px
+    font-weight: bold
+    margin-top: 5px
+    margin-bottom: 5px
+
+  .crProductReviewsSummary .crSolicitation
+    margin-top: -20px
+
+  .crSideHeading
+    color: #c60
+    font-weight: bold
+    text-align: center
+    padding-top: 0.4em
+
+  .crStepNum
+    vertical-align: top
+    padding: 0em 0.6em 1.5em 0em
+
+  .crTanBorder-tl
+    background: url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/boxes/boxfill/innerbox-tl._V192261887_.gif) no-repeat top left
+    width: 1em
+
+  .crTanBorder-tc
+    background: url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/boxes/boxfill/innerbox-tc._V192261859_.gif) repeat-x top
+
+  .crTanBorder-tr
+    background: url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/boxes/boxfill/innerbox-tr._V192261886_.gif) no-repeat top right
+    width: 1em
+
+  .crTanBorder-bl
+    background: url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/boxes/boxfill/innerbox-bl._V192261884_.gif) no-repeat bottom left
+
+  .crTanBorder-bc
+    background: url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/boxes/boxfill/innerbox-bc._V192261856_.gif) repeat-x bottom
+
+  .crTanBorder-br
+    background: url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/boxes/boxfill/innerbox-br._V192261857_.gif) no-repeat bottom right
+
+  .crTextAreaHeader
+    background: #B6CFE5
+    padding: 0.4em 0em 0.4em 0em
+    width: 620px
+
+  .crTextTab
+    width: 30%
+    float: left
+    white-space: nowrap
+
+  .crTextTabHeading
+    padding: 0.3em 0 0.7em 0.6em
+
+  .crThreadHeader
+    color: #CC6600
+    font-weight: bold
+    float: left
+
+  .crTipsBoxHeader
+    font-size: 0.90em
+    font-weight: bold
+    margin-bottom: 10px
+    margin-top: 10px
+
+  .crTipsBoxTitle
+    color: #CC6600
+    font-size: 1.1em
+    font-weight: bold
+    margin-bottom: 10px
+
+  h1.crTitle
+    color: #E47911
+    font-family: Arial, Helvetica, sans-serif
+    font-size: 218%
+    letter-spacing: -0.03em
+    margin: 0
+    padding: 0
+
+  .crTitle
+    font-family: verdana, arial, helvetica, sans-serif
+    font-size: 1.4em
+    font-weight: bold
+
+  .crTab-tl
+    background: #eff5f9 url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/reviews/innerbox-tl._V192261789_.gif) no-repeat top left
+
+  .crTab-tr
+    background: url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/reviews/innerbox-tr._V192261789_.gif) no-repeat top right
+
+  .crVideoUpload
+    background: #FFFFFF
+    border: 0.1em solid #7F9DB9
+    text-align: center
+    padding: 0.4em
+
+  .crVidTab
+    width: 70%
+    float: left
+    white-space: nowrap
+
+  .crVidTabHeading
+    padding: 0.3em 0 0.7em 0.6em
+
+  table.crDataGrid
+    th
+      background-color: #EEEEEE
+      font-weight: normal
+      font-size: 70%
+      text-align: left
+      color: #666666
+    td
+      border-bottom: 1px solid #CCCCCC
+    .img
+      height: 92px
+    .crNum
+      text-align: right
+    .crNumPercentHelpful
+      text-align: right
+      padding-right: 20px
+    .crNumFanVoters
+      text-align: right
+      border-left: solid 1px #cccccc
+
+  ul
+    &.crBigBullet
+      margin: 0em
+      padding: 0em
+      list-style-image: url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/reviews/big-bullet._V192261810_.gif)
+    &.crSmallBullet
+      padding-left: 0
+      margin: 0.4em 0em 0.6em 1.5em
+      list-style-image: url(http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/reviews/small-bullet._V192261790_.gif)
+
+  .srCreateReview
+    td.name
+      padding-left: 9px
+    .srPopoverList table.srList td
+      a
+        margin-left: 0px
+      &.name span.newAttribute
+        margin-left: 0px
+        color: #000000
+    .srPopoverFooter
+      padding-left: 9px
+      padding-top: 9px
+    .srPopoverContentSection .heading
+      font-weight: normal
+
+  #structuredRatingsList .cBox
+    width: 375px
+
+  .structuredRatingsVisibilityLink
+    line-height: 2.5em
+    font-size: 0.86em
+
+  .structuredRatingsVisibilityLinkText
+    margin-left: 5px
+
+  #structuredRatingsListHelp
+    font-size: 0.86em
+    font-weight: normal
+
+  #structuredRatingsList .srpopover .scrollSection
+    height: 210px
+
+  .crVerifiedNew
+    font-size: 0.86em
+    font-weight: bold
+    color: #009900
+    margin-right: 0.5em
+
+  .crVerifyLearnMore
+    margin-left: 0.5em
+
+  .crVerifiedPurchaseInputs
+    display: block
+    margin-bottom: 1em
+
+  .crVerifiedBackfillSuboption
+    display: block
+    margin-left: 2em
+
+  div
+    &.crCommentThread .cmPage
+      margin-left: 5px
+    &#cdNonReplyPostBoxButton
+      margin-bottom: 40px
+
+  #rdpItemInfo .crAvgStars
+    font-size: 10px
+
+  .crIneligibleHeader
+    padding: 15px 9px 0 6px
+    color: #E47911
+    font-weight: bold
+    font-size: 218%
+    margin: 0
+
+  .crIneligibleMessage
+    font-size: 12px
+    border: solid 1px #0071B5
+    position: relative
+    background-color: #ffffdd
+    border-color: #E47911
+    padding: 18px 50px 18px 20px
+    margin: 10px 0 40px 10px
+
+  .crIneligibleMessageImage
+    position: absolute
+
+  .crIneligibleMessageHeader
+    font-size: 18px
+    font-weight: bold
+    margin: 0 0 4px 45px
+    padding: 0
+
+  .crIneligibleMessageText
+    font-size: 13px
+    margin: 0 0 6px 45px
+    width: 100%
+
+  .crIFrame
+    margin: 10px
+
+  .crIFrameLogo
+    margin-bottom: 20px
+
+  .crIFrameHeaderLeftColumn
+    float: left
+    margin-right: 20px
+
+  .crIFrameHeaderTitle
+    font-size: 24px
+    letter-spacing: -1px
+
+  .crIFrameHeaderHistogram
+    float: left
+
+  .crIFrameError
+    border-top: 1px solid #D1E6F7
+    border-bottom: 1px solid #D1E6F7
+    text-align: center
+    line-height: 24px
+    width: 360px
+    padding: 20px
+    margin-top: 20px
+
+  .crIFrameErrorText
+    font-size: 14px
+    font-weight: bold
+
+  .crIFrameCreateReview
+    margin-bottom: 3px
+    white-space: nowrap
+
+  .crIFrameCreateReviewButton
+    vertical-align: middle
+
+  .crIFrameAverageReviewText
+    align: left
+    font-weight: bold
+
+  .crIFrameNumCustReviews
+    white-space: nowrap
+
+  .crIFrameReviewList
+    width: 100%
+    clear: left
+
+  .CMheadingBar
+    background: url(http://g-ec2.images-amazon.com/images/G/09/nav2/images/gui/tile-blue-bg._V45731293_.gif) repeat-x
+    border-top: 1px solid #BADAE8
+    border-bottom: 1px solid #BADAE8
+    padding: 6px
+
+  .CMpaginate
+    color: #666
+    .on
+      border: 1px solid #CC6600
+      padding: 3px
+      background-color: white
+      color: #CC6600
+      text-decoration: none
+    a
+      &:link, &:visited
+        padding: 4px
+        text-decoration: none
+      &:hover
+        padding: 3px
+        background-color: white
+        border: 1px solid #CC6600
+        color: #CC6600
+
+  a.areaLink
+    text-decoration: none
+    color: black
+    display: block
+    &:visited
+      text-decoration: none
+      color: black
+      display: block
+
+  .areaLink .innerLink
+    white-space: nowrap
+    text-decoration: underline
+    color: #039
+
+  div.crVS
+    width: 46%
+    text-align: center
+    white-space: nowrap
+
+  .crClear
+    clear: both
+
+  .crLeft
+    float: left
+
+  .crRight
+    float: right
+
+  .attr-sheet
+    padding-left: 5px
+    ul
+      margin-left: 31px
+      padding: 0
+      list-style: none
+      border: solid 1px #eee
+      border-radius: 5px
+      li
+        padding: 5px
+    li
+      &.alt
+        background: #F8F5D8
+      .label
+        font-weight: bold
+      .vm
+        vertical-align: middle
+      .option-line
+        width: 100%
+        line-height: 1.75em
+        .label
+          float: left
+          width: 35%
+          max-width: 300px
+        .option
+          float: left
+          width: 30%
+          max-width: 200px
+      .option-undo
+        float: right
+        font-size: xx-small
+        display: none
+      .textbar-text
+        margin-top: 2px
+        clear: both
+      .textbar
+        .empty
+          width: 35%
+          max-width: 300px
+          float: left
+        input
+          width: 50%
+          margin-left: 5px
+          float: left
+        .blur
+          color: #999
+
+  .attr-preview
+    .boldLabel
+      font-weight: bold
+    .head
+      padding: 20px 0 0 25px
+    .head-detail
+      padding-top: 5px
+    .line
+      padding: 5px 0 15px 0
+    .lines
+      padding: 10px 0 0 25px
+
+  .rypWgtDiv
+    margin-bottom: 20px
+
+  .rypWgtImgLink
+    display: block
+    width: 300px
+    height: 97px
+    background: url('http://g-ec2.images-amazon.com/images/G/09/x-locale/communities/reviews/ryp-page-image2sprite._V399541205_.png') top
+    text-indent: -10000px
+    &:hover
+      background-position: bottom
+
+  /* non-sprited
+
+  .ap_popover_unsprited
+    .ap_body
+      .ap_left
+        background-image: url(http://g-ec2.images-amazon.com/images/G/01/javascripts/lib/popover/images/po_left_17._V248144977_.png)
+      .ap_right
+        background-image: url(http://g-ec2.images-amazon.com/images/G/01/javascripts/lib/popover/images/po_right_17._V248144979_.png)
+    .ap_header
+      .ap_left
+        background-image: url(http://g-ec2.images-amazon.com/images/G/01/javascripts/lib/popover/images/po_top_left._V265110087_.png)
+      .ap_right
+        background-image: url(http://g-ec2.images-amazon.com/images/G/01/javascripts/lib/popover/images/po_top_right._V265110087_.png)
+      .ap_middle
+        background-image: url(http://g-ec2.images-amazon.com/images/G/01/javascripts/lib/popover/images/po_top._V265110086_.png)
+    .ap_footer
+      .ap_left
+        background-image: url(http://g-ec2.images-amazon.com/images/G/01/javascripts/lib/popover/images/po_bottom_left._V265110084_.png)
+      .ap_right
+        background-image: url(http://g-ec2.images-amazon.com/images/G/01/javascripts/lib/popover/images/po_bottom_right._V265110087_.png)
+      .ap_middle
+        background-image: url(http://g-ec2.images-amazon.com/images/G/01/javascripts/lib/popover/images/po_bottom._V265110084_.png)
+
+  /* Everything else -- sprited
+
+  .ap_popover_sprited
+    .ap_body
+      .ap_left, .ap_right
+        background-image: url(http://g-ec2.images-amazon.com/images/G/01/javascripts/lib/popover/images/light/sprite-v._V219326283_.png)
+    .ap_header
+      .ap_left, .ap_right, .ap_middle
+        background-image: url(http://g-ec2.images-amazon.com/images/G/01/javascripts/lib/popover/images/light/sprite-h._V219326280_.png)
+    .ap_footer
+      .ap_left, .ap_right, .ap_middle
+        background-image: url(http://g-ec2.images-amazon.com/images/G/01/javascripts/lib/popover/images/light/sprite-h._V219326280_.png)
+    .ap_closebutton
+      background-image: url(http://g-ec2.images-amazon.com/images/G/01/javascripts/lib/popover/images/light/sprite-h._V219326280_.png)
+    .ap_body
+      .ap_right-arrow, .ap_left-arrow
+        background-image: url(http://g-ec2.images-amazon.com/images/G/01/javascripts/lib/popover/images/light/sprite-arrow-v._V219326286_.png)
+
+// EOF

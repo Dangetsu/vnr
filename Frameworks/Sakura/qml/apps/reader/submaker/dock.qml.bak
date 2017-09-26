@@ -1,0 +1,484 @@
+// dock.qml
+// 9/30/2012 jichi
+// Preferences panel
+import QtQuick 1.1
+import QtEffects 1.0 as Effects
+import '../../../js/sakurakit.js' as Sk
+import '../../../js/reader.js' as My
+import '../share' as Share
+
+Item { id: root_
+  width: 420; height: 145 // should be larger enough to hold the panel
+
+  property alias textChecked: textButton_.checked
+  property alias translationChecked: translationButton_.checked
+  property alias subtitleChecked: subtitleButton_.checked
+  property alias commentChecked: commentButton_.checked
+  property alias copyChecked: copyButton_.checked
+  //property alias spellChecked: spellButton_.checked
+  property alias headerChecked: headerButton_.checked
+  //property alias groupChecked: groupButton_.checked
+
+  //property alias allButtonEnabled: allButton_.enabled
+
+  //property bool attachChecked
+  //property int checkedAlignment: Qt.AlignBottom
+
+  property int alignment: Qt.AlignLeft // horizontal
+
+  //signal allButtonClicked
+  //signal analyticsButtonClicked
+
+  signal upButtonClicked
+  signal downButtonClicked
+
+  // - Private -
+
+  property int _VISIBLE_DURATION: 5000
+
+  //Component.onCompleted: console.log("graffitidock.qml: pass")
+
+  //property color hoverColor: '#33ff33cc' // magenta
+  property color hoverColor: '#336a6d6a' // black
+
+  //property color effectColor: '#aa007f' // purple-like
+  property color effectColor: '#6a6d6a' // black
+
+  property color styleColor: 'deepskyblue'
+
+  property color buttonEnabledColor: '#8b434343' // gray
+  property color buttonDisabledColor: '#7a6a6d6a' // gray
+
+  Share.TextButton { id: switchButton_
+    anchors {
+      verticalCenter: parent.verticalCenter
+      left: root_.alignment === Qt.AlignLeft ? parent.left : undefined
+      right: root_.alignment === Qt.AlignRight ? parent.right : undefined
+      margins: 10
+    }
+    //language: 'ja'
+    width: 10; height: 15
+    text: checked ^ root_.alignment === Qt.AlignRight ? "<" : ">"
+    font.pixelSize: 20; font.bold: true
+    color: 'snow'
+    backgroundColor: hover ? root_.hoverColor : 'transparent'
+    effect: Effects.DropShadow {
+      blurRadius: 8; offset: '1,1'
+      color: root_.effectColor
+    }
+
+    style: Text.Raised
+    styleColor: enabled ? root_.styleColor : 'transparent'
+
+    property alias checked: panel_.visible
+
+    //visible: !panel_.visible
+    onClicked: checked = !checked
+    toolTip: Sk.tr("Option")
+  }
+
+  Share.TextButton { id: downButton_
+    anchors {
+      top: switchButton_.bottom
+      left: root_.alignment === Qt.AlignLeft ? parent.left : undefined
+      right: root_.alignment === Qt.AlignRight ? parent.right : undefined
+      margins: 10
+    }
+    //language: 'ja'
+    width: 10; height: 15
+    text: "↓"
+    font.pixelSize: 12; //font.bold: true
+    color: 'snow'
+    backgroundColor: hover ? root_.hoverColor : 'transparent'
+    effect: Effects.DropShadow {
+      blurRadius: 8; offset: '1,1'
+      color: root_.effectColor
+    }
+
+    style: Text.Raised
+    styleColor: enabled ? root_.styleColor : 'transparent'
+
+    onClicked: root_.downButtonClicked()
+    toolTip: qsTr("Scroll to the bottom")
+  }
+
+  Share.TextButton { id: upButton_
+    anchors {
+      bottom: switchButton_.top
+      left: root_.alignment === Qt.AlignLeft ? parent.left : undefined
+      right: root_.alignment === Qt.AlignRight ? parent.right : undefined
+      margins: 10
+    }
+    //language: 'ja'
+    width: 10; height: 15
+    text: "↑"
+    font.pixelSize: 12; //font.bold: true
+    color: 'snow'
+    backgroundColor: hover ? root_.hoverColor : 'transparent'
+    effect: Effects.DropShadow {
+      blurRadius: 8; offset: '1,1'
+      color: root_.effectColor
+    }
+
+    style: Text.Raised
+    styleColor: enabled ? root_.styleColor : 'transparent'
+
+    onClicked: root_.upButtonClicked()
+    toolTip: qsTr("Scroll to the top")
+  }
+
+  Rectangle { id: panel_
+    anchors.fill: parent
+    property bool hover: mouseArea_.hover ||
+                         closeButton_.hover ||
+                         textButton_.hover ||
+                         translationButton_.hover ||
+                         subtitleButton_.hover ||
+                         commentButton_.hover
+                         //analyticsButton_.hover
+                         //allButton_.hover
+
+    onVisibleChanged: if (visible) hideTimer_.restart()
+    Component.onCompleted: visible = false  // hide on startup
+
+    radius: 10
+    gradient: Gradient {  // color: aarrggbb
+      GradientStop { position: 0.0;  color: '#9c8f8c8c' }
+      GradientStop { position: 0.17; color: '#7a6a6d6a' }
+      GradientStop { position: 0.77; color: '#4f3f3f3f' }
+      GradientStop { position: 1.0;  color: '#7a6a6d6a' }
+    }
+
+    Rectangle { id: shadow1_ // Shadow
+      anchors {
+        left: parent.left; right: parent.right
+        top: parent.top
+        leftMargin: 20; rightMargin: 10
+        topMargin: 8
+      }
+      radius: 10
+      height: buttonGrid_.spacing * 2 + buttonGrid_.cellHeight
+      color: '#7a545454' // gray
+      //gradient: Gradient {  // color: aarrggbb
+      //  GradientStop { position: 0.0;  color: '#9c8f8c00' }
+      //  GradientStop { position: 0.17; color: '#7a6a6d00' }
+      //  GradientStop { position: 0.77; color: '#4f3f3f00' }
+      //  GradientStop { position: 1.0;  color: '#7a6a6d00' }
+      //}
+    }
+
+    Rectangle { id: shadow2_// Group#2 shadow
+      anchors {
+        left: parent.left; right: parent.right
+        top: shadow1_.bottom
+        leftMargin: 20; rightMargin: 10
+        topMargin: 8
+      }
+      radius: shadow1_.radius
+      height: shadow1_.height
+      color: shadow1_.color
+    }
+
+    MouseArea { id: mouseArea_
+      anchors.fill: parent
+      acceptedButtons: Qt.NoButton
+      hoverEnabled: true
+    }
+
+    Grid { id: buttonGrid_
+      anchors.centerIn: parent
+      columns: 2
+      spacing: 25
+
+      property int cellWidth: 150
+      property int cellHeight: 10
+      property int pixelSize: 14
+
+      // Row 1:
+
+      Share.CheckBox { id: textButton_
+        width: parent.cellWidth; height: parent.cellHeight
+        text: My.tr("Game text")
+        font.pixelSize: parent.pixelSize
+        font.bold: true
+        toolTip: qsTr("Display game text")
+      }
+
+      Share.CheckBox { id: translationButton_
+        width: parent.cellWidth; height: parent.cellHeight
+        text: My.tr("Machine translation")
+        font.pixelSize: parent.pixelSize
+        font.bold: true
+        toolTip: qsTr("Display machine translation")
+      }
+
+      Share.CheckBox { id: subtitleButton_
+        width: parent.cellWidth; height: parent.cellHeight
+        text: My.tr("Community subtitle")
+        font.pixelSize: parent.pixelSize
+        font.bold: true
+        toolTip: qsTr("Display comments from other users")
+      }
+
+      Share.CheckBox { id: commentButton_
+        width: parent.cellWidth; height: parent.cellHeight
+        text: My.tr("User comment")
+        font.pixelSize: parent.pixelSize
+        font.bold: true
+        toolTip: qsTr("Popup translation from dictionary when click the game text")
+      }
+
+      // Row 2:
+
+      Share.CheckBox { id: copyButton_
+        width: parent.cellWidth; height: parent.cellHeight
+        text: qsTr("Copy when select")
+        font.pixelSize: parent.pixelSize
+        font.bold: true
+        toolTip: qsTr("Copy the clicked text to clipboard")
+      }
+
+      //Share.CheckBox { id: spellButton_
+      //  width: parent.cellWidth; height: parent.cellHeight
+      //  text: qsTr("Check subtitle spell")
+      //  font.pixelSize: parent.pixelSize
+      //  font.bold: true
+      //  toolTip: qsTr("Enable spell checker for subtitles")
+      //}
+
+      //Share.CheckBox { id: groupButton_
+      //  width: parent.cellWidth; height: parent.cellHeight
+      //  text: qsTr("Alternate colors")
+      //  font.pixelSize: parent.pixelSize
+      //  font.bold: true
+      //  toolTip: qsTr("Use zebra background colors")
+      //}
+
+      Share.CheckBox { id: headerButton_
+        width: parent.cellWidth; height: parent.cellHeight
+        text: qsTr("Highlight headers")
+        font.pixelSize: parent.pixelSize
+        font.bold: true
+        toolTip: qsTr("Highlight summary of text")
+      }
+
+      // Row 3:
+
+      //Share.TextButton { id: allButton_
+      //  height: parent.cellHeight
+      //  width: parent.cellWidth *9/10
+      //  text: qsTr("Show all subtitles")
+      //  font.pixelSize: parent.pixelSize
+      //  color: enabled ? 'snow' : 'silver'
+      //  backgroundColor: enabled ? root_.buttonEnabledColor : root_.buttonDisabledColor
+      //  property bool enabled: true
+      //  radius: 10
+      //  onClicked:
+      //    if (enabled)
+      //      root_.allButtonClicked()
+      //  toolTip: qsTr("Show all subtitles here")
+      //}
+
+      //Share.TextButton { id: analyticsButton_
+      //  height: parent.cellHeight
+      //  //width: parent.cellWidth * 9/10
+      //  width: parent.cellWidth
+      //  text: qsTr("Show statistics")
+      //  font.pixelSize: parent.pixelSize
+      //  color: 'snow'
+      //  backgroundColor: root_.buttonEnabledColor
+      //  radius: 10
+      //  onClicked: root_.analyticsButtonClicked()
+      //  toolTip: qsTr("Generate a statistis graph of the subtitles, and save to the desktop")
+      //}
+    }
+
+    Share.CloseButton { id: closeButton_
+      anchors { left: parent.left; top: parent.top; margins: 4 }
+      onClicked: panel_.visible = !panel_.visible
+    }
+  }
+
+  Timer { id: hideTimer_
+    interval: root_._VISIBLE_DURATION
+    onTriggered: {
+      if (panel_.hover)
+        start()
+      else
+        panel_.visible = false
+    }
+  }
+}
+
+// EOF
+
+      /*
+
+      Kagami.TextButton { id: textButton_
+        width: parent.cellWidth; height: parent.cellHeight
+        text: qsTr("Text")
+        font.pixelSize: parent.pixelSize
+        font.bold: true
+        color: checked ? 'snow' : 'silver'
+        backgroundColor: checked ? '#99ff33cc' : '#7a6a6d6a'  // magenta : gray
+
+        property bool checked: true
+        onClicked: checked = !checked
+      }
+
+      Kagami.TextButton { id: translationButton_
+        width: parent.cellWidth; height: parent.cellHeight
+        text: qsTr("Translation")
+        font.pixelSize: parent.pixelSize
+        color: checked ? 'snow' : 'silver'
+        backgroundColor: checked ? '#99ff33cc' : '#7a6a6d6a'  // magenta : gray
+
+        property bool checked: true
+        onClicked: checked = !checked
+      }
+
+      Kagami.TextButton { id: subtitleButton_
+        width: parent.cellWidth; height: parent.cellHeight
+        text: qsTr("Subtitle")
+        font.pixelSize: parent.pixelSize
+        color: checked ? 'snow' : 'silver'
+        backgroundColor: checked ? '#99ff33cc' : '#7a6a6d6a'  // magenta : gray
+
+        property bool checked: true
+        onClicked: checked = !checked
+      }
+
+      Kagami.TextButton { id: commentButton_
+        width: parent.cellWidth; height: parent.cellHeight
+        text: qsTr("Comment")
+        font.pixelSize: parent.pixelSize
+        color: checked ? 'snow' : 'silver'
+        backgroundColor: checked ? '#99ff33cc' : '#7a6a6d6a'  // magenta : gray
+        property bool checked: true
+        onClicked: checked = !checked
+      }
+
+      Row { id: innerRow_
+        spacing: parent.spacing + cellWidth / 4
+        property int cellWidth: parent.cellWidth / 4
+        property int cellHeight: parent.cellHeight
+        property int pixelSize: parent.pixelSize * 2
+
+        Kagami.TextButton { // top
+          width: parent.cellWidth; height: parent.cellHeight
+          text: "↑"
+          font.pixelSize: parent.pixelSize
+          font.bold: true
+          color: checked ? 'snow' : 'silver'
+          backgroundColor: checked ? '#99ff33cc' : '#7a6a6d6a'  // magenta : gray
+
+          property bool checked: root_.checkedAlignment === Qt.AlignTop
+          onClicked: root_.checkedAlignment = Qt.AlignTop
+        }
+
+        Kagami.TextButton { // bottom
+          width: parent.cellWidth; height: parent.cellHeight
+          text: "↓"
+          font.pixelSize: parent.pixelSize
+          font.bold: true
+          color: checked ? 'snow' : 'silver'
+          backgroundColor: checked ? '#99ff33cc' : '#7a6a6d6a'  // magenta : gray
+
+          property bool checked: root_.checkedAlignment === Qt.AlignBottom
+          onClicked: root_.checkedAlignment = Qt.AlignBottom
+        }
+      }
+
+      Row {
+        spacing: innerRow_.spacing
+        property int cellWidth: innerRow_.cellWidth
+        property int cellHeight: innerRow_.cellHeight
+        property int pixelSize: innerRow_.pixelSize
+
+        Kagami.TextButton { // left
+          width: parent.cellWidth; height: parent.cellHeight
+          text: "←"
+          font.pixelSize: parent.pixelSize
+          font.bold: true
+          color: checked ? 'snow' : 'silver'
+          backgroundColor: checked ? '#99ff33cc' : '#7a6a6d6a'  // magenta : gray
+
+          property bool checked: root_.checkedAlignment === Qt.AlignLeft
+          onClicked: root_.checkedAlignment = Qt.AlignLeft
+        }
+
+        Kagami.TextButton { // right
+          width: parent.cellWidth; height: parent.cellHeight
+          text: "→"
+          font.pixelSize: parent.pixelSize
+          font.bold: true
+          color: checked ? 'snow' : 'silver'
+          backgroundColor: checked ? '#99ff33cc' : '#7a6a6d6a'  // magenta : gray
+
+          property bool checked: root_.checkedAlignment === Qt.AlignRight
+          onClicked: root_.checkedAlignment = Qt.AlignRight
+        }
+      }
+
+      Row {
+        spacing: innerRow_.spacing
+        property int cellWidth: innerRow_.cellWidth
+        property int cellHeight: innerRow_.cellHeight
+        property int pixelSize: innerRow_.pixelSize
+
+        Kagami.TextButton { // top left
+          width: parent.cellWidth; height: parent.cellHeight
+          text: "↖"
+          font.pixelSize: parent.pixelSize
+          font.bold: true
+          color: checked ? 'snow' : 'silver'
+          backgroundColor: checked ? '#99ff33cc' : '#7a6a6d6a'  // magenta : gray
+
+          property bool checked: root_.checkedAlignment === (Qt.AlignTop|Qt.AlignLeft)
+          onClicked: root_.checkedAlignment = Qt.AlignTop|Qt.AlignLeft
+        }
+
+        Kagami.TextButton { // bottom right
+          width: parent.cellWidth; height: parent.cellHeight
+          text: "↘"
+          font.pixelSize: parent.pixelSize
+          font.bold: true
+          color: checked ? 'snow' : 'silver'
+          backgroundColor: checked ? '#99ff33cc' : '#7a6a6d6a'  // magenta : gray
+
+          property bool checked: root_.checkedAlignment === (Qt.AlignBottom|Qt.AlignRight)
+          onClicked: root_.checkedAlignment = Qt.AlignBottom|Qt.AlignRight
+        }
+      }
+
+      Row {
+        spacing: innerRow_.spacing
+        property int cellWidth: innerRow_.cellWidth
+        property int cellHeight: innerRow_.cellHeight
+        property int pixelSize: innerRow_.pixelSize
+
+        Kagami.TextButton { // top right
+          width: parent.cellWidth; height: parent.cellHeight
+          text: "↗"
+          font.pixelSize: parent.pixelSize
+          font.bold: true
+          color: checked ? 'snow' : 'silver'
+          backgroundColor: checked ? '#99ff33cc' : '#7a6a6d6a'  // magenta : gray
+
+          property bool checked: root_.checkedAlignment === (Qt.AlignTop|Qt.AlignRight)
+          onClicked: root_.checkedAlignment = Qt.AlignTop|Qt.AlignRight
+        }
+
+        Kagami.TextButton { // bottom left
+          width: parent.cellWidth; height: parent.cellHeight
+          text: "↙"
+          font.pixelSize: parent.pixelSize
+          font.bold: true
+          color: checked ? 'snow' : 'silver'
+          backgroundColor: checked ? '#99ff33cc' : '#7a6a6d6a'  // magenta : gray
+
+          property bool checked: root_.checkedAlignment === (Qt.AlignBottom|Qt.AlignLeft)
+          onClicked: root_.checkedAlignment = Qt.AlignBottom|Qt.AlignLeft
+        }
+      }
+      */

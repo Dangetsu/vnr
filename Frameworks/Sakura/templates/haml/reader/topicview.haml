@@ -1,0 +1,71 @@
+; topicview.haml
+; 1/2/2015 jichi
+; @param  host  str
+; @param  topicId  long
+; @param  userName  str  not 'guest'
+; @param  userPassword  str
+; @param  locale  string
+; @param  title  unicode
+; @param  rc  rc
+; @param  tr  sktr.tr_
+;!!! 5
+
+%html(lang="#{locale}")
+  %head
+    %title #{title}
+
+    ; Stylesheets
+    -for it in 'bootstrap3.css', 'font-awesome4.css', \
+        'reader/forum/posts.css', 'reader/forum/topic.css', 'reader/topicview.css'
+      %link(rel="stylesheet",href="#{rc.cdn_url(it)}")
+
+    :css
+      body {
+        background-image: url("#{rc.wallpaper_url()}");
+        background-size: cover;
+      }
+
+  %body
+    .view
+      .sec.sec-topic
+        .forum-topic
+        .forum-posts
+      %hr
+      .toolbar
+        %ul.filter.nav.nav-pills.nav-clean.nav-xs
+          %li.active(data-sort-key="createTime",data-sort-asc="true",title="#{tr('Creation time')}")
+            %a #{tr('Creation')}
+          %li(data-sort-key="updateTime",data-sort-asc="false",title="#{tr('Update time')}")
+            %a #{tr('Recent')}
+          %li(data-sort-key="likeCount",data-sort-asc="false",title="#{tr('Like')}")
+            %a #{tr('Like')}
+        .btn-group.pull-right
+          %button.btn.btn-primary.btn-sm.new-post(type="button")
+            %span.fa.fa-plus
+            #{tr('Reply')}
+      .sec.sec-posts
+        .forum-posts
+        .footer
+          .btn.btn-link.btn-more(role="button")
+            #{tr('More')} ...
+    #spin
+
+    :javascript
+      window.HOST = "#{host}";
+      window.LOCALE = "#{locale}";
+      window.USER_NAME = "#{userName}";
+      window.USER_PASSWORD = "#{userPassword}";
+      window.TOPIC_ID = #{topicId};
+
+    -for it in \
+        'jquery', 'jquery.ui', \
+        'bootstrap.growl', \
+        'underscore', \
+        'spin', 'jquery.spin', \
+        'bbcode', 'haml', 'moment', \
+        'libs/linkify', \
+        'share/growl', 'share/rest', 'share/util', \
+        'reader/forum/posts', 'reader/forum/topic', 'reader/topicview'
+      %script(src="#{rc.cdn_url(it)}")
+
+; EOF

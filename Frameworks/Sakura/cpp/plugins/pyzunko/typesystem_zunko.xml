@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<!-- typesystem_zunko.xml 4/1/2013 jichi -->
+<typesystem package='pyzunko'>
+  <load-typesystem name="typesystem_cpp_types.xml" generate="yes" />
+  <load-typesystem name="typesystem_std_string.xml" generate="yes" />
+  <object-type name="AITalkSynthesizer" />
+</typesystem>

@@ -1,0 +1,15 @@
+# Sample script
+# 3/6/2015
+# See also: http://joshua-decoder.org/6.0/file-formats.html
+# Format:
+#   lfs_token ||| rhs_source ||| rhs_target ||| features
+# Features
+#   id:int selector:int flags:string
+#n ||| [[m]]女子?(?:校|学[校園苑院]) ||| [[]] Girls' School ||| 85484 -1 r
+m$0 ||| 悠真 ||| Yuuma ||| 1 -1
+#v ||| 攻略 ||| capture ||| 2 -1
+#m ||| [[m#1]]くん ||| [[]]-kun ||| 3 -1
+m$_2 ||| [[m,n]]くん ||| [[]]-kun ||| 3 -1
+#x ||| [[m]]を[[v,a#2]] ||| [[#2]] [[n]] ||| 4 -1
+# ||| DELETE |||  ||| 5 -1
+#x ||| [[x]][[x]] ||| [[x]] ||| 6 -1

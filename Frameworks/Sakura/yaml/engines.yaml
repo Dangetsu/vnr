@@ -1,0 +1,844 @@
+# engines.yaml
+# 12/7/2013 jichi
+
+rename:
+  #AB2Try: YaneSDK # TODO
+  AbelSoftware: Abel
+  AliceRunPatch: AliceRunPatch43
+  AMUSE CRAFT: Pal
+  AUEngine: Tenco
+  ApRicot: ApRicoT
+  CIRCUS: Circus
+  Eushully: ARCGameEngine
+  Gesen18: Unicorn
+  MAJIRO: Majiro
+  NitroPlus: Nitroplus
+  Pencil: Pensil
+  QLIE: QLiE
+  QLIE2: QLiE2
+  RetouchSystem: Retouch
+  Silkys: Elf
+  SolfaSoft: ScenarioPlayerA
+  SofthouseChara: SystemAoi
+  SystemAoi5: SystemAoi2
+  EmbedSystem4: EmbedSystem43
+  System4: EmbedSystem43
+  User-defined: H-code
+
+gc:
+  - Vanillaware GC
+
+ps2:
+  - Marvelous PS2
+  - Marvelous2 PS2
+  - TypeMoon PS2
+
+psp:
+  all:
+    - 5pb PSP
+    - Alchemist2 PSP
+    - Broccoli PSP
+    - CYBERFRONT PSP
+    - FELISTELLA PSP
+    - Intense PSP
+    - Imageepoch PSP
+    - Imageepoch2 PSP
+    - KID PSP
+    - KONAMI PSP
+    - Otomate PSP
+    - Yeti PSP
+    - Yeti2 PSP
+  0.9.9:
+    - Otomate PPSSPP
+  0.9.8:
+    - Alchemist PSP
+    - BANDAI PSP
+    - BANDAI Name PSP
+    - Nippon1 PSP
+    - Nippon2 PSP
+
+gc:
+  - Vanillaware GC
+
+embed:
+  - 2RM
+  - ARCGameEngine
+  - BGI
+  - BGI2
+  - CatSystem2
+  - CatSystem3
+  - CMVS
+  - CMVS2
+  - Debonosu
+  - DebonosuName
+  - Elf
+  - Escude
+  - GXP
+  - GXP2
+  - Lucifen
+  - Malie2
+  - Malie3
+  - NEXTON
+  #- NEXTON1
+  - Nitroplus2
+  - Pensil
+  - QLiE
+  - QLiE2
+  - Retouch
+  - Retouch2
+  - ShinaRio
+  - SiglusEngine2
+  #- SiglusEngine3
+  #- SiglusEngine4
+  - Silkys
+  - SilkysPlus
+  - SystemAoi
+  - SystemAoi2
+  - SystemAoiA
+  - SystemAoiW
+  - Taskforce2
+  - Unicorn
+  - Waffle
+  - WillPlus
+  - WillPlusA
+  - WillPlusW
+  - WolfRPG
+  #- Majiro
+  #- Majiro2
+  #- SideB
+
+embed_en:
+  - Circus
+  - Cotopha
+  - Leaf
+  - LunaSoft
+  - Nitroplus2
+  - Pal
+  - System43+
+  - System44
+  #- Tamamo
+  #- HorkEye
+
+  - EmbedCircus
+  - EmbedCotopha
+  - EmbedLeaf
+  - EmbedLunaSoft
+  - EmbedNitroplus
+  - EmbedPal
+  - EmbedSystem4
+  - EmbedSystem43
+  - EmbedSystem44
+  #- EmbedTamamo
+
+gui:
+  # User32
+  - DrawTextA
+  - DrawTextW
+  - DrawTextExA
+  - DrawTextExW
+  # GDI+
+  - GdipAddPathString
+  - GdipAddPathStringl
+  - GdipDrawString
+  - GdipMeasureString
+  # GDI32
+  - ExtTextOutA
+  - ExtTextOutW
+  - GetCharacterPlacementA
+  - GetCharacterPlacementW
+  - GetCharWidth32A
+  - GetCharWidth32W
+  - GetCharWidthFloatA
+  - GetCharWidthFloatW
+  - GetCharABCWidthsA
+  - GetCharABCWidthsW
+  - GetCharABCWidthsFloatA
+  - GetCharABCWidthsFloatW
+  - GetGlyphIndicesA
+  - GetGlyphIndicesW
+  - GetGlyphOutlineA
+  - GetGlyphOutlineW
+  - GetTextExtentPoint32A
+  - GetTextExtentPoint32W
+  - GetTextExtentExPointA
+  - GetTextExtentExPointW
+  - GetTabbedTextExtentA
+  - GetTabbedTextExtentW
+  - TextOutA
+  - TextOutW
+  - TabbedTextOutA
+  - TabbedTextOutW
+  # PSP
+  - sceFontGetCharInfo
+  - sceFontGetShadowInfo
+  - sceFontGetCharImageRect
+  - sceFontGetShadowImageRect
+  - sceFontGetCharGlyphImage
+  - sceFontGetCharGlyphImage_Clip
+  - sceFontGetShadowGlyphImage
+  - sceFontGetShadowGlyphImage_Clip
+
+optgui:
+  - 5pb2 # 5pb1 is better
+  - BootupLstrA # BootupA is better
+  - BootupLstrW # BootupW is better
+  - AliceRunPatch43 # System43+ is better
+  - KiriKiri2
+  #- KiriKiriZ # KAGParser is better
+  - Malie2 # Malie3 is better
+  - SiglusEngine3 # SiglusEngine2 is better
+  - SiglusEngine4 # SiglusEngine2 is better
+  - System43 # System43+ is better
+  - WillPlus # WillPlusA and WillPlusW are better
+  #- WolfRPG # WolfRPG2 is better
+
+nongui:
+  # PC
+  - lstrlenA
+  - lstrlenW
+  - CharNextA
+  - CharNextW
+  - MultiByteToWideChar
+  - WideCharToMultiByte
+  - _strinc
+  - _wcsinc
+  - _mbsinc
+  - _mbsinc_l
+  # PSP
+  - sceCccStrlenSJIS
+  - sceCccStrlenUTF8
+  - sceCccStrlenUTF16
+  - sceCccSJIStoUTF8
+  - sceCccSJIStoUTF16
+  - sceCccUTF8toSJIS
+  - sceCccUTF8toUTF16
+  - sceCccUTF16toSJIS
+  - sceCccUTF16toUTF8
+  - sysclib_strcat
+  - sysclib_strcpy
+  - sysclib_strlen
+
+# no repeat & no float
+simple:
+  - 2RM
+  - 5pb PSP
+  - 5pb1
+  - 5pb2
+  - 5pb3
+  - AB2Try
+  - Abel
+  - Adobe AIR
+  - Adobe Flash 10
+  - Alchemist PSP
+  - Alchemist2 PSP
+  - AliceRunPatch # renamed
+  - AliceRunPatch43
+  - AliceRunPatch44
+  - AMUSE CRAFT # renamed
+  - AOS
+  - ApRicot # renamed
+  - ApRicoT
+  - ARCGameEngine
+  - Atelier KAGUYA
+  - AUEngine # renamed
+  - BANDAI Name PSP
+  - BGI
+  - BGI1
+  - BGI2
+  - BootupA
+  - BootupW
+  - Broccoli PSP
+  - CatSystem2
+  - CatSystem3
+  - CIRCUS # renamed
+  - Circus
+  - Circus1
+  - CMVS
+  - CMVS2
+  - Cotopha
+  - CYBERFRONT PSP
+  - Debonosu
+  - DebonosuName
+  - EAGLS
+  - Elf
+  - Escude
+  - Eushully # renamed
+  - FELISTELLA PSP
+  - GXP
+  - GXP2
+  #- FocasLens # I am not sure. 幻想人形演舞 cannot go full screen anyway
+  - HorkEye
+  - Intense PSP
+  - Imageepoch2 PSP
+  - KID PSP
+  - KAGParser
+  - KAGParserEx
+  - KiriKiri1
+  #- KiriKiri2 http://sakuradite.com/game/4633
+  - KiriKiriZ
+  #- KONAMI PSP # KONAMI could have both repeat and float text
+  - Leaf
+  - Live
+  - LunaSoft
+  - MAJIRO # renamed
+  - Majiro
+  - Majiro2
+  - Malie2
+  - Malie3
+  - Marvelous PS2
+  - Marvelous2 PS2
+  - MBL
+  - MED
+  - Mink
+  - Mono
+  - NeXAS
+  - Nippon1 PSP
+  - Nippon2 PSP
+  - Nitroplus2
+  - Otomate PSP
+  - Pal
+  - Pencil # renamed
+  - Pensil
+  - RealLive
+  - Rejet
+  - Retouch
+  - Retouch2
+  - RetouchSystem # renamed
+  - rUGP
+  - rUGP2
+  - ScenarioPlayerA
+  - ScenarioPlayerW
+  - ShinaRio
+  - ShinaRio2
+  - SideB
+  - SiglusEngine
+  - SiglusEngine2
+  - SiglusEngine3
+  #- SiglusEngine4 # there could have duplication
+  - Silkys # renamed
+  - SilkysPlus
+  - SofthouseChara # renamed
+  - SolfaSoft # renamed
+  - StuffScriptEngine
+  - SystemC
+  - System4 # renamed
+  - System43
+  - System43+
+  - System44
+  - SystemAoi
+  - SystemAoi2
+  - SystemAoiA
+  - SystemAoiW
+  - Syuntada
+  - Tamamo
+  - Taskforce2
+  - TinkerBell0
+  - TinkerBell1
+  - TinkerBell2
+  - Tenco
+  - TypeMoon PS2
+  - YU-RIS
+  - YU-RIS2
+  - Vanillaware GC
+  - WAFFLE
+  - Waffle
+  - WillPlus
+  - WillPlusA
+  - WillPlusW
+  - Yeti PSP
+  - Yeti2 PSP
+  - YukaSystem2
+
+single: # single thread
+  # PC
+  - AB2Try
+  - ARCGameEngine
+  #- Debonosu
+  - Eushully # renamed
+  - FocasLens
+  - GXP
+  - GXP2
+  - HorkEye
+  - Malie3
+  #- Nitroplus2
+  - Rejet
+  - SiglusEngine2
+  #- System43+
+  # PSP
+  - 5pb PSP
+  - Intense PSP
+  - KONAMI PSP
+  # PS2
+  - Marvelous PS2
+  - TypeMoon PS2
+
+repeat:
+  - Malie       # finite
+  - MarineHeart # finite
+
+# No repetition int the game text
+norepeat:
+  - Artemis
+  - BALDR # removed
+  - EXP # there could be different type of threads, but it is OK to merge them
+  - KiriKiri2  # might float, http://sakuradite.com/game/4633
+  - NEXTON
+  - NEXTON1 # I am not sure if it could be floating like NEXTON
+  - QLiE
+  - QLiE2
+  - TanukiSoft # But this thread is floating
+  - Unicorn
+  - Unity # removed
+
+# Not floating address
+nofloat:
+  - BANDAI PSP # could have repetitions
+  - BootupLstrA # always float, and could have repetitions
+  - BootupLstrW # always float, and could have repetitions
+  - Bruns
+  - Bruns2
+  - Malie
+  - MarineHeart # sometimes has limited repetition
+  - Otomate PPSSPP # could have repetitions
+  - SiglusEngine4 # there could have duplication
+  - Imageepoch PSP # could have repetitions
+  - Vanillaware GC # could have repetitions
+  # Mono
+  - mono_string_from_utf16
+  - mono_string_new_utf16
+  #- mono_string_new
+  #- mono_string_new_wrapper
+  - mono_string_to_utf16
+  - mono_string_to_utf8
+  - mono_string_to_utf8_checked
+  - mono_unicode_from_external
+  - mono_unicode_to_external
+  - mono_utf8_from_external
+
+float:
+  - Unicorn
+  - Unity # removed
+
+# The game engines that require the game to have normal/slow text speed
+slow:
+  - EmonEngine
+  - RunrunEngine
+  - RunrunEngine Old
+  - ShinaRio2
+
+# The game engines that require the game to have fast text speed
+fast:
+  - AB2Try
+  - MarineHeart
+  - EmbedMono
+
+# The game engines that require the game to be hooked after loaded
+delay:
+  - AB2Try # .NET delay loading
+  - Adobe AIR
+
+# Thin character, SHIFT-JIS or GBK
+char:
+  # PC
+  - DrawTextA
+  - DrawTextExA
+  - ExtTextOutA
+  - GetCharWidth32A
+  - GetCharWidthFloatA
+  - GetCharacterPlacementA
+  - GetCharABCWidthsA
+  - GetCharABCWidthsFloatA
+  - GetGlyphIndicesA
+  - GetGlyphOutlineA
+  - GetTabbedTextExtentA
+  - GetTextExtentPoint32A
+  - GetTextExtentExPointA
+  - TextOutA
+  - TabbedTextOutA
+  - lstrlenA
+  - MultiByteToWideChar
+  - CharNextA
+  # PSP
+  - sysclib_strcat
+  - sysclib_strcpy
+  - sysclib_strlen
+  - sceCccStrlenSJIS
+  - sceCccSJIStoUTF8
+  - sceCccSJIStoUTF16
+  # Embed
+  - EmbedARCGameEngine
+  - EmbedBGI
+  - EmbedCatSystem2
+  - EmbedCircus
+  - EmbedCMVS
+  - EmbedDebonosu
+  - EmbedElf
+  - EmbedEscude
+  - EmbedFVP
+  - EmbedLCScriptEngine
+  - EmbedLeaf
+  - EmbedLucifen
+  - EmbedLunaSoft
+  - EmbedMinori
+  - EmbedNexton
+  - EmbedNitroplus
+  - EmbedPal
+  - EmbedPensil
+  - EmbedQLiE
+  - EmbedRetouch
+  - EmbedRio
+  - EmbedSilkysPlus
+  - EmbedSystem4
+  - EmbedSystem43
+  - EmbedSystem44
+  - EmbedSystemAoiA
+  - EmbedTaskforce2
+  - EmbedUnicorn
+  - EmbedWaffle
+  - EmbedWillPlusA
+  - EmbedWolfRPG
+  # Engines
+  - 2RM
+  - 5pb PSP
+  - 5pb1
+  - 5pb2
+  - 5pb3
+  - AB2Try
+  - Abel
+  - AbelSoftware # renamed
+  - Alchemist PSP
+  - Alchemist2 PSP
+  - AliceRunPatch # renamed
+  - AliceRunPatch43
+  - AliceRunPatch44
+  - AMUSE CRAFT # renamed
+  - Anex86
+  - AOS
+  - ARCGameEngine
+  - Artemis
+  - Atelier KAGUYA
+  - AUEngine # removed
+  #- BANDAI PSP # BANDAI engine could be either UTF-8 or SHIFT-JIS
+  - BANDAI Name PSP
+  - BGI
+  - BGI1
+  - BGI2
+  - BootupA
+  - BootupLstrA
+  - Broccoli PSP
+  - C4
+  - CaramelBox
+  - CatSystem2
+  - CatSystem3
+  - CIRCUS # renamed
+  - Circus
+  - Circus1
+  - CMVS
+  - CMVS2
+  - CYBERFRONT PSP
+  - Debonosu
+  - DebonosuName
+  - EAGLS
+  - Elf
+  - EmonEngine
+  - Escude
+  - Eushully # renamed
+  - EXP
+  - FocasLens
+  - Gesen18 # renamed
+  - HorkEye
+  - Intense PSP
+  - KONAMI PSP
+  - KID PSP
+  - Leaf
+  - Live
+  - Lucifen
+  - LunaSoft
+  - MAJIRO # renamed
+  - Majiro
+  - Majiro2
+  - MarineHeart
+  - Marvelous PS2
+  - Marvelous2 PS2
+  - MBL
+  - MED
+  - NeXAS
+  - NEXTON
+  - NEXTON1
+  - Mink
+  - Nippon1 PSP
+  - Nippon2 PSP
+  - NitroPlus # renamed
+  - Nitroplus
+  - Nitroplus2
+  - Otomate PSP
+  - Otomate PPSSPP
+  - Pal
+  - Pencil # renamed
+  - Pensil
+  - QLiE
+  - QLiE2
+  - QLIE # renamed
+  - QLIE2 # renamed
+  - RealLive
+  - Rejet
+  - Retouch
+  - Retouch2
+  - RetouchSystem # renamed
+  - rUGP
+  - rUGP2
+  - ScenarioPlayerA
+  - ShinaRio
+  - ShinaRio2
+  - SideB
+  - Silkys # renamed
+  - SilkysPlus
+  - SolfaSoft # renamed
+  - StudioRyokucha
+  - StuffScriptEngine
+  - System4 # renamed
+  - System40
+  - System43
+  - System43+
+  - System44
+  - SystemAoiA
+  - SystemC
+  - Syuntada
+  - Tamamo
+  - TanukiSoft
+  - Taskforce2
+  - Tenco
+  - TinkerBell0
+  - TinkerBell1
+  - TinkerBell2
+  - Triangle
+  - TypeMoon PS2
+  - Unicorn
+  - Vanillaware GC
+  - WAFFLE
+  - Waffle
+  - WillPlus
+  - WillPlusA
+  - WolfRPG
+  - Yeti PSP
+  - Yeti2 PSP
+  - YU-RIS
+  - YU-RIS2
+
+# Wide character, UTF-16
+wchar:
+  # PC
+  - DrawTextW
+  - DrawTextExW
+  - ExtTextOutW
+  - GetCharacterPlacementW
+  - GetCharABCWidthsW
+  - GetCharABCWidthsFloatW
+  - GetCharWidth32W
+  - GetCharWidthFloatW
+  - GetGlyphIndicesW
+  - GetGlyphOutlineW
+  - GetTabbedTextExtentW
+  - GetTextExtentPoint32W
+  - GetTextExtentExPointW
+  - TextOutW
+  - TabbedTextOutW
+  - lstrlenW
+  - WideCharToMultiByte
+  - CharNextW
+  # GDI+
+  - GdipAddPathString
+  - GdipAddPathStringl
+  - GdipDrawString
+  - GdipMeasureString
+  # Mono
+  - mono_string_from_utf16
+  - mono_string_new_utf16
+  - mono_string_to_utf16
+  - mono_string_to_utf8
+  - mono_string_to_utf8_checked
+  - mono_unicode_from_external
+  - mono_unicode_to_external
+  # PSP
+  - sceCccStrlenUTF16
+  - sceCccUTF16toSJIS
+  - sceCccUTF16toUTF8
+  - sceFontGetCharInfo
+  - sceFontGetShadowInfo
+  - sceFontGetCharImageRect
+  - sceFontGetShadowImageRect
+  - sceFontGetCharGlyphImage
+  - sceFontGetCharGlyphImage_Clip
+  - sceFontGetShadowGlyphImage
+  - sceFontGetShadowGlyphImage_Clip
+  # Embed
+  - EmbedCotopha
+  - EmbedGXP
+  - EmbedMalie
+  - EmbedMono
+  - EmbedSiglusEngine
+  - EmbedSystemAoiW
+  - EmbedWillPlus
+  - EmbedWillPlusW
+  # Engines
+  - Adobe AIR
+  - Adobe Flash 10
+  - ApRicot # renamed
+  - ApRicoT
+  - BALDR # removed
+  - BootupW
+  - BootupLstrW
+  - Bruns
+  - Bruns2
+  - Cotopha
+  - GXP
+  - GXP2
+  - IronGameSystem
+  - KAGParser
+  - KAGParserEx
+  - KiriKiri1
+  - KiriKiri2
+  - KiriKiriZ
+  - Malie
+  - Malie2
+  - Malie3
+  - Mono
+  - ScenarioPlayerW
+  - ShinyDays
+  - SiglusEngine
+  - SiglusEngine2
+  - SiglusEngine3
+  - SiglusEngine4
+  - SofthouseChara # renamed
+  - SystemAoi # It could also be SHIFT-JIS for Aoi<4
+  - SystemAoi2
+  - SystemAoiW
+  - Unity # removed
+  - WillPlusW
+
+# UTF-8
+utf8:
+  # Mono
+  - mono_utf8_from_external
+  #- mono_string_new
+  #- mono_string_new_wrapper
+  # PSP
+  - sceCccStrlenUTF8
+  - sceCccUTF8toSJIS
+  - sceCccUTF8toUTF16
+  # Engine
+  - FELISTELLA PSP
+  - Imageepoch PSP
+  - Imageepoch2 PSP
+  # PC
+  - EmbedRGSS
+  - EmbedLova
+  - YukaSystem2
+
+# List of game engine that allows focus
+focus:
+  - 2RM
+  - 5pb1
+  - 5pb2
+  - 5pb3
+  - Adobe Flash 10
+  - ARCGameEngine
+  - Artemis
+  - BootupA # not for 仏蘭西少女 though
+  - BootupW
+  - BootupLstrA
+  - BootupLstrW
+  - CatSystem2
+  - CatSystem3
+  - Circus
+  - Circus1
+  - CMVS
+  - CMVS2
+  - Debonosu
+  - DebonosuName
+  - EAGLS
+  - EmbedARCGameEngine
+  - EmbedCatSystem2
+  - EmbedCircus
+  - EmbedCMVS
+  - EmbedDebonosu
+  - EmbedEscude
+  - EmbedLCScriptEngine
+  - EmbedLeaf
+  - EmbedLova
+  - EmbedLucifen
+  - EmbedPal
+  - EmbedQLiE
+  - EmbedRetouch
+  - EmbedSiglusEngine
+  - EmbedSilkysPlus
+  - EmbedTaskforce2
+  - EmbedUnicorn
+  - EmbedWaffle
+  - EmbedWillPlus
+  - EmbedWillPlusA
+  - EmbedWillPlusW
+  - Escude
+  - FocasLens
+  - HorkEye
+  - KAGParser
+  - KAGParserEx
+  - KiriKiriZ
+  - Leaf
+  - Lucifen
+  - Majiro2
+  - Pal
+  - QLiE
+  - QLiE2
+  - Retouch
+  - Retouch2
+  - SiglusEngine2
+  - SiglusEngine3
+  - SiglusEngine4
+  - SilkysPlus
+  - SystemC
+  - Syuntada
+  - Taskforce2
+  - Unicorn
+  - WAFFLE
+  - Waffle
+  - WillPlus
+  - WillPlusA
+  - WillPlusW
+  - YU-RIS2
+  - YukaSystem2
+# No focus:
+  #- Abel
+  #- AliceRunPatch43
+  #- AOS
+  #- Cotopha
+  #- Elf
+  #- EmbedFVP
+  #- EmbedMinori
+  #- EmbedMono
+  #- EmbedRGSS
+  #- EXP    # there is no way to display VNR in full screen
+  #- GXP
+  #- GXP2
+  #- KiriKiri1
+  #- KiriKiri2
+  #- LunaSoft
+  #- Majiro
+  #- Malie2
+  #- Malie3
+  #- Nitroplus2
+  #- Mink
+  #- Mono
+  #- NEXTON
+  #- Pensil
+  #- ScenarioPlayerW
+  #- ShinaRio
+  #- StuffScriptEngine
+  #- SystemAoi
+  #- System40
+  #- System43
+  #- System44
+  #- Tamamo
+  #- WolfRPG
+
+# EOF

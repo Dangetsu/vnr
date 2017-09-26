@@ -1,0 +1,236 @@
+# blacklist.yaml
+# 10/14/2012 jichi
+
+hcode:
+  - /HS8@41FDCB # DC3
+  - /HB8*0:D4@0:GDI32.dll:GetTextExtentPoint32A # 幻創のイデア
+  - /HA-C:40@0:GDI32.dll:GetTextMetricsA # 幻創のイデア
+  - /HA8@394F8:gdi32.dll # 幻創のイデア
+  #-/HS-8@42D8F4 # X: 媚肉の香り, O: スクエアな関係
+  #-/HB18*0@4D2CD8 # X: 少女騎士物語, O: はつゆきさくら
+  #-/HWN-8*0@14F36:libscr.dll # Berry's
+  #-/HSN-4@B14B4 # Justy×Nasty ～魔王はじめました～
+
+hcodefile:
+  - DC3.EXE     # DC3
+  - IDEA.EXE    # 幻創のイデア
+
+processes:
+  - browser.exe # VNR
+  - AUTORUN.EXE
+  - Autorun.exe
+  - autorun.exe
+  - SETUP.EXE
+  - Setup.exe
+  - setup.exe
+  - INSTALL.EXE
+  - Install.exe
+  - install.exe
+  - Unnstall.exe
+  - uninstall.exe
+  - 115Chrome.exe       # 115
+  - 1ClickDownloader.exe # Download
+  - 2345Explorer.exe    # 2345
+  - 2345chrome.exe      # 2345
+  - 2345PicView.exe     # 2345
+  - 360Chrome.exe       # 360
+  - 360chrome.exe       # 360
+  - 360Desktop.exe      # 360
+  - 360desktop.exe      # 360
+  - 360Kantu.exe        # 360
+  - 360kantu.exe        # 360
+  - 360SE.exe           # 360
+  - 360se.exe           # 360
+  - 360Zip.exe          # 360
+  - 360zip.exe          # 360
+  - 7zG.exe             # 7-zip
+  - 7zFM.exe            # 7-zip
+  - ADSafe.exe          # ADSafe: http://sakuradite.com/topic/1067
+  - agth.exe            # AGTH
+  - AlphaROM Cracker Build20121001.exe  # AlphaROM
+  - AlphaROMdiE.exe     # AlphaROM
+  - alpharomdie.exe     # AlphaROM
+  - ALZip.exe           # ALZip
+  #- Anemone.exe         # Anemone
+  - AppUpdate.exe       # JBeijing
+  - AralTrans.exe       # Aral Trans
+  - Atlas.exe           # Atlas
+  - Apoint.exe          # Dell
+  - ApntEx.exe          # Dell
+  - AutoHotKey.exe      # AutoHotKey
+  - AutoHotkey.exe      # AutoHotKey
+  - AutoIt3.exe         # AutoIt
+  - AutoIt3_x64.exe     # AutoIt
+  - BaiduBrowser.exe    # Baidu
+  - baidubrowser.exe    # Baidu
+  - BaiduPlayer.exe     # Baidu
+  - BaiduYunGuanjia.exe # Baidu
+  - baiduyunguanjia.exe # Baidu
+  - BingDesktop.exe     # Microsoft
+  - BitComet.exe        # BitComet
+  - Bootcamp.exe        # Apple
+  - CalendarMain.exe    # 160
+  - CeVIO Creative Studio FREE.exe # CeVIO
+  - chromeplus.exe      # Google?
+  - chrome.exe          # Google
+  - CHROME.EXE          # Google
+  - CliphookerEX.exe    # CliphookerEX
+  - ComicsViewer.exe    # ComicsViewer
+  - devcpp.exe          # Dev-Cpp
+  - DTLite.exe          # Daemon Tools
+  - Dwm.exe             # Windows
+  - dwm.exe             # Windows
+  - emacs.exe           # GNU
+  - explore.exe         # Windows
+  - Explore.EXE         # Windows
+  - Evernote.exe        # Evernote
+  - EvernoteTray.exe    # Evernote
+  - EXCEL.EXE           # Microsoft Office
+  - firefox.exe         # Mozilla
+  - flashget.exe        # Flashget
+  - "Foxit Reader.exe"  # Foxit Reader
+  - foobar2000.exe      # foobar
+  - GarenaMessenger.exe # Garena, http://sakuradite.com/topic/525
+  - googledrivesync.exe # Google
+  - GoogleIMEJaConverter.exe # Google
+  - GoogleIMEJaRenderer.exe  # Google
+  - GOM.EXE             # GOM Player
+  - GOM.exe             # GOM Player
+  - gvim.exe            # GVIM
+  - HaoZip.exe          # HaoYa
+  - HD-Agent.exe        # BlueStacks
+  - HD-Frontend.exe     # BlueStacks
+  - hidfind.exe         # Dell
+  - iCloudServices.exe  # Apple
+  - idaq.exe            # IDA
+  - idea.exe            # Intelij IDEA
+  - IDMan.exe           # Internet Download Manager
+  - iesandbox.exe       # Kuwo
+  - IESandBox.exe       # Kuwo
+  - iexplore.exe        # Windows
+  - IEXPLORE.EXE        # Windows
+  - IMJPDUS.EXE         # Microsoft
+  - imjpdus.exe         # Microsoft
+  - ineter_ex.exe       # Microsoft
+  - ITH.exe             # ITH
+  - iTunes.exe          # Apple
+  - iTunesHelper.exe    # Apple
+  - Jane2ch.exe         # 2ch
+  - java.exe            # Java
+  - javaw.exe           # Java
+  - JCT.exe             # JBeijing
+  - jct.exe             # JBeijing
+  - JCTchs.exe          # JBeijing
+  - JOCR.exe            # JOCR
+  - JspVReader.exe      # 詠太2
+  - jusched.exe         # Java
+  - Kakaotalk.exe       # Kakaotalk
+  - KakaoTalk.exe       # Kakaotalk
+  - KHALMNPR.exe        # Logitech
+  - KuGou.exe           # Kugou
+  - KMPlayer.exe        # KMPlayer
+  - kmplayer.exe        # KMPlayer
+  - KSafeTray.exe       # Kingsoft
+  - kxetray             # Kingsoft
+  - liebao.exe          # LieBao Browser
+  - LIEBAO.EXE          # LieBao Browser
+  - LEGUI.exe           # Locale Emulator
+  - LocaleSwitch.exe    # Locale Switch
+  - LSC.exe             # Locale Switch
+  - KanKan.exe          # Xunlei
+  - Maxthon.exe         # Maxthon
+  - MacDrive.exe        # MacDrive
+  - MagicISO.exe        # Magic ISO Maker
+  - MangaMeeya.exe      # Manga reader
+  - mousegesture.exe    # Sogou
+  - MediaInfo.exe       # MediaInfo
+  - mpc-be.exe          # MPC
+  - mpc-hc.exe          # MPC
+  - mpc-hc_nvo.exe      # MPC
+  - mpcstar.exe         # MPC
+  - ModOrganizer.exe    # Skyrim Mod Organizer
+  - netbeans.exe        # NetBeans
+  - notepad++.exe       # Notepad++
+  - ntleac.exe          # NTLER
+  - NtleaGUI.exe        # NTLER
+  - ntleas.exe          # NTLEAS
+  - NK-Frontend.exe     # Android emulator
+  - ollydbg.exe         # OllyDbg
+  - ONENOTE.EXE         # Microsoft Office
+  - onenote.exe         # Microsoft Office
+  - opera.exe           # Opera
+  - osu!.exe            # Osu!
+  - OSU!.EXE            # Osu!
+  - perfect dark.exe    # Perfect Dark
+  - perl.exe            # Perl
+  - python.exe          # Python
+  - pythonw.exe         # Python
+  - PinyinUp.exe        # Sogou
+  - plugin-container.exe # Mozilla
+  - POWERPNT.EXE        # Microsoft Office
+  - PotPlayer.exe       # Pot Player
+  - PotPlayerMini.exe   # Pot Player
+  - PPLive.exe          # PPLive
+  - QQ.exe              # Tencent
+  - QQBrowser.exe       # Tencent
+  - QQDownload.exe      # Tencent
+  - QQImageViewer.exe   # Tencent
+  - QQMusic.exe         # Tencent
+  - QQPlayer.exe        # Tencent
+  - qtcreator.exe       # Qt
+  - QuickTime.exe       # Apple
+  - QvodPlayer.exe      # QVOD
+  - Rainmeter.exe       # Rainmeter
+  - saayaa.exe          # Baidu
+  - Safari.exe          # Apple
+  - ScreenshotReaderPortable.exe # http://sakuradite.com/topic/524
+  - SetPoint.exe        # Logitech
+  - sidebar.exe         # Microsoft Windows
+  - Skype.exe           # Microsoft Skype
+  - SogouCloud.exe      # Sogou
+  - SogouExplorer.exe   # Sogou
+  - sogouexplorer.exe   # Sogou
+  - spark.exe           # Baidu Browser
+  - SpoilerAL.exe       # Game editor
+  #- splayer.exe         # SPlayer
+  #- Splayer.exe         # SPlayer # conflict with 真姫裸
+  - Steam.exe           # Steam
+  - StormPlayer.exe     # Storm player
+  - sttray.exe          # Dell
+  - sublime_text.exe    # Sublime Text
+  - TaoBrowser.exe      # TaoBao
+  - TeamViewer.exe      # TeamViewer
+  - TextAloudMP3.exe    # TextAloud TTS
+  - TheWorld.exe        # Browser
+  - thunderbird.exe     # Mozilla
+  - Thunder.exe         # Xunlei
+  - thunder.exe         # Xunlei
+  - TianTianPlayer.exe  # Kaopu
+  - TranEdit.exe        # Dr.eye
+  - TTPlayer.exe        # TTPlayer
+  - TTraveler.exe       # Tencent
+  - TTSReader.exe       # TextAloud TTS
+  - vlc.exe             # VLC
+  - VOICEROID.exe       # AHS
+  - translation aggregator.exe
+  - Translation Aggregator.exe
+  - TranslationAggregator.exe
+  - TXPlatform.exe      # Tencent
+  - Uedit32.exe         # UltraEdit
+  - UltraISO.exe        # UltraISO
+  - WinRAR.exe          # WinRAR
+  - WINWORD.EXE         # Microsoft Office
+  - XDict.exe           # Kingsoft
+  - XMP.EXE             # Xunlei
+  - XMP.exe             # Xunlei
+  - Xmp.exe             # Xunlei
+  - wmplayer.exe        # Windows media player
+  - XMP.exe             # Xunlei KanKan
+  - UCBrowser.exe       # Chrome
+  - YahooMessenger.exe  # Yahoo
+  - Yomikaku.exe        # 読取革命
+  - YoukuDesktop.exe    # Youku
+  # Unsupported games
+  - KanColleViewer.exe  # http://grabacr.net/kancolleviewer
+
+# EOF

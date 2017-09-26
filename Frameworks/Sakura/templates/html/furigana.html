@@ -1,0 +1,91 @@
+{# furigana.html 11/28/2012 jichi
+ # @param  tuples  [unicode surface, unicode yomigana, str annot, str color, int groupId or None]
+ # @param* rubySize  int  yomigana font size
+ # @param* annotSize  int  annot font size
+ # @param* paddingSize  int  padding space size
+ # @param* center  bool  align ment
+ # @param* annotExists  bool
+ # @param* rubyExists  bool
+ # @param* annotFont  str
+ # @param* rubyFont  str
+ #
+ # Tuples will be iterated twice.
+ # Tuple elements can be None.
+ # This file is not written in HAML for performance reason.
+-#}
+<html>
+	<head>
+		<style type="text/css">
+%if rubyExists
+.ruby {
+%if rubyFont
+    font-family: {{rubyFont}};
+%else
+	font-weight: bold;
+%endif
+	font-size: {{rubySize}}px;
+}
+%endif
+%if annotExists
+.annot {
+%if annotFont
+    font-family: {{annotFont}};
+%endif
+	font-size: {{annotSize}}px;
+}
+%endif
+%if paddingSize
+td {
+	padding-left: {{paddingSize}}px;
+	padding-right: {{paddingSize}}px;
+}
+%endif
+		</style>
+	</head>
+	<body>
+%if center
+		<center>
+%endif
+			<table>
+%if rubyExists
+				<tr class="ruby" valign="bottom">
+%	for _, yomi, _, _ in tuples
+%		if yomi
+					<td align="center">{{yomi|e}}</td>
+%		else
+					<td />
+%		endif
+%	endfor
+				</tr>
+%endif
+				<tr class="surface">
+%for surface, _, _, color in tuples
+%	if surface
+					<td align="center"
+%		if color
+						style="background-color:{{color}}"
+%		endif
+						>{{surface|e}}
+					</td>
+%	else
+					<td />
+%	endif
+%endfor
+				</tr>
+%if annotExists
+				<tr class="annot">
+%	for _, _, annot, _ in tuples
+%		if annot
+					<td align="center">{{annot|e}}</td>
+%		else
+					<td />
+%		endif
+%	endfor
+				</tr>
+%endif
+			</table>
+%if center
+		</center>
+%endif
+	</body>
+</html>

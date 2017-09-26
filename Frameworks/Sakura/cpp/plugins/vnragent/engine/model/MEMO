@@ -1,0 +1,19 @@
+7/1/2015
+
+# Things needed to do to add new engines
+- Check if full screen works
+- Check if GDI functions are called
+- Modify engines.yaml to add match pattern and encoding
+
+- Add text extraction
+- Add embed support
+- Find split
+
+- Test if \n works (if not, set new line string to zero)
+- Test if font can be changed (enforce GDI font)
+  If cannot, try insert GDI font first before enabling dynamic font
+- Test if contains ruby
+
+- Compare with ITH and AralTrans
+
+# EOF

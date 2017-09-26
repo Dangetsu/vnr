@@ -1,0 +1,10 @@
+Changes
+3/28/2013 jichi
+
+The orignal package is: https://github.com/aehlke/ebmodule
+Checkout: 3/18/2013
+* eblib.py is moved to lib
+* EB_HOOK_STOP_CODE is removed from eblib
+* Manually add dllexport before init
+* Manually rename ebmodule.pyd to eb.pyd on windows
+  Manually rename libebmodule.so to ebmodule.so on mac

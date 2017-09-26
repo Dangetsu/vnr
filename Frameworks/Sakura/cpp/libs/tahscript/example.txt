@@ -1,0 +1,18 @@
+# encoding: utf8
+# example.txt
+# 8/14/2014 jichi
+# See: http://www.hongfire.com/forum/showthread.php/94395-Translation-Aggregator-v0-4-9/page51?p=2269439#post2269439
+# See: http://www.hongfire.com/forum/showthread.php/94395-Translation-Aggregator-v0-4-9?p=1811363#post1811363
+
+### TAH SCRIPT BEGIN ###
+
+頑張ろ([！、。？」…])	頑張ろう\1
+頭よくない => 頭がよくない
+頼もう([！、。？」…])	頼む\1
+
+((される|える)(と)(c))	\2\3、
+
+# Delete trailing characters
+(([゛～ぁぃぅぇぉ]))
+
+### TAH SCRIPT END ###

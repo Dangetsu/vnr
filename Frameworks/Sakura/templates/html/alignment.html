@@ -1,0 +1,63 @@
+{# alignment.html 1/25/2015 jichi
+ # @param  tuples  [unicode surface, unicode ruby, str color]
+ # @param  rubySize  int  ruby font size
+ # @param* rubyColor  str  color of ruby
+ # @param* paddingSize  int  padding space size
+ # @param* center  bool  align ment
+ #
+ # Tuples will be iterated twice.
+ # Tuple elements can be None.
+ # This file is not written in HAML for performance reason.
+-#}
+<html>
+	<head>
+		<style type="text/css">
+.ruby {
+	font-weight: bold;
+	font-family: Tahoma;
+	font-size: {{rubySize}}px;
+%if rubyColor
+	color: {{rubyColor}};
+%endif
+}
+%if paddingSize
+td {
+	padding-left: {{paddingSize}}px;
+	padding-right: {{paddingSize}}px;
+}
+%endif
+		</style>
+	</head>
+	<body>
+%if center
+		<center>
+%endif
+			<table>
+				<tr class="ruby" valign="bottom">
+%for _, ruby, _ in tuples
+%	if ruby
+					<td align="center">{{ruby}}</td>
+%	else
+					<td />
+%	endif
+%endfor
+				</tr>
+				<tr class="surface">
+%for surface, _, color in tuples
+%	if surface
+					<td align="center"
+%		if color
+						style="background-color:{{color}}"
+%		endif
+					>{{surface}}</td>
+%	else
+					<td />
+%	endif
+%endfor
+				</tr>
+			</table>
+%if center
+		</center>
+%endif
+	</body>
+</html>

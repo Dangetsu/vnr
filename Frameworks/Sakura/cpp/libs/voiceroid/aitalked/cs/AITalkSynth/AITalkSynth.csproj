@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <ProjectType>local</ProjectType>
+    <ProjectVersion>7.10.377</ProjectVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>b1170351-3e95-4380-ba00-6b7591f28f06</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <AssemblyName>AITalkSynth</AssemblyName>
+    <OutputType>Library</OutputType>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Global.cs" />
+    <Compile Include="AITalk\SynthMode.cs" />
+    <Compile Include="AITalk\SynthOption.cs" />
+    <Compile Include="AITalk\AITalkUtil.cs" />
+    <Compile Include="AITalk\AITalkUtilEx.cs" />
+    <Compile Include="AITalk\AITalkMarshal.cs" />
+    <Compile Include="AITalk\AITalkResultCode.cs" />
+    <Compile Include="AITalk\AITalkStatusCode.cs" />
+    <Compile Include="AITalk\AITalkEventReasonCode.cs" />
+    <Compile Include="AITalk\AITalkJobInOut.cs" />
+    <Compile Include="AITalk\AIAudioResultCode.cs" />
+    <Compile Include="AITalk\AIAudioFormatType.cs" />
+    <Compile Include="AITalk\AITalkProcTextBuf.cs" />
+    <Compile Include="AITalk\AITalkProcRawBuf.cs" />
+    <Compile Include="AITalk\AITalkProcEventTTS.cs" />
+    <Compile Include="AITalk\AIAudioProcNotify.cs" />
+    <Compile Include="AITalk\AITalk_TConfig.cs" />
+    <Compile Include="AITalk\AITalk_TTtsParam.cs" />
+    <Compile Include="AITalk\AITalk_TJobParam.cs" />
+    <Compile Include="AITalk\AIAudio_TConfig.cs" />
+    <Compile Include="AITalk\AIAudio_TWaveFormat.cs" />
+    <Compile Include="AITalk\AITalkAPI.cs" />
+    <Compile Include="AITalk\AIAudioAPI.cs" />
+    <Compile Include="AITalk\AITalkErrorMessage.cs" />
+    <Compile Include="AITalk\AIAudioErrorMessage.cs" />
+    <Compile Include="AITalk\AITalkEditorAPI.cs" />
+    <Compile Include="AITalk\JobInfo.cs" />
+  </ItemGroup>
+</Project>

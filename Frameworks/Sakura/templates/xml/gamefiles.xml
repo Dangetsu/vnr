@@ -1,0 +1,27 @@
+{# gamefiles.xml 5/23/2013 jichi
+ # @param  now  datetime.datetime
+ # @param  files  iter[dataman.GameFile]
+-#}
+<?xml version="1.0" encoding="utf-8"?>
+<!-- gamefiles.xml {{now.strftime("%Y-%m-%d %H:%M")}} -->
+<grimoire version="1.0">
+	<games>
+%for it in files
+		<game id="{{it.id}}">
+			<md5>{{it.md5}}</md5>
+%	if it.itemId
+			<itemId>{{it.itemId}}</itemId>
+%	endif
+%	if it.visitCount
+			<visitCount>{{it.visitCount}}</visitCount>
+%	endif
+%	if it.commentCount
+			<commentCount>{{it.commentCount}}</commentCount>
+%	endif
+			<names>
+				<name type="file">{{it.name|e}}</name>
+			</names>
+		</game>
+%endfor
+	</games>
+</grimoire>

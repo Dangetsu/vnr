@@ -1,0 +1,3 @@
+# table/qmldir
+# 7/20/2013 jichi
+TextColumn  textcolumn.qml

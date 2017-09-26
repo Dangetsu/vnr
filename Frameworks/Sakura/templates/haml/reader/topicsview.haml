@@ -1,0 +1,91 @@
+; topicsview.haml
+; 8/29/2014 jichi
+; @param  host  str
+; @param  subjectId  long
+; @param  topicId  long
+; @param  userName  str  not 'guest'
+; @param  userPassword  str
+; @param  locale  string
+; @param  title  unicode
+; @param  rc  rc
+; @param  tr  sktr.tr_
+;!!! 5
+
+%html(lang="#{locale}")
+  %head
+    %title #{title}
+
+    ; Stylesheets
+    -for it in 'bootstrap3.css', 'font-awesome4.css', \
+        'reader/forum/posts.css', 'reader/forum/topics.css', 'reader/topicsview.css'
+      %link(rel="stylesheet",href="#{rc.cdn_url(it)}")
+
+    :css
+      body {
+        background-image: url("#{rc.wallpaper_url()}");
+        background-size: cover;
+      }
+
+  %body
+    .view
+      -if not topicId and userName
+        .sec.sec-review
+          .forum-topics
+      .sec.sec-reviews
+        .sec-btn.btn.btn-sm.btn-pill.btn-checkable.checked #{tr('Review')}
+        -if not topicId and userName
+          .btn.btn-sm.btn-primary.new-topic(title="#{tr('New')}")
+            %span.fa.fa-plus
+            #{tr('Review')}
+        .sec-content
+          .forum-topics
+          .footer
+            .btn.btn-link.btn-more(role="button")
+              #{tr('More')} ...
+      %hr
+      .sec.sec-topics
+        .sec-btn.btn.btn-sm.btn-pill.btn-checkable.checked #{tr('Topic')}
+        -if userName
+          .btn.btn-sm.btn-default.new-topic(title="#{tr('New')}")
+            %span.fa.fa-plus
+            #{tr('Topic')}
+        .sec-content
+          .forum-topics
+          .footer
+            .btn.btn-link.btn-more(role="button")
+              #{tr('More')} ...
+      -if topicId
+        %hr
+        .sec.sec-posts
+          .sec-btn.btn.btn-sm.btn-pill.btn-checkable.checked #{tr('Chat')}
+          -if userName
+            .btn.btn-sm.btn-default.new-post(title="#{tr('New')}")
+              %span.fa.fa-plus
+              #{tr('Chat')}
+          .sec-content
+            .forum-posts
+            .footer
+              .btn.btn-link.btn-more(role="button")
+                #{tr('More')} ...
+    #spin
+
+    :javascript
+      window.HOST = "#{host}";
+      window.LOCALE = "#{locale}";
+      window.USER_NAME = "#{userName}";
+      window.USER_PASSWORD = "#{userPassword}";
+      window.TOPIC_ID = #{topicId};
+      window.SUBJECT_ID = #{subjectId};
+
+    -for it in \
+        'jquery', 'jquery.ui', \
+        'bootstrap.growl', \
+        'underscore', \
+        'spin', 'jquery.spin', \
+        'bbcode', 'haml', 'moment', \
+        'libs/linkify', \
+        'share/growl', 'share/rest', 'share/util', \
+        'reader/forum/posts', 'reader/forum/topics', 'reader/topicsview'
+      %script(src="#{rc.cdn_url(it)}")
+
+; EOF

@@ -1,0 +1,47 @@
+{# refs.xml 7/16/2013 jichi
+ # @param  now  datetime.datetime
+ # @param  refs  iter[dataman.Reference]
+-#}
+<?xml version="1.0" encoding="utf-8"?>
+<!-- refs.xml {{now.strftime("%Y-%m-%d %H:%M")}} -->
+<grimoire version="1.0">
+	<references>
+%for it in refs
+%	if it.id and it.itemId
+		<reference id="{{it.id}}" type="{{it.type}}"
+{%- if it.disabled %} disabled="true" {%- endif %}>
+			<itemId>{{it.itemId}}</itemId>
+			<gameId>{{it.gameId or 0}}</gameId>
+			<userId>{{it.userId}}</userId>
+%		if it.userHash
+			<userHash>{{it.userHash}}</userHash>
+%		endif
+			<timestamp>{{it.timestamp or 0}}</timestamp>
+%		if it.updateTimestamp
+			<updateTimestamp>{{it.updateTimestamp}}</updateTimestamp>
+			<updateUserId>{{it.updateUserId}}</updateUserId>
+%		endif
+			<key>{{it.key|e}}</key>
+%		if it.url
+			<url>{{it.url|e}}</url>
+%		endif
+%		if it.title
+			<title>{{it.title|e}}</title>
+%		endif
+%		if it.brand
+			<brand>{{it.brand|e}}</brand>
+%		endif
+%		if it.date
+			<date>{{it.date}}</date>
+%		endif
+%		if it.comment
+			<comment>{{it.comment|e}}</comment>
+%		endif
+%		if it.updateComment
+			<updateComment>{{it.updateComment|e}}</updateComment>
+%		endif
+		</reference>
+%	endif
+%endfor
+	</references>
+</grimoire>

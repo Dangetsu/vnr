@@ -1,0 +1,312 @@
+// Created by Microsoft (R) C/C++ Compiler Version 10.00.30319.01 (f97952f2).
+//
+// c:\tmp\build-sakura-desktop-release\cpp\tests\ceviotest\release\cevio.talk.remoteservice.tli
+//
+// Wrapper implementations for Win32 type library C:\Program Files\CeVIO\CeVIO Creative Studio\CeVIO.Talk.RemoteService.tlb
+// compiler-generated file created 06/29/14 at 03:20:57 - DO NOT EDIT!
+
+#pragma once
+
+//
+// interface ITalkerComponent wrapper method implementations
+//
+
+inline _bstr_t ITalkerComponent::GetId ( ) {
+    BSTR _result = 0;
+    HRESULT _hr = get_Id(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _bstr_t(_result, false);
+}
+
+inline _bstr_t ITalkerComponent::GetName ( ) {
+    BSTR _result = 0;
+    HRESULT _hr = get_Name(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _bstr_t(_result, false);
+}
+
+inline unsigned long ITalkerComponent::GetValue ( ) {
+    unsigned long _result = 0;
+    HRESULT _hr = get_Value(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _result;
+}
+
+inline void ITalkerComponent::PutValue ( unsigned long pRetVal ) {
+    HRESULT _hr = put_Value(pRetVal);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+}
+
+//
+// interface ITalkerComponentArray wrapper method implementations
+//
+
+inline long ITalkerComponentArray::GetLength ( ) {
+    long _result = 0;
+    HRESULT _hr = get_Length(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _result;
+}
+
+inline ITalkerComponentPtr ITalkerComponentArray::At ( long index ) {
+    struct ITalkerComponent * _result = 0;
+    HRESULT _hr = raw_At(index, &_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return ITalkerComponentPtr(_result, false);
+}
+
+inline ITalkerComponentPtr ITalkerComponentArray::ByName ( _bstr_t Name ) {
+    struct ITalkerComponent * _result = 0;
+    HRESULT _hr = raw_ByName(Name, &_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return ITalkerComponentPtr(_result, false);
+}
+
+inline ITalkerComponentArrayPtr ITalkerComponentArray::Duplicate ( ) {
+    struct ITalkerComponentArray * _result = 0;
+    HRESULT _hr = raw_Duplicate(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return ITalkerComponentArrayPtr(_result, false);
+}
+
+//
+// interface IStringArray wrapper method implementations
+//
+
+inline long IStringArray::GetLength ( ) {
+    long _result = 0;
+    HRESULT _hr = get_Length(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _result;
+}
+
+inline _bstr_t IStringArray::At ( long index ) {
+    BSTR _result = 0;
+    HRESULT _hr = raw_At(index, &_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _bstr_t(_result, false);
+}
+
+inline IStringArrayPtr IStringArray::Duplicate ( ) {
+    struct IStringArray * _result = 0;
+    HRESULT _hr = raw_Duplicate(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return IStringArrayPtr(_result, false);
+}
+
+//
+// interface IServiceControl wrapper method implementations
+//
+
+inline VARIANT_BOOL IServiceControl::GetIsHostStarted ( ) {
+    VARIANT_BOOL _result = 0;
+    HRESULT _hr = get_IsHostStarted(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _result;
+}
+
+inline long IServiceControl::StartHost ( VARIANT_BOOL noWait ) {
+    long _result = 0;
+    HRESULT _hr = raw_StartHost(noWait, &_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _result;
+}
+
+inline HRESULT IServiceControl::CloseHost ( long mode ) {
+    HRESULT _hr = raw_CloseHost(mode);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _hr;
+}
+
+//
+// interface IPhonemeData wrapper method implementations
+//
+
+inline _bstr_t IPhonemeData::GetPhoneme ( ) {
+    BSTR _result = 0;
+    HRESULT _hr = get_Phoneme(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _bstr_t(_result, false);
+}
+
+inline double IPhonemeData::GetStartTime ( ) {
+    double _result = 0;
+    HRESULT _hr = get_StartTime(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _result;
+}
+
+inline double IPhonemeData::GetEndTime ( ) {
+    double _result = 0;
+    HRESULT _hr = get_EndTime(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _result;
+}
+
+//
+// interface IPhonemeDataArray wrapper method implementations
+//
+
+inline long IPhonemeDataArray::GetLength ( ) {
+    long _result = 0;
+    HRESULT _hr = get_Length(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _result;
+}
+
+inline IPhonemeDataPtr IPhonemeDataArray::At ( long index ) {
+    struct IPhonemeData * _result = 0;
+    HRESULT _hr = raw_At(index, &_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return IPhonemeDataPtr(_result, false);
+}
+
+inline IPhonemeDataArrayPtr IPhonemeDataArray::Duplicate ( ) {
+    struct IPhonemeDataArray * _result = 0;
+    HRESULT _hr = raw_Duplicate(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return IPhonemeDataArrayPtr(_result, false);
+}
+
+//
+// interface ISpeakingState wrapper method implementations
+//
+
+inline VARIANT_BOOL ISpeakingState::GetIsSucceeded ( ) {
+    VARIANT_BOOL _result = 0;
+    HRESULT _hr = get_IsSucceeded(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _result;
+}
+
+inline VARIANT_BOOL ISpeakingState::GetIsCompleted ( ) {
+    VARIANT_BOOL _result = 0;
+    HRESULT _hr = get_IsCompleted(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _result;
+}
+
+inline HRESULT ISpeakingState::Wait ( ) {
+    HRESULT _hr = raw_Wait();
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _hr;
+}
+
+inline HRESULT ISpeakingState::Wait_2 ( double timeoutSeconds ) {
+    HRESULT _hr = raw_Wait_2(timeoutSeconds);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _hr;
+}
+
+//
+// interface ITalker wrapper method implementations
+//
+
+inline unsigned long ITalker::GetVolume ( ) {
+    unsigned long _result = 0;
+    HRESULT _hr = get_Volume(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _result;
+}
+
+inline void ITalker::PutVolume ( unsigned long pRetVal ) {
+    HRESULT _hr = put_Volume(pRetVal);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+}
+
+inline unsigned long ITalker::GetSpeed ( ) {
+    unsigned long _result = 0;
+    HRESULT _hr = get_Speed(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _result;
+}
+
+inline void ITalker::PutSpeed ( unsigned long pRetVal ) {
+    HRESULT _hr = put_Speed(pRetVal);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+}
+
+inline unsigned long ITalker::GetTone ( ) {
+    unsigned long _result = 0;
+    HRESULT _hr = get_Tone(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _result;
+}
+
+inline void ITalker::PutTone ( unsigned long pRetVal ) {
+    HRESULT _hr = put_Tone(pRetVal);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+}
+
+inline unsigned long ITalker::GetAlpha ( ) {
+    unsigned long _result = 0;
+    HRESULT _hr = get_Alpha(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _result;
+}
+
+inline void ITalker::PutAlpha ( unsigned long pRetVal ) {
+    HRESULT _hr = put_Alpha(pRetVal);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+}
+
+inline ITalkerComponentArrayPtr ITalker::GetComponents ( ) {
+    struct ITalkerComponentArray * _result = 0;
+    HRESULT _hr = get_Components(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return ITalkerComponentArrayPtr(_result, false);
+}
+
+inline _bstr_t ITalker::GetCast ( ) {
+    BSTR _result = 0;
+    HRESULT _hr = get_Cast(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _bstr_t(_result, false);
+}
+
+inline void ITalker::PutCast ( _bstr_t pRetVal ) {
+    HRESULT _hr = put_Cast(pRetVal);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+}
+
+inline IStringArrayPtr ITalker::GetAvailableCasts ( ) {
+    struct IStringArray * _result = 0;
+    HRESULT _hr = get_AvailableCasts(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return IStringArrayPtr(_result, false);
+}
+
+inline ISpeakingStatePtr ITalker::Speak ( _bstr_t text ) {
+    struct ISpeakingState * _result = 0;
+    HRESULT _hr = raw_Speak(text, &_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return ISpeakingStatePtr(_result, false);
+}
+
+inline VARIANT_BOOL ITalker::Stop ( ) {
+    VARIANT_BOOL _result = 0;
+    HRESULT _hr = raw_Stop(&_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _result;
+}
+
+inline double ITalker::GetTextDuration ( _bstr_t text ) {
+    double _result = 0;
+    HRESULT _hr = raw_GetTextDuration(text, &_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _result;
+}
+
+inline IPhonemeDataArrayPtr ITalker::GetPhonemes ( _bstr_t text ) {
+    struct IPhonemeDataArray * _result = 0;
+    HRESULT _hr = raw_GetPhonemes(text, &_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return IPhonemeDataArrayPtr(_result, false);
+}
+
+inline VARIANT_BOOL ITalker::OutputWaveToFile ( _bstr_t text, _bstr_t path ) {
+    VARIANT_BOOL _result = 0;
+    HRESULT _hr = raw_OutputWaveToFile(text, path, &_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _result;
+}

@@ -1,0 +1,26 @@
+{# refdigest.xml 7/16/2013 jichi
+ # @param  now  datetime.datetime
+ # @param  digests  iter[dataman.ReferenceDigest]
+-#}
+<?xml version="1.0" encoding="utf-8"?>
+<!-- refdigest.xml {{now.strftime("%Y-%m-%d %H:%M")}} -->
+<grimoire version="1.0">
+	<references>
+%for it in digests
+		<reference id="{{it.id}}" type="{{it.type}}">
+			<itemId>{{it.itemId}}</itemId>
+			<gameId>{{it.gameId or 0}}</gameId>
+			<key>{{it.key}}</key>
+			<title>{{it.title|e}}</title>
+%	if it.brand
+			<brand>{{it.brand|e}}</brand>
+%	endif
+			<date>{{it.date}}</date>
+			<timestamp>{{it.timestamp}}</timestamp>
+%	if it.image
+			<image>{{it.image|e}}</image>
+%	endif
+		</reference>
+%endfor
+	</references>
+</grimoire>

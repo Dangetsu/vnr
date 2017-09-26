@@ -1,0 +1,43 @@
+/* reader.sass
+   3/29/2013 jichi
+
+// Text edit color
+
+QTextEdit.edit.edit-default
+  background-color: #fafafc // 250,250,252
+
+// Text color
+
+.readonly
+  color: steelblue
+.default
+  color: black
+.warning
+  color: brown
+.error
+  color: red
+.muted
+  color: #777
+  //color: #999 // bootstrap3 color
+
+QComboBox.normal,
+QComboBox.normal,
+QInputEdit.normal,
+QLineEdit.normal,
+QPlainTextEdit.normal,
+QTextEdit.normal,
+QTextBrowser.normal,
+.normal
+  color: green
+
+QComboBox.normal:not(editable),
+QComboBox.normal:read-only,
+QInputEdit.normal:read-only,
+QLineEdit.normal:read-only,
+QPlainTextEdit.normal.readonly,
+QTextEdit.normal.readonly,
+QTextBrowser.normal.readonly,
+QLabel.normal
+  color: darkgreen
+
+// EOF

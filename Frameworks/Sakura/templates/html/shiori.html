@@ -1,0 +1,65 @@
+{# shiori.html 11/25/2012 jichi
+ # @param  language  unicode  not used
+ # @param  text  unicode not None  The orignal text to translate
+ # @param  feature  unicode or None
+ # @param  kanji  [unicode] or None
+ # @param  tuples  [unicode word, unicode html]
+ # @param  eb_strings  [unicode]
+ #
+ # Escaping is disabled to improve performance.
+-#}
+%set gg = "https://www.google.com/?#hl=ja&safe=off&q="
+%set bd = "https://www.baidu.com/s?wd="
+<html>
+	<head>
+		<style type="text/css">
+p{margin:6px 0 0}
+i{font-style:normal}
+ul,ol{margin:0}
+li{margin:0;padding:0}
+a{color:silver}
+.q a{text-decoration:none;color:#add8ff}
+.f{background-color:rgba(255,0,0,40%);font-weight:bold;font-family:"MS Mincho"}
+.zh{background-color:rgba(0,0,255,40%);font-weight:bold;font-family:Tahoma,HanaMinA,HanaMinB}
+.zh .def{font-weight:normal}
+.sk,.th{background-color:rgba(128,225,0,40%)}
+.ta{text-align:right}
+.hl{background-color:rgba(255,165,0,40%)}
+u,.role{background-color:rgba(128,0,128,60%)}
+.flag{color:orange}
+/*.sr,.tt{font-weight:normal}*/
+		</style>
+	</head>
+	<body>
+    <br/>
+%if JMDictEnabled
+    <br/>
+    <br/>
+    %if kanji
+            <p class="kanji">
+    %	for line in kanji
+                <div><span class="zh">{{line}}</span></div>
+    %	endfor
+            </p>
+    %endif
+    %if tuples
+    %	for word, html in tuples
+            <p class="t">
+                <div class="q">
+                    <span class="th">【{{word}}】</span>
+                    {{' '}}<a href="{{gg}}{{word}}">+gg</a>
+                    {{' '}}<a href="{{bd}}{{word}}">+bd</a>
+                </div>
+                <div class="tt">{{html}}</div>
+            </p>
+    %	endfor
+    %endif
+%endif
+%if eb_strings
+		<hr/>
+%	for s in eb_strings
+		<p class="s">{{s}}</p>
+%	endfor
+%endif
+	</body>
+</html>

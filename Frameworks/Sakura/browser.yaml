@@ -1,0 +1,58 @@
+# browser.yaml
+# 11/1/2012 jichi
+#
+# Difference between 'location' and 'path'
+# See: http://stackoverflow.com/questions/7195717/what-is-the-difference-between-the-pathelement-attributes-path-and-location
+
+# Application
+version:
+  id: 4
+  name: browser
+  organization: sakuradite
+  domain: sakuradite.org
+  timestamp: 1419279152
+
+app:
+  debug: false
+  addressHistorySize: 20    # max number of items in address edit
+  closeHistorySize: 20  # max number of saved closed tabs
+  visitHistorySize: 20  # max number of saved visited urls
+
+# Environment variables
+env:
+  pythonpath:
+  - $PWD/py/apps/browser/core
+  - $PWD/py/apps/browser/managers
+  - $PWD/py/apps/browser/utilities
+  #- $PWD/py/apps/browser/dialogs
+  #- $PWD/py/apps/browser/widgets
+
+qt:
+  #metaCallPort: 6104    # IPC QMetaCall listening port (6100 + app.id)
+  threadCount:  10      # QtCore.QThreadPool.maxThreadCount
+  threadTimeout: 6000   # QThreadPool.waitForDone timeout in msecs
+  #quitTimeout: 3000     # time taken for closing the app
+  css: # QSS
+    - share
+    - browser
+py:
+  socketTimeout: 5000 # socket.defaulttimeout, default is None
+  recursionLimit: 1000 # sys.recursionlimit, default is 1000. See: http://stackoverflow.com/questions/4378786/python-exception-in-exception
+  #stackSize: 67108864 # i.e. 64MB. threading.stack_size, default is 1MB. See: http://stackoverflow.com/questions/2917210/python-what-is-the-hard-recursion-limit-for-linux-mac-and-windows
+
+# User profile
+user:
+  profiles:
+    mac:    "$HOME/Library/Application Support/org.sakuradite.browser"
+    win:    $APPDATA/org.sakuradite.browser  # ~/AppData/Roaming/org.sakuradite.browser
+    posix:  $HOME/.sakuradite/browser
+
+# Translations
+tr:
+  locales: ['ja_JP', 'zh_TW', 'zh_CN']
+  locations:
+  - $PWD/py/libs/sakurakit/tr
+  #- $PWD/py/apps/browser/mytr
+  #- $PWD/py/apps/browser/tr
+
+# EOF

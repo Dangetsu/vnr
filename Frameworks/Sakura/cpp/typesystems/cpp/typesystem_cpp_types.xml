@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!-- typesystem_cpp_types.xml
+9/26/2014 jichi
+Built-in primitives.
+-->
+<typesystem>
+
+  <!-- Copied from typesystem_core_common.xml -->
+  <primitive-type name="bool" />
+  <primitive-type name="double" />
+  <primitive-type name="float" />
+  <primitive-type name="unsigned long long" />
+  <primitive-type name="long long" />
+  <primitive-type name="short" />
+  <primitive-type name="signed short" />
+  <primitive-type name="signed short int" />
+  <primitive-type name="unsigned short int" />
+  <primitive-type name="unsigned short" />
+  <primitive-type name="char" />
+  <primitive-type name="signed char" />
+  <primitive-type name="uchar" />
+  <primitive-type name="unsigned char" />
+  <primitive-type name="int" />
+  <primitive-type name="signed int" />
+  <primitive-type name="uint" />
+  <primitive-type name="ulong" />
+  <primitive-type name="unsigned int" />
+  <primitive-type name="signed long" />
+  <primitive-type name="signed long int" />
+  <primitive-type name="long" />
+  <primitive-type name="unsigned long int" />
+  <primitive-type name="unsigned long" />
+
+  <!-- This would cause error due to missing _Check
+  <primitive-type name="wchar_t" />
+  -->
+
+  <!-- I am not able to get the pointer type working as primitive-type
+  <primitive-type name="unsigned short*" target-lang-api-name="PyUnicode">
+    <include file-name="cstring" location="global"/>
+    <conversion-rule>
+      <native-to-target>
+      const int N = wcslen(%in);
+      const wchar_t* str = %in;
+      PyObject* %out = PyUnicode_FromWideChar(str, N);
+      return %out;
+      </native-to-target>
+      <target-to-native>
+        <add-conversion type="PyUnicode">
+        Py_UNICODE *unicode = PyUnicode_AS_UNICODE(%in);
+        %out = unicode;
+        </add-conversion>
+        <add-conversion type="PyString" check="PyString_Check(%in)">
+        const char *str = PyString_AS_STRING(%in);
+	    PyObject *u = PyUnicode_FromStringAndSize(str, PyString_GET_SIZE(%in));
+        Py_UNICODE *unicode = PyUnicode_AS_UNICODE(u);
+        %out = unicode;
+        </add-conversion>
+        <add-conversion type="Py_None">
+        %out = 0;
+        </add-conversion>
+      </target-to-native>
+    </conversion-rule>
+  </primitive-type>
+  -->
+
+</typesystem>

@@ -1,0 +1,8 @@
+# comet/qmldir
+# 2/21/2014 jichi
+Comet           comet.qml
+GameComet       gamecomet.qml
+GlobalComet     globalcomet.qml
+PostComet       postcomet.qml
+PostDataComet   postdatacomet.qml
+TermComet       termcomet.qml

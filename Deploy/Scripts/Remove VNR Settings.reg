@@ -1,0 +1,11 @@
+Windows Registry Editor Version 5.00
+
+;
+; Remove VNR Settings.reg
+; 8/13/2014 jichi
+;
+; This script will delete VNR's registry entries to reset VNR's all Preferences.
+; If you want to permanently delete VNR, please also run Remove VNR Profiles.cmd
+;
+
+-[HKEY_CURRENT_USER\Software\sakuradite.org]

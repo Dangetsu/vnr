@@ -1,0 +1,16 @@
+2/25/2014
+GnuWin32:
+http://gnuwin32.sourceforge.net/packages.html
+http://sourceforge.net/projects/gnuwin32/files/
+
+tar-1.13-1-bin: http://gnuwin32.sourceforge.net/packages/gtar.htm
+libintl-0.11.5-2-bin: http://gnuwin32.sourceforge.net/packages/libintl.htm
+
+::wget-1.11.4-1-bin: http://gnuwin32.sourceforge.net/packages/wget.htm
+::openssl-0.9.8h-1-bin: http://gnuwin32.sourceforge.net/packages/openssl.htm
+
+fileutils-4.1-8-bin: http://sourceforge.net/projects/gnuwin32/files/coreutils/4.1/fileutils-4.1-8-bin.zip/download
+libintl-0.14.4-bin: http://gnuwin32.sourceforge.net/packages/libintl.htm
+
+::coreutils-5.3.0-bin: http://gnuwin32.sourceforge.net/packages/coreutils.htm
+::libiconv-1.9.2-1-bin: http://gnuwin32.sourceforge.net/packages/libiconv.htm

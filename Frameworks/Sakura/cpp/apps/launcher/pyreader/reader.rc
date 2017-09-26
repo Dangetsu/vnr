@@ -1,0 +1,42 @@
+/*
+ * reader.rc
+ * 7/20/2011 jichi
+ */
+#if defined(UNDER_CE)
+# include <winbase.h>
+#else
+# include <winver.h>
+#endif
+
+IDI_ICON1 ICON DISCARDABLE "reader.ico"
+
+VS_VERSION_INFO VERSIONINFO
+  FILEVERSION 1,0,0,0
+  PRODUCTVERSION 1,0,0,0
+  FILEFLAGS 0x0L
+  FILEFLAGSMASK 0x3fL
+  FILEOS 0x00040004L
+  FILETYPE 0x1L
+  FILESUBTYPE 0x0L
+  BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+      BLOCK "000004b0"
+      BEGIN
+        VALUE "CompanyName", "Sakuradite"
+        VALUE "FileDescription", "Visual Novel Reader"
+        VALUE "FileVersion", "1.0"
+        VALUE "LegalCopyright", "Copyright (C) 2012."
+        VALUE "InternalName", "Visual Novel Reader.exe"
+        VALUE "OriginalFilename", "Visual Novel Reader.exe"
+        VALUE "ProductName", "Visual Novel Reader"
+        VALUE "ProductVersion", "1.0"
+      END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+      VALUE "Translation", 0x0, 1200
+    END
+  END
+
+/* End of Version info */

@@ -1,0 +1,33 @@
+# This Document is available under the terms of the GNU Free Documentation License.
+# Read README for detail of this file.
+# Author : Sung-il KIM (masoris@gmail.com)
+#
+#유니코드 정규화 알고리즘 텍스트 변환용 추가 목록
+#
+# 인명용 목록
+## 대한민국의 성씨 100위 중 예외 발음 목록
+金	김
+李	이
+林	임
+柳	유
+沈	심
+劉	유
+盧	노
+羅	나
+魯	노
+廉	염
+呂	여
+陸	육
+## 일반 이름 목록
+#麟	인
+#
+# 일반 단어
+六	육
+兩	양
+龍	용
+串	곶
+禮	예
+#類	유
+#
+#Unihan 자체 오류
+變	섭

@@ -1,0 +1,7 @@
+# submaker/qmldir
+# 12/3/2012 jichi
+ContextEdit contextedit.qml
+Footer      footer.qml
+Graffiti    graffiti.qml
+Header      header.qml
+SubEdit     subedit.qml

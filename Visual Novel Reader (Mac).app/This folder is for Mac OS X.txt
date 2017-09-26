@@ -1,0 +1,3 @@
+﻿This folder is for launching VNR on Mac OS X rather than Linux/Windows.
+
+這個文件夾是用來在Mac下打開VNR的，和Linux/Windows沒有關係的。

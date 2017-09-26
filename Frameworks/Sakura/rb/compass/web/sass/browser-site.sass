@@ -1,0 +1,73 @@
+/* browser-site.sass
+   11/15/2014 jichi
+
+@import main/cursor
+@import compass/css3/box-shadow
+@import compass/css3/text-shadow
+
+$base-z-index: 9999
+
+$background-color: rgba(0,0,0,0.8)
+$text-color: snow
+$tr-color: snow
+
+$header-btn-size: 18px
+$header-height: 2px + $header-btn-size
+$header-width: $header-height * 2
+
+body:not(.site-enabled) #sk-main
+  display: none
+
+#sk-main
+  z-index: $base-z-index // top-most
+  position: fixed
+  right: 10px
+  bottom: 10px
+  width: 400px
+  height: 200px
+
+  > .header
+    background-color: $background-color
+    height: $header-height
+    width: $header-width
+    margin-bottom: 5px
+    &:hover
+      +box-shadow(0 0 20px yellow)
+    .btn-close
+      @extend .cursor-pointer
+      color: snow
+      margin: auto
+      width: $header-btn-size
+      height: $header-btn-size
+      margin-left: 2px
+      font-size: 150%
+      font-weight: normal
+  > .body
+    background-color: $background-color
+    &:hover
+      +box-shadow(0 0 20px yellow)
+    > .content
+      padding: 10px
+      margin: 0 auto
+      text-align: center
+
+      //overflow-y: auto // display scroll bar
+      .text
+        font-size: 150%
+        line-height: 150%
+        font-weight: bold
+        color: $text-color
+        +text-shadow(purple 1px 1px 5px)
+        &:hover
+          +text-shadow(red 1px 1px 5px)
+      .tr
+        margin-top: 10px
+        font-size: 150%
+        line-height: 150%
+        font-weight: bold
+        color: $tr-color
+        +text-shadow(blue 1px 1px 5px)
+        &:hover
+          +text-shadow(red 1px 1px 5px)
+
+// EOF

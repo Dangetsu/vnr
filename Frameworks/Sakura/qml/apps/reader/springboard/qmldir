@@ -1,0 +1,14 @@
+# springboard/qmldir
+# 9/25/2012 jichi
+AppMenu         appmenu.qml
+AppModel        appmodel.qml
+CometCounter    cometcounter.qml
+Curtain         curtain.qml
+Dashboard       dashboard.qml
+Desktop         desktop.qml
+Dock            dock.qml
+DockModel       dockmodel.qml
+Drawer          drawer.qml
+Inspector       inspector.qml
+PrefsPane       prefspane.qml
+SwitchButton    switchbutton.qml

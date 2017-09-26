@@ -1,0 +1,4 @@
+* tah-verb.txt
+* 1/6/2015 jichi
+* Verbs
+{{?<!hira}}ころす{{?!hira}}	殺す

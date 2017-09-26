@@ -1,0 +1,11 @@
+Since: 9/4/2014
+Email: TAHscript@outlook.com
+Changes: Change encoding to UTF-8, ff=dos
+
+LEC: https://www.dropbox.com/sh/81x2tpjyw2mepxh/AAAUdt-igma9IQTFZcAaSidza?dl=0
+Update: 3/27/2016
+Since: 9/8/2014
+
+ATLAS: https://www.dropbox.com/sh/u6kqovt7fnsuxhs/AABm3bkta1xkKeUa_01-dW3ja?dl=0
+Update: 1/22/2016
+Since: 9/4/2014

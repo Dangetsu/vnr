@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+<key>hA123</key><string>ç</string>
+<key>hA124</key><string>ə</string>
+<key>hA125</key><string>ʃ</string>
+<key>hA126</key><string>ŋ</string>
+<key>hA127</key><string>ː</string>
+<key>hA128</key><string>ɛ̃</string>
+<key>hA129</key><string>ɑ̃</string>
+<key>hA12A</key><string>ɑ</string>
+<key>hA12B</key><string>ñ</string>
+<key>hA130</key><string>ɔ́</string>
+<key>hA131</key><string>É</string>
+<key>hA132</key><string>á</string>
+<key>hA133</key><string>é</string>
+<key>hA134</key><string>í</string>
+<key>hA135</key><string>à</string>
+<key>hA136</key><string>è</string>
+<key>hA137</key><string>ë</string>
+<key>hA138</key><string>ï</string>
+<key>hA139</key><string>ö</string>
+<key>hA13A</key><string>â</string>
+<key>hA13B</key><string>ê</string>
+<key>hA13C</key><string>ô</string>
+<key>hA13D</key><string>ō</string>
+<key>zB123</key><string>✓</string>
+<key>zB124</key><string>嗉</string>
+<key>zB125</key><string>胳</string>
+<key>zB126</key><string>骶</string>
+<key>zB127</key><string>稃</string>
+<key>zB128</key><string>炻</string>
+<key>zB129</key><string>絇</string>
+<key>zB12A</key><string>蒴</string>
+<key>zB12B</key><string>©</string>
+<key>zB12C</key><string>☨</string>
+</dict>
+</plist>

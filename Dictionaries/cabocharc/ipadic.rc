@@ -1,0 +1,66 @@
+# ipadic.rc - cabocharc
+# 6/12/2014 jichi
+# See: etc/cabocharc from CaboCha 0.68
+
+charset = UTF-8
+#charset = SHIFT-JIS
+
+# charset-file = /opt/local/lib/cabocha/model/charset-file.txt
+charset-file = $(rcpath)/charset-file.txt
+
+posset = IPA
+# posset = IPA
+# posset = JUMAN
+# posset = UNIDIC
+
+# Output Format
+#  0 - tree
+#  1 - lattice
+output-format = 0
+
+# Input Layer
+#  0 - RAW sentence layer (MeCab only)
+#  1 - POS tagged layer (default)
+#  2 - POS tagged and Chunked layer
+#  3 - POS tagged, Chunked and Feature selected layer
+input-layer = 0
+
+# Output Layer
+#  1 - POS tagged layer (MeCab only)
+#  2 - Chunked layer
+#  3 - Chunked and Feature selected layer
+#  4 - Parsed layer (default)
+output-layer = 4
+
+# Output NE
+# 0 - no output
+# 1 - output NE with    Chunk Constraint
+# 2 - output NE without Chunk Constraint
+ne = 0
+
+# Parser model file name
+parser-model = $(rcpath)/../../../Caches/Dictionaries/CaboCha/ipadic/dep.ipa.model
+# parser-model  = /opt/local/lib/cabocha/model/dep.ipa.model
+# parser-model  = /opt/local/lib/cabocha/model/dep-tournament.ipa.model
+# parser-model  = /opt/local/lib/cabocha/model/dep.juman.model
+# parser-model  = /opt/local/lib/cabocha/model/dep-tournament.juman.model
+# parser-model  = /opt/local/lib/cabocha/model/dep.unidic.model
+# parser-model  = /opt/local/lib/cabocha/model/dep-tournament.unidic.model
+
+# Chunker model file name
+chunker-model = $(rcpath)/../../../Caches/Dictionaries/CaboCha/ipadic/chunk.ipa.model
+# chunker-model = /opt/local/lib/cabocha/model/chunk.ipa.model
+# chunker-model = /opt/local/lib/cabocha/model/chunk.juman.model
+# chunker-model = /opt/local/lib/cabocha/model/chunk.unidic.model
+
+# NE model file name
+ne-model = $(rcpath)/../../../Caches/Dictionaries/CaboCha/ipadic/ne.ipa.model
+# ne-model = /opt/local/lib/cabocha/model/ne.ipa.model
+# ne-model = /opt/local/lib/cabocha/model/ne.juman.model
+# ne-model = /opt/local/lib/cabocha/model/ne.unidic.model
+
+# mecabrc
+# MeCab does not support relative path
+#mecabrc = $(rcpath)/../mecabrc/ipadic.rc
+
+# EOF

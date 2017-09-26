@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!-- typesystem_msime.xml 4/1/2013 jichi -->
+<typesystem package='pymsime'>
+  <load-typesystem name="typesystem_core_common.xml" generate="no" />
+  <object-type name="Msime">
+    <enum-type name="Language" />
+    <enum-type name="Ruby" />
+    <enum-type name="ConversionFlag" />
+  </object-type>
+</typesystem>

@@ -1,0 +1,190 @@
+/* gameboard.sass
+   7/31/2013 jichi
+   See: http://isotope.metafizzy.co/css/style.css
+
+//$default-transition-duration: 0.8s // default is 1s
+
+// http://compass-style.org/reference/compass/css3/transition/
+@import compass/css3/box-shadow
+//@import compass/css3/transition
+//@import compass/css3/gradient // unreachable?!
+@import fixes/bootstrap
+@import main/blocker
+@import main/cursor
+@import main/shadow
+//@import main/spinner
+@import widgets/toolbar
+//@import main/i18n
+
+// Keywords
+#keyword
+  .btn-toolbar
+    margin: 0
+    //margin: 0 0 0 5px  // t,r,b,l
+    //position: relative
+    //text-align: right
+    //left: 2px
+    .first
+      margin-left: 5px
+  .close
+    position: relative
+    top: -2px
+    right: 2px
+    z-index: 99 // larger than toolbar
+  .label
+    @extend .cursor-pointer
+
+// Quick search
+.search
+  input
+    width: 90px
+  .close
+    position: relative
+    left: -15px
+    top: 3px
+    margin: 0px -10px
+
+// Items
+//.masonry
+//  margin: 0 auto // isFitWidth: true
+
+.game
+  //float: left
+  //vertical-align: top
+  //display: inline-block
+  //overflow: hidden
+  //position: relative
+  //width: 100% // relative to masonry columnWidth does not work
+  //width: 160px // dynamically adjust width instead
+  //background-color: rgba(206,208,214,0.87)
+  //background-color: rgba(206,208,214,0.5) // gray
+  //border-radius: 6px
+  margin: 5px
+  //padding: 2px
+  .header
+    margin-bottom: 2px
+  .footer
+    margin-top: 2px
+  .label
+    @extend .cursor-pointer
+  img
+    @extend .cursor-pointer
+    @extend .img-shadow
+    // No effect
+    //&:hover
+    //  +box-shadow(0 0 6px red)
+    //border: 2px solid rgba(255,0,0,0.8)  // red
+  &.junai img
+    +box-shadow(0 0 8px deepskyblue)
+    &:hover
+      +box-shadow(0 0 6px red)
+  &.okazu img
+    +box-shadow(0 0 8px purple)
+    &:hover
+      +box-shadow(0 0 6px red)
+  &.otome img
+    +box-shadow(0 0 8px green)
+    //+box-shadow(0 0 8px orange)
+    &:hover
+      +box-shadow(0 0 6px red)
+  //&.local img
+  //  @extend .img-shadow
+  //  +box-shadow(0 0 8px yellow)
+
+// Filters
+
+//$bs-highlight-default: #428bca
+//$bs-highlight-clean: rgba(135,206,235,.5)  // skyblue, the same as navbar
+//$bs-highlight-color: $bs-highlight-clean // use my color
+
+.options
+  padding-bottom: 1.0em
+  ul
+    margin: 0
+    list-style: none
+    ul
+      margin-left: 1.5em
+  li
+    float: left
+    margin-bottom: 0.2em
+    a
+      text-decoration: none
+      // remove bootstrap underline
+      display: block
+      padding: 0.4em 0.5em
+      color: #222
+      font-weight: bold
+      text-shadow: 0 1px hsla(0, 0%, 100%, 0.5)
+      border-left: 1px solid hsla(0, 0%, 100%, 0.3)
+      border-right: 1px solid hsla(0, 0%, 0%, 0.2)
+      // jichi: linear-gradient in my compass is broken?!
+      // 2/23/2013: Disable linear gradient
+      //background-image: -webkit-linear-gradient(top, hsla(0, 0%, 100%, 0.5), hsla(0, 0%, 100%, 0))
+      //background-image: -moz-linear-gradient(top, hsla(0, 0%, 100%, 0.5), hsla(0, 0%, 100%, 0))
+      //background-image: -ms-linear-gradient(top, hsla(0, 0%, 100%, 0.5), hsla(0, 0%, 100%, 0))
+      //background-image: -o-linear-gradient(top, hsla(0, 0%, 100%, 0.5), hsla(0, 0%, 100%, 0))
+      //background-image: linear-gradient(top, hsla(0, 0%, 100%, 0.5), hsla(0, 0%, 100%, 0))
+      //background-color: #ddd
+      background-color: #e6e6e6 // bootstrap3 btn-default
+      &:hover
+        //background-color: #5bf
+        background-color: #fff // bootstrap3 btn-default
+      &:active
+        //background-color: #39d
+        background-color: #ccc // bootstrap3 btn-default
+        +box-shadow(inset 0 2px 8px hsla(0, 0%, 0%, 0.6))
+      &.selected
+        background-color: #428bca // bootstrap3 btn-primary
+        //background-color: #13f
+        //background-color: #08c
+        // the same as bootstrap primary button color
+        text-shadow: none
+        color: white
+    &:first-child a
+      border-radius: 7px 0 0 7px
+      border-left: none
+    &:last-child a
+      border-radius: 0 7px 7px 0
+  // For compo filter options
+  .option-combo
+    display: inline-block
+    float: left
+    margin-right: 10px
+    ul
+      margin-right: 20px
+      display: inline-block
+
+// EOF
+
+// Isotope filtering
+
+//.isotope-item
+//  z-index: 2
+
+//.isotope-hidden.isotope-item
+//  display: none // jichi: permanetly hide hidden classes
+  //pointer-events: none
+  //z-index: 1
+
+// Transitions are disabled for performance reason
+//// Transitions
+//.isotope,
+//.isotope .isotope-item
+//  +transition-duration(0.8s)
+//.isotope
+//  +transition-property(height, width)
+//.isotope .isotope-item
+//  +transition-property(transform, opacity)
+//
+//// Disabling Isotope CSS3 transitions
+//.isotope.no-transition,
+//.isotope.no-transition .isotope-item,
+//.isotope .isotope-item.no-transition
+//  +transition-duration(0s)
+//
+//// Disable CSS transitions for containers with infinite scrolling
+//.isotope.infinite-scrolling
+//  +transition(none)
+
+// Isotop options
+

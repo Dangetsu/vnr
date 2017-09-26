@@ -1,0 +1,83 @@
+/* annot.sass
+   3/29/2014 jichi
+
+.annot-ruby
+  //a:hover,
+  &:hover
+    .word1
+      background-color: rgba(250,0,0,.15)   // red
+      rt
+        background-color: rgba(250,0,0,.15)
+    .word2
+      background-color: rgba(250,250,0,.15) // yellow
+      rt
+        background-color: rgba(250,250,0,.15)
+    .word3
+      background-color: rgba(0,250,0,.15)   // green
+      rt
+        background-color: rgba(0,250,0,.15)
+    .word4
+      background-color: rgba(0,0,250,.15)   // blue
+      rt
+        background-color: rgba(0,0,250,.15)
+
+  // change font
+  ruby
+    //@extend .cursor-pointer
+    //@extend .ja
+    //font-weight: bold
+    //font-size: 18px
+    rt
+      font-size: 70% // default 50% is too small
+  // remove underline for furigana
+  a,
+  a:active,
+  a:focus,
+  a:hover,
+  a:link,
+  a:visited
+    //rt  // does not work
+    text-decoration: none
+  a:active,
+  a:focus,
+  a:hover
+    rb
+      text-decoration: underline
+
+//$hl-color: #fffbcc // yellow, highlight color
+//$hl-hover-color: #fffb00  // yello
+$hl-color: rgba(255,255,100,.3) // yellow, highlight color
+$hl-hover-color: rgba(255,255,0,.5) // yellow
+
+// container
+.annot-container
+  display: inline-block
+
+.annot-tr:hover
+  background-color: $hl-color
+
+body
+  // Display pointer when TTS
+  //&.annot-opt-tts .annot-ruby ruby
+  //  @extend .cursor-pointer
+  // Hide source when toggle
+  &.annot-opt-ruby .annot-src
+    display: none
+  &.annot-opt-tr .annot-src
+    display: none
+  &:not(.annot-opt-ruby) .annot-ruby
+    display: none
+  &:not(.annot-opt-tr) .annot-tr
+    display: none
+  // Highlight when translation tip/tts is enabled
+  &.annot-opt-tts,
+  &.annot-opt-tr-tip
+    .annot-src:hover
+      background-color: $hl-color
+  // Both source and translation are visible
+  &.annot-opt-tr.annot-opt-ruby .annot-tr
+    background-color: $hl-color
+    &:hover
+      background-color: $hl-hover-color
+
+// EOF

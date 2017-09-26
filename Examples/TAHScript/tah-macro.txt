@@ -1,0 +1,12 @@
+* tah-macro.txt
+* 1/6/2015 jichi
+* Global macros
+
+* Represent hiragana
+$:hira:	あ-ん
+$hira	[{{:hira:}}]
+$!hira	[^{{:hira:}}]
+$?=hira	(?={{hira}})
+$?!hira	(?!{{hira}})
+$?<=hira	(?<={{hira}})
+$?<!hira	(?<!{{hira}})

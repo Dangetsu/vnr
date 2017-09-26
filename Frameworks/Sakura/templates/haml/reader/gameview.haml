@@ -1,0 +1,532 @@
+; gameview.haml
+; 6/29/2013 jichi
+; @param  host  str
+; @param  title  unicode
+; @param  userName  string
+; @param  userPassword  string
+; @param  game  dataman.GameInfo
+; @param  tr  sktr.tr_
+; @param  i18n  i18n
+; @param  rc  rc
+; @param  py  py
+; @param  settings  Settings
+; @param  mainland  bool
+; @param  onlne  bool
+; @param  proxy  proxy.ProxyManager
+; @param  cache  cacheman.Cacher
+;!!! 5
+
+%html(lang="ja")
+  %head
+    ; Stylesheets
+    -for it in 'bootstrap3.css', 'font-awesome4.css', 'bootstrap.switch.css', 'dragdealer.css', 'reader/gameview.css'
+      %link(rel="stylesheet",href="#{rc.cdn_url(it)}")
+
+    :css
+      body {
+        background-image: url("#{rc.image_url('background').toString()}");
+        background-repeat: repeat;
+      }
+
+    ;-if mainland
+    ;  :javascript
+    ;    window.MAINLAND = true;
+    ;-else
+    ;  :javascript
+    ;    window.MAINLAND = false;
+
+  -if not game
+    %body
+      .blocker #{tr('Empty') + ' ><'}
+  -else
+    -set GG_Q = 'https://www.google.com/?#hl=ja&safe=off&q='
+    %body
+      #toolbar
+        #zoomSlider.dragdealer.rounded.vertical
+          .handle.red(title="#{tr('Zoom')}"): 拡大
+        ; 4/10/2015 Temporarily disabled
+        ;%button.btn.btn-default.btn-block.btn-xs.btn-annot(type="button",data-annot="annot-opt-ruby", title="振仮名")
+        ;  あ
+        ;%button.btn.btn-default.btn-block.btn-xs.btn-annot(type="button",data-annot="annot-opt-tr",title="翻訳")
+        ;  訳
+        ;%button.btn.btn-default.btn-block.btn-xs.btn-annot(type="button",data-annot="annot-opt-tr-tip",title="ツールチップで翻訳を表示する")
+        ;  示
+        ;%button.btn.btn-default.btn-block.btn-xs.btn-annot(type="button",data-annot="annot-opt-tts",title="#{tr('TTS')}")
+        ;  %span.fa.fa-music
+        %button.btn.btn-default.btn-block.btn-xs.btn-top(type="button",title="#{tr('Scroll to top')}")
+          %span.fa.fa-chevron-up
+        %button.btn.btn-default.btn-block.btn-xs.btn-bottom(type="button",title="#{tr('Scroll to bottom')}")
+          %span.fa.fa-chevron-down
+        %button.btn.btn-default.btn-block.btn-xs.btn-refresh(type="button",title="#{tr('Refresh')}")
+          %span.fa.fa-undo
+
+      .game.view(data-id="#{game.itemId}")
+        .cover.draggable
+          -if game.image
+            %button.close.pull-left(type="button",title="#{tr('Close')}") &times;
+            %a(href="#{game.imageUrl}",title="#{tr('Draggable')}")
+              %img.cover.zoom.zoom-cover.img-rounded(src="#{game.imageUrl}")
+          -else
+            .text-minor #{tr('Cover')}: (#{tr('unknown')})
+        .header
+          .title
+            %a.tts.cursor-pointer(title="#{tr('TTS')}",data-text="#{game.title}")
+              %span.fa.fa-volume-down.icon-margin
+            %a(href="#{GG_Q}#{game.title}",title="#{tr('Google')}") #{game.title}
+            -if game.upcoming
+              %b.text-danger (未発売)
+            -elif game.recent
+              %b.text-danger (新作)
+          -if game.romajiTitle
+            .title-romaji
+              %a(href="#{GG_Q}#{game.romajiTitle}",title="#{tr('Google')}") #{game.romajiTitle}
+          -if game.englishTitle
+            .title-en
+              %span.text-danger #{"en: "}
+              %a.text-success(href="#{GG_Q}#{game.englishTitle}",title="#{tr('Google')}") #{game.englishTitle}
+          -if game.itemId
+            .buttons
+              %button.btn.btn-default.btn-xs.btn-dl-img(type="button",title="画像"")
+                %span.fa.fa-save
+                画像
+              -if game.hasVideos()
+                -if online
+                  %button.btn.btn-default.btn-xs.btn-dl-yt(type="button",title="YouTube動画")
+                    %span.fa.fa-download
+                    動画
+                -else
+                  %button.btn.btn-default.btn-xs.disabled(type="button",title="YouTube動画")
+                    %span.fa.fa-download
+                    動画
+        %hr
+        .content
+          %section.info
+            .title
+              .title-content #{tr('Game Information')}
+            .body.form-horizontal
+              -if game.date
+                .row.date
+                  %label.control-label.col-xs-2 #{tr('Release')}
+                  .form-control-static.col-xs-10
+                    -set search = i18n.timestamp2datetimeobj(game.date).strftime('%Y%m')
+                    %a.search(title="#{tr('Search')}: #{search}",data-text="#{search}")
+                      #{i18n.timestamp2date(game.date)}
+              -if game.event
+                .row.comike
+                  %label.control-label.col-xs-2 #{tr('Comiket')}
+                  .form-control-static.col-xs-10
+                    #{game.event}
+                    %a.tts(title="#{tr('TTS')}",data-text="#{game.event}")
+                      %span.fa.fa-volume-down.icon-margin
+              -if game.price
+                .row.price
+                  %label.control-label.col-xs-2 #{tr('Price')}
+                  .form-control-static.col-xs-10 ￥#{game.price}
+              -elif game.freem
+                .row.price
+                  %label.control-label.col-xs-2 #{tr('Price')}
+                  .form-control-static.col-xs-10
+                    -set url = game.freem.url
+                    %a.text-danger(href="#{url}",title="#{url}")
+                      無料
+              .row.type
+                -set typeName = '乙女' if game.otome else '抜き' if game.okazu else '純愛'
+                %label.control-label.col-xs-2 #{tr('Type')}
+                .form-control-static.col-xs-10
+                  #{typeName}
+                  -if not game.ecchi
+                    %span.text-danger(title="Hシーンはありません") 一般作品
+              -if game.fileSize
+                .row.fileSie
+                  %label.control-label.col-xs-2 #{tr('Size')}
+                  .form-control-static.col-xs-10 #{game.fileSizeString}
+              -if game.slogan
+                .row.slogan
+                  %label.control-label.col-xs-2 #{tr('Slogan')}
+                  .form-control-static.col-xs-10
+                    #{game.slogan}
+                    %a.tts(title="#{tr('TTS')}",data-text="#{game.slogan}")
+                      %span.fa.fa-volume-down.icon-margin
+              -if game.series
+                .row.series
+                  %label.control-label.col-xs-2 #{tr('Series')}
+                  .form-control-static.col-xs-10
+                    %a.search(title="#{tr('Search')}") #{game.series}
+                    %a.tts(title="#{tr('TTS')}",data-text="#{game.series}")
+                      %span.fa.fa-volume-down.icon-margin
+              -if game.brand
+                .row.brand
+                  %label.control-label.col-xs-2 #{tr('Brand')}
+                  .form-control-static.col-xs-10
+                    -for i,it in py.enumerate(game.brand.split(','))
+                      -if i
+                        、
+                      -if i%2
+                        %a.link.link-odd.search(title="#{tr('Search')}") #{it}
+                      -else
+                        %a.link.link-even.search(title="#{tr('Search')}") #{it}
+                    %a.tts(title="#{tr('TTS')}",data-text="#{game.brand.replace(',','、')}")
+                      %span.fa.fa-volume-down.icon-margin
+              -if game.artists
+                .row.artist
+                  %label.control-label.col-xs-2 原画
+                  .form-control-static.col-xs-10
+                    -for i,it in py.enumerate(game.artists)
+                      -if i
+                        、
+                      -if i%2
+                        %a.link.link-odd.search(title="#{tr('Search')}") #{it}
+                      -else
+                        %a.link.link-even.search(title="#{tr('Search')}") #{it}
+                    %a.tts(title="#{tr('TTS')}",data-text="#{'、'.join(game.artists)}")
+                      %span.fa.fa-volume-down.icon-margin
+              -if game.sdartists
+                .row.artist
+                  %label.control-label.col-xs-2 SD原画
+                  .form-control-static.col-xs-10
+                    -for i,it in py.enumerate(game.sdartists)
+                      -if i
+                        、
+                      -if i%2
+                        %a.link.link-odd.search(title="#{tr('Search')}") #{it}
+                      -else
+                        %a.link.link-even.search(title="#{tr('Search')}") #{it}
+                    %a.tts(title="#{tr('TTS')}",data-text="#{'、'.join(game.sdartists)}")
+                      %span.fa.fa-volume-down.icon-margin
+              -if game.writers
+                .row.artist
+                  %label.control-label.col-xs-2 #{tr('Scenario')}
+                  .form-control-static.col-xs-10
+                    -for i,it in py.enumerate(game.writers)
+                      -if i
+                        、
+                      -if i%2
+                        %a.link.link-odd.search(title="#{tr('Search')}") #{it}
+                      -else
+                        %a.link.link-even.search(title="#{tr('Search')}") #{it}
+                    %a.tts(title="#{tr('TTS')}",data-text="#{'、'.join(game.writers)}")
+                      %span.fa.fa-volume-down.icon-margin
+              -if game.musicians
+                .row.artist
+                  %label.control-label.col-xs-2 #{tr('Music')}
+                  .form-control-static.col-xs-10
+                    -for i,it in py.enumerate(game.musicians)
+                      -if i
+                        、
+                      -if i%2
+                        %a.link.link-odd.search(title="#{tr('Search')}") #{it}
+                      -else
+                        %a.link.link-even.search(title="#{tr('Search')}") #{it}
+                    %a.tts(title="#{tr('TTS')}",data-text="#{'、'.join(game.musicians)}")
+                      %span.fa.fa-volume-down.icon-margin
+              -if game.tags0
+                .row.keywords
+                  %label.control-label.col-xs-2 #{tr('Keywords')}:
+                  .form-control-static.col-xs-10
+                    -for i,it in py.enumerate(game.tags0.split(','))
+                      -if i
+                        、
+                      -if i%2
+                        %a.link.link-odd.search(title="#{tr('Search')}") #{it}
+                      -else
+                        %a.link.link-even.search(title="#{tr('Search')}") #{it}
+                    %a.tts(title="#{tr('TTS')}",data-text="#{game.tags0.replace(',','、')}")
+                      %span.fa.fa-volume-down.icon-margin
+              -if game.hasLinks()
+                .row.links
+                  %label.control-label.col-xs-2 #{tr('Links')}
+                  .form-control-static.col-xs-10
+                    -for i,(url,site) in py.enumerate(game.iterLinks())
+                      -if i%2
+                        %a.link.link-odd(href="#{url}",title="#{url}")
+                          #{i18n.site_name(site)}
+                      -else
+                        %a.link.link-even(href="#{url}",title="#{url}")
+                          #{i18n.site_name(site)}
+              -if game.homepage
+                .row.homepage
+                  %label.control-label.col-xs-2 #{tr('Homepage')}
+                  .form-control-static.col-xs-10
+                    %a(href="#{game.homepage}",title="#{game.homepage}") #{game.homepage}
+              -if game.scape.trialUrl
+                -set url = game.scape.trialUrl
+                .row.trial
+                  %label.control-label.col-xs-2 体験版
+                  .form-control-static.col-xs-10
+                    %a(href="#{url}",title="#{url}") #{url}
+                    -if game.scape.trialH
+                      %span.text-danger(title="Hなシーンがあります") #{" (Hあり)"}
+                    -else
+                      %span.text-minor(title="Hなシーンがありません") #{" (H無し)"}
+              -if game.wiki
+                -set url = 'http://ja.wikipedia.org/wiki/' + game.wiki
+                .row.wiki
+                  %label.control-label.col-xs-2 #{tr('Wikipedia')}
+                  .form-control-static.col-xs-10
+                    %a(href="#{url}",title="#{url}") #{url}
+              -if game.scape and game.scape.median
+                .row
+                  %label.control-label.col-xs-2 批評空間
+                  .form-control-static.col-xs-10
+                    %a(href="#{game.scape.url}",title="#{game.scape.url}")
+                      #{game.scape.median}&times;#{game.scape.medianCount or 1}
+              -if game.itemId
+                .row
+                  %label.control-label.col-xs-2 #{tr('Topic')}
+                  .form-control-static.col-xs-10
+                    %a.count.link-topic #{game.topicCount}
+              -if game.visitCount
+                .row
+                  %label.control-label.col-xs-2 #{tr('Play')}
+                  .form-control-static.col-xs-10
+                    %span.count #{game.visitCount}
+              -if game.playUserCount
+                .row
+                  %label.control-label.col-xs-2 #{tr('User')}
+                  .form-control-static.col-xs-10
+                    %span.count #{game.playUserCount}
+              -if game.commentCount
+                .row
+                  %label.control-label.col-xs-2 #{tr('Danmaku')}
+                  .form-control-static.col-xs-10
+                    %span.count #{game.commentCount}
+              -if game.subtitleCount
+                .row
+                  %label.control-label.col-xs-2 #{tr('Subtitle')}
+                  .form-control-static.col-xs-10
+                    %span.count #{game.subtitleCount}
+          -if game.hasBannerImages()
+            %section.banner
+              -for it in game.iterBannerImageUrls()
+                -if game.homepage
+                  %a(href="#{game.homepage}",title="#{game.homepage}")
+                    %img(src="#{it}")
+                -else
+                  %a(href="#{GG_Q}#{game.title}",title="#{tr('Google')}: #{game.title}")
+                    %img(src="#{it}")
+          %hr
+          %section.stats
+            .title
+              .title-content #{tr('Rating')}
+            .body.form-horizontal
+              ;.row
+              ;  %label.control-label.col-xs-2 #{tr('Play')}
+              ;  .form-control-static.col-xs-10
+              ;    %span.count #{game.visitCount or 1}
+              ;.row
+              ;  %label.control-label.col-xs-2 #{tr('Subtitle')}
+              ;  .form-control-static.col-xs-10
+              ;    %span.count #{game.commentCount or 0}
+              ;-if game.scape and game.scape.median
+              ;  .row
+              ;    %label.control-label.col-xs-2 批評空間
+              ;    .form-control-static.col-xs-10
+              ;      %a(href="#{game.scape.url}",title="#{game.scape.url}")
+              ;        #{game.scape.median}&times;#{game.scape.medianCount or 1}
+              -if game.gameItem
+                .row.score-row
+                  %label.control-label.col-xs-2 #{i18n.score_name('overall')}
+                  .form-control-static.col-xs-10
+                    -if game.gameItem
+                      -set sum = game.gameItem.overallScoreSum
+                      -set count = game.gameItem.overallScoreCount
+                    -else
+                      -set sum = 0
+                      -set count = 0
+                    .raty.rating(data-type="overall",data-sum="#{sum}",data-count="#{count}")
+                    .score-label.score-overall.text-danger
+                      %span.text-minor #{tr('Not specified')}
+                .row.score-row
+                  %label.control-label.col-xs-2 #{i18n.score_name('ecchi')}
+                  .form-control-static.col-xs-10
+                    -if game.gameItem
+                      -set sum = game.gameItem.ecchiScoreSum
+                      -set count = game.gameItem.ecchiScoreCount
+                    -else
+                      -set sum = 0
+                      -set count = 0
+                    .raty.rating(data-type="ecchi",data-sum="#{sum}",data-count="#{count}")
+                    .score-label.score-ecchi.text-info
+                      %span.text-minor #{tr('Not specified')}
+            -if game.gameItem
+              .footer
+                .col-xs-2
+                  -if online
+                    %button.btn-review.btn.btn-primary.btn-sm(type="button")
+                      %span.fa.fa-star
+                      #{tr('Review')}
+                  -else
+                    %button.btn-review.btn.btn-primary.btn-sm(disabled="true",type="button",title="#{tr('Offline')}")
+                      %span.fa.fa-star
+                      #{tr('Review')}
+                .switch-group
+                  -if online
+                    %input.switch(type="checkbox",data-size="small",data-on-text="#{tr('Show')}",data-off-text="#{tr('Hide')}")
+                    %span.msg
+                  -else
+                    %input.switch(disabled="true",type="checkbox",data-size="small",data-on-text="#{tr('Show')}",data-off-text="#{tr('Hide')}")
+                    %span.msg #{'(' + tr('Offline') + ')'}
+              .contents
+                .topics
+                .footer
+          %hr
+          %section.settings
+            .title
+              .col-xs-2
+                .spin
+                .title-content #{tr('Settings')}
+              .switch-group
+                -if online
+                  %input.switch(type="checkbox",data-size="small",data-on-text="#{tr('Show')}",data-off-text="#{tr('Hide')}")
+                  %span.msg
+                -else
+                  %input.switch(disabled="true",type="checkbox",data-size="small",data-on-text="#{tr('Show')}",data-off-text="#{tr('Hide')}")
+                  %span.msg #{'(' + tr('Offline') + ')'}
+            .contents
+          -if game.commentCount
+            %hr
+            %section.users
+              .title
+                .col-xs-2
+                  .spin
+                  .title-content #{tr('Danmaku')}
+                .switch-group
+                  -if online
+                    %input.switch(type="checkbox",data-size="small",data-on-text="#{tr('Show')}",data-off-text="#{tr('Hide')}")
+                    %span.msg
+                  -else
+                    %input.switch(disabled="true",type="checkbox",data-size="small",data-on-text="#{tr('Show')}",data-off-text="#{tr('Hide')}")
+                    %span.msg #{'(' + tr('Offline') + ')'}
+              .contents
+          -if game.hasTwitterWidgets()
+            %hr
+            %section.twitter
+              .title
+                .col-xs-2
+                  .title-content Twitter
+                .switch-group
+                  %input.switch(type="checkbox",data-size="small",data-on-text="#{tr('Show')}",data-off-text="#{tr('Hide')}")
+              %center.widgets
+                ;-for it in game.iterTwitterWidgets()
+                ;  %a.twitter-timeline(height="400",href="https://twitter.com/twitterapi",data-widget-id="#{it}",data-chrome="nofooter noborders transparent")
+                ;%script(src="#{rc.cdn_url('twitter.widgets')}")
+          -if game.hasVideos()
+            %hr
+            %section.youtube
+              .title
+                .col-xs-2
+                  .spin
+                  .title-content YouTube
+                .switch-group
+                  %input.switch(type="checkbox",data-size="small",data-on-text="#{tr('Show')}",data-off-text="#{tr('Hide')}")
+              %center.videos
+          -if game.hasSampleImages()
+            %hr
+            %section.cg
+              .title
+                .col-xs-2
+                  .spin
+                  .title-content #{tr('Images')}
+                %ul.nav.nav-pills.nav-clean.nav-xs
+                  %li.active(data-type="")
+                    %a #{tr('Hide')}
+                  %li.divider
+                  -for r in game.iterSampleImageReferences()
+                    %li(data-type="#{r.type}")
+                      %a #{i18n.site_name(r.type)}
+                ;.switch-group
+                ;  %input.switch(type="checkbox",data-size="small",data-on-text="#{tr('Show')}",data-off-text="#{tr('Hide')}")
+              .contents
+                ;-for i,it in py.enumerate(game.iterSampleImageUrls())
+                ;  %a(href="#{it}",title="CG #{'#'}#{i+1}")
+                ;    %img.img-rounded(src="#{it}")
+          -if game.hasCharacterDescriptions()
+            %hr
+            %section.characters
+              .title
+                .col-xs-2
+                  .spin
+                  .title-content 人物
+                %ul.nav.nav-pills.nav-clean.nav-xs
+                  %li.active(data-type="")
+                    %a #{tr('Hide')}
+                  %li.divider
+                  -for r in game.iterCharacterDescriptionReferences()
+                    %li(data-type="#{r.type}")
+                      %a #{i18n.site_name(r.type)}
+              .contents
+          -if game.hasDescriptions()
+            %hr
+            %section.descriptions
+              .title
+                .col-xs-2
+                  .spin
+                  .title-content 紹介
+                %ul.nav.nav-pills.nav-clean.nav-xs
+                  %li.active(data-type="")
+                    %a #{tr('Hide')}
+                  %li.divider
+                  -for r in game.iterDescriptionReferences()
+                    %li(data-type="#{r.type}")
+                      %a #{i18n.site_name(r.type)}
+              .contents
+          -if not game.upcoming and game.hasReviews()
+            %hr
+            %section.reviews
+              .title
+                .col-xs-2
+                  .spin
+                  .title-content 感想
+                %ul.nav.nav-pills.nav-clean.nav-xs
+                  %li.active(data-type="")
+                    %a #{tr('Hide')}
+                  %li.divider
+                  -for r in game.iterReviewReferences()
+                    %li(data-type="#{r.type}")
+                      %a #{i18n.site_name(r.type)}
+              .contents
+
+      ; Scripts
+      -if game
+        :javascript
+          window.JQUERY_RATY_PATH = '#{rc.cdn_url('jquery.raty.path')}';
+          window.USER_NAME = "#{userName}";
+          window.USER_PASSWORD = "#{userPassword}";
+
+        -for it in \
+            'jquery', 'jquery.imagesloaded', 'jquery.raty', 'jquery.ui', \
+            'underscore', \
+            'bootstrap.growl', \
+            'spin', 'jquery.spin', \
+            'bootstrap.switch', 'dragdealer', \
+            'bbcode', 'haml', 'masonry', 'moment', 'sprintf', \
+            'libs/linkify', \
+            'share/annot', 'share/rest', 'share/util', \
+            'reader/widgets', 'reader/gameview'
+          %script(src="#{rc.cdn_url(it)}")
+
+        -if game.dmm and game.dmm.hasSampleImages()
+          -for it in 'underscore.string', 'libs/choco'
+            %script(src="#{rc.cdn_url(it)}")
+
+        -if not mainland and game.hasTwitterWidgets()
+          %script(src="#{rc.cdn_url('twitter.widgets')}")
+
+        :javascript
+          window.HOST = "#{host}";
+        -if game.image
+          :javascript
+            $(function() {
+              var url = "#{game.imageUrl}";
+              var img = new Image;
+              img.onload = function() {
+                document.body.style.backgroundImage = 'url("' + url + '")';
+                document.body.style.backgroundSize = 'cover';
+                document.body.style.backgroundAttachment = 'fixed';
+                // TODO: Bind onresize to change background image to half screen
+                //document.body.style.backgroundSize = '50%, auto';
+              }
+              img.src = url
+            });
+
+; EOF
