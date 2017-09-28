@@ -1257,6 +1257,12 @@ class Settings(QSettings):
       self.setValue('LingoesJaEn', v)
       self._updateDictionaryEnabled()
 
+  def isJishoOrgEnabled(self): return to_bool(self.value('JishoOrg'))
+  def setJishoOrgEnabled(self, v):
+    if v != self.isJishoOrgEnabled():
+      self.setValue('JishoOrg', v)
+      self._updateDictionaryEnabled()
+
   def isStardictJaViEnabled(self): return to_bool(self.value('StardictJaVi'))
   def setStardictJaViEnabled(self, v):
     if v != self.isStardictJaViEnabled():

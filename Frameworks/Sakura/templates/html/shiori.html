@@ -61,5 +61,20 @@ u,.role{background-color:rgba(128,0,128,60%)}
 		<p class="s">{{s}}</p>
 %	endfor
 %endif
+%if jisho
+    <h4>From jisho.org</h4>
+%for ji in jisho
+        <p class="t">
+            <div class="q">
+                <span class="th">{{ji['reading']}}<br/>【{{ji['word']}}】</span>
+            </div>
+            <div class="tt">
+                %for def in ji['alldefinitions']
+                    <p class="s">{{def}}</p>
+                %endfor
+            </div>
+        </p>
+%endfor
+%endif
 	</body>
 </html>

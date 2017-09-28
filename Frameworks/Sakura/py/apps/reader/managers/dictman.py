@@ -13,7 +13,7 @@ from mytr import my
 from hanjaconv import hanjaconv
 from unitraits.jpchars import iskanji
 import config, convutil, dicts, ebdict, growl, hanzidict, mecabman, rc, settings
-import _dictman
+import _dictman, netman
 
 @memoized
 def manager(): return DictionaryManager()
@@ -420,12 +420,49 @@ class DictionaryManager:
       eb_strings = d.lookupEB(text, feature=feature)
       if ss.isJMDictRuEnabledJM():
         JMDictEnabled = False
+
+      jisho = []
+      if ss.isJishoOrgEnabled() and netman.manager().isOnline():
+        jishomass = netman.manager().jisho_api(text)
+        for it in jishomass:
+          word = ''
+          reading = ''
+          if 'word' in it['japanese'][0].keys():
+            word = it['japanese'][0]['word']
+          if 'reading' in it['japanese'][0].keys():
+            reading = it['japanese'][0]['reading']
+
+          jptext = ''
+          for jp in it['japanese']:
+            if 'word' in jp.keys():
+              jptext = jptext + jp['word']
+            if 'reading' in jp.keys():
+              jptext = jptext + "(" + jp['reading'] + ") "
+
+          alldefinitions = []
+          i = 1
+          for sens in it['senses']:
+            definitions = ''
+            if 'english_definitions' in sens.keys():
+              if len(sens['english_definitions']) > 0:
+                definitions = str(i) + ") " + ', '.join(sens['english_definitions'])
+              if len(sens['parts_of_speech']) > 0:
+                definitions = definitions + " (" + ', '.join(sens['parts_of_speech']) + ")"
+            if definitions != "":
+              alldefinitions.append(definitions)
+            i = i + 1
+          jisho.append({'word': word,
+                        'reading': reading,
+                        'jptext': jptext,
+                        'alldefinitions': alldefinitions})
+
       #with SkProfiler("en-vi"): # 1/8/2014: take 7 seconds for OVDP
       ret = rc.jinja_template('html/shiori').render({
         'language': 'ja',
         'JMDictEnabled': JMDictEnabled,
         'text': text,
         'feature': f,
+        'jisho': jisho,
         'kanji': d.renderHanzi(text, html=True),
         'tuples': d.lookupDB(text, exact=exact, feature=feature),
         'eb_strings': eb_strings, # exact not used, since it is already very fast

@@ -29,7 +29,7 @@ from sakurakit.sknetdef import GZIP_HEADERS
 from qtrequests import qtrequests
 from mytr import my
 from sysinfo import timestamp2jst
-import config, dataman, defs, features, growl
+import config, dataman, defs, features, growl, json
 
 session = requests.Session() # global request session
 
@@ -1737,6 +1737,15 @@ class _NetworkManager(object):
     except: pass
     return False
 
+  def jisho_api(self, text):
+    params = {'keyword': text}
+
+    r = session.get('http://jisho.org/api/v1/search/words', params=params, headers=GZIP_HEADERS)
+    if r.ok:
+      items = json.loads(r.content)
+      return items['data']
+
+
   #@staticmethod
   #def _parseTranslationScripts(h, begin, end):
   #  """
@@ -1797,6 +1806,8 @@ class NetworkManager(QObject):
   onlineChanged = Signal(bool)
   def isOnline(self): return self.__d.online
   def updateOnline(self): self.__d.updateOnline()
+
+  def jisho_api(self, text): return self.__d.jisho_api(text)
 
   def blockedLanguages(self, v): return self.__d.blockedLanguages
   def setBlockedLanguages(self, v): self.__d.blockedLanguages = v
@@ -2179,6 +2190,7 @@ class NetworkManager(QObject):
       'type': 'like',
       'value': value,
     }))
+
 
 @memoized
 def manager(): return NetworkManager()

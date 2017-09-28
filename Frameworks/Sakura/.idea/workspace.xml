@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/py/apps/reader/settings.py" line="1368" mnemonic="2" />
+    <bookmark url="file://$PROJECT_DIR$/py/apps/reader/settings.py" line="1259" mnemonic="1" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="e7d560e5-086a-4dc8-b399-10a2b3ec4e5b" name="Default" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -10,44 +14,12 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="googletrans.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/py/libs/google/googletrans.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-119">
-              <caret line="26" column="12" lean-forward="true" selection-start-line="26" selection-start-column="12" selection-end-line="26" selection-end-column="12" />
-              <folding>
-                <element signature="e#1979#1994#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="netman.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/py/apps/reader/managers/netman.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2159">
-              <caret line="143" column="6" lean-forward="false" selection-start-line="143" selection-start-column="6" selection-end-line="143" selection-end-column="7" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="shiori.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/html/shiori.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="646">
-              <caret line="38" column="12" lean-forward="true" selection-start-line="38" selection-start-column="12" selection-end-line="38" selection-end-column="12" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file leaf-file-name="share.yaml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/share.yaml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="684" column="12" lean-forward="true" selection-start-line="684" selection-start-column="4" selection-end-line="684" selection-end-column="15" />
+            <state relative-caret-position="17">
+              <caret line="684" column="12" lean-forward="false" selection-start-line="684" selection-start-column="4" selection-end-line="684" selection-end-column="15" />
               <folding />
             </state>
           </provider>
@@ -56,28 +28,54 @@
       <file leaf-file-name="dictman.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/py/apps/reader/managers/dictman.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3349">
-              <caret line="425" column="38" lean-forward="false" selection-start-line="425" selection-start-column="25" selection-end-line="425" selection-end-column="38" />
+            <state relative-caret-position="253">
+              <caret line="424" column="64" lean-forward="true" selection-start-line="424" selection-start-column="64" selection-end-line="424" selection-end-column="64" />
+              <folding>
+                <element signature="e#90#128#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="netman.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/py/apps/reader/managers/netman.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2904">
+              <caret line="1741" column="0" lean-forward="false" selection-start-line="1741" selection-start-column="0" selection-end-line="1741" selection-end-column="0" />
+              <folding>
+                <element signature="e#447#468#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="dataman.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/py/apps/reader/managers/dataman.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="238">
+              <caret line="9455" column="4" lean-forward="false" selection-start-line="9455" selection-start-column="4" selection-end-line="9455" selection-end-column="35" />
+              <folding>
+                <element signature="e#126#165#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="shiori.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/py/apps/reader/qml/shiori.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="17">
+              <caret line="33" column="6" lean-forward="false" selection-start-line="33" selection-start-column="6" selection-end-line="33" selection-end-column="6" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="gameview.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/py/apps/reader/views/gameview.py">
+      <file leaf-file-name="shiori.qml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/qml/apps/reader/kagami/shiori.qml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="gameboard.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/py/apps/reader/views/gameboard.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1825">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="815">
+              <caret line="336" column="17" lean-forward="false" selection-start-line="336" selection-start-column="4" selection-end-line="336" selection-end-column="17" />
               <folding />
             </state>
           </provider>
@@ -86,18 +84,38 @@
       <file leaf-file-name="springboard.qml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/qml/apps/reader/springboard.qml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2805">
+            <state relative-caret-position="-4047">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="_prefs.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/py/apps/reader/settings.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="394">
+              <caret line="1262" column="34" lean-forward="true" selection-start-line="1262" selection-start-column="34" selection-end-line="1262" selection-end-column="34" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="_prefs.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/py/apps/reader/dialogs/_prefs.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="4874" column="0" lean-forward="true" selection-start-line="4874" selection-start-column="0" selection-end-line="4874" selection-end-column="0" />
+            <state relative-caret-position="275">
+              <caret line="5105" column="51" lean-forward="false" selection-start-line="5105" selection-start-column="38" selection-end-line="5105" selection-end-column="55" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="prefs.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/py/apps/reader/dialogs/prefs.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-303">
+              <caret line="72" column="52" lean-forward="false" selection-start-line="72" selection-start-column="43" selection-end-line="72" selection-end-column="67" />
               <folding />
             </state>
           </provider>
@@ -110,6 +128,11 @@
       <find>shiori.html</find>
       <find>html/shiori</find>
       <find>прелест</find>
+      <find>showPopup</find>
+      <find>милы</find>
+      <find>Preferred</find>
+      <find>jishoOrgButton</find>
+      <find>netman</find>
     </findStrings>
     <dirStrings>
       <dir>D:\Visual Novel Reader(new)\Library\Frameworks\Sakura</dir>
@@ -118,15 +141,38 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
+        <option value="$PROJECT_DIR$/py/apps/reader/managers/netman.py" />
+        <option value="$PROJECT_DIR$/templates/html/shiori.html" />
         <option value="$PROJECT_DIR$/py/apps/reader/dialogs/_prefs.py" />
+        <option value="$PROJECT_DIR$/py/apps/reader/managers/dictman.py" />
+        <option value="$PROJECT_DIR$/py/apps/reader/settings.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="7">
-    <option name="x" value="260" />
-    <option name="y" value="20" />
+    <option name="x" value="266" />
+    <option name="y" value="178" />
     <option name="width" value="1400" />
     <option name="height" value="1000" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+          <State>
+            <id>Python</id>
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>PyPep8Inspection</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -143,7 +189,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -235,11 +280,12 @@
         </subPane>
       </pane>
       <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../Python/python.exe" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.Python" />
   </component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
@@ -264,6 +310,9 @@
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
   </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="e7d560e5-086a-4dc8-b399-10a2b3ec4e5b" name="Default" comment="" />
@@ -280,21 +329,21 @@
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1807611" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -302,72 +351,56 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager />
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/py/apps/reader/managers/dictman.py</url>
+          <line>6</line>
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="5" />
+    </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/py/libs/google/googletts.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/py/libs/google/googledef.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/py/libs/google/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/py/libs/google/googletrans.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-119">
-          <caret line="26" column="12" lean-forward="true" selection-start-line="26" selection-start-column="12" selection-end-line="26" selection-end-column="12" />
-          <folding>
-            <element signature="e#1979#1994#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/py/apps/reader/managers/netman.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2159">
-          <caret line="143" column="6" lean-forward="false" selection-start-line="143" selection-start-column="6" selection-end-line="143" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/html/shiori.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="646">
-          <caret line="38" column="12" lean-forward="true" selection-start-line="38" selection-start-column="12" selection-end-line="38" selection-end-column="12" />
+          <caret line="38" column="12" lean-forward="false" selection-start-line="38" selection-start-column="12" selection-end-line="38" selection-end-column="12" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/share.yaml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="684" column="12" lean-forward="true" selection-start-line="684" selection-start-column="4" selection-end-line="684" selection-end-column="15" />
+        <state relative-caret-position="11628">
+          <caret line="684" column="12" lean-forward="false" selection-start-line="684" selection-start-column="4" selection-end-line="684" selection-end-column="15" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/py/apps/reader/managers/dictman.py">
+    <entry file="file://$PROJECT_DIR$/py/apps/reader/managers/dataman.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3349">
-          <caret line="425" column="38" lean-forward="false" selection-start-line="425" selection-start-column="25" selection-end-line="425" selection-end-column="38" />
+        <state relative-caret-position="93585">
+          <caret line="5505" column="28" lean-forward="false" selection-start-line="5505" selection-start-column="28" selection-end-line="5505" selection-end-column="55" />
+          <folding>
+            <element signature="e#126#165#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/py/apps/reader/qml/shiori.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="33" column="6" lean-forward="false" selection-start-line="33" selection-start-column="6" selection-end-line="33" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/qml/apps/reader/kagami/shiori.qml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5712">
+          <caret line="336" column="17" lean-forward="false" selection-start-line="336" selection-start-column="4" selection-end-line="336" selection-end-column="17" />
           <folding />
         </state>
       </provider>
@@ -382,15 +415,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/py/apps/reader/views/gameboard.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1825">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/qml/apps/reader/comet/comet.qml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-714">
+        <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
@@ -398,7 +423,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/qml/apps/reader/springboard.qml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2805">
+        <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
@@ -406,14 +431,253 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/py/apps/reader/dialogs/_prefs.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
+        <state relative-caret-position="82858">
+          <caret line="4874" column="0" lean-forward="false" selection-start-line="4874" selection-start-column="0" selection-end-line="4874" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/py/apps/reader/managers/dictman.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="23" column="5" lean-forward="false" selection-start-line="23" selection-start-column="5" selection-end-line="23" selection-end-column="5" />
+          <folding>
+            <element signature="e#90#128#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/py/libs/google/googletrans.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="442">
+          <caret line="26" column="12" lean-forward="false" selection-start-line="26" selection-start-column="12" selection-end-line="26" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/py/apps/reader/managers/netman.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2431">
+          <caret line="143" column="6" lean-forward="false" selection-start-line="143" selection-start-column="6" selection-end-line="143" selection-end-column="7" />
+          <folding>
+            <element signature="e#447#468#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/html/shiori.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="646">
+          <caret line="38" column="12" lean-forward="true" selection-start-line="38" selection-start-column="12" selection-end-line="38" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/share.yaml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="11628">
+          <caret line="684" column="12" lean-forward="true" selection-start-line="684" selection-start-column="4" selection-end-line="684" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/py/apps/reader/managers/dictman.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7072">
+          <caret line="425" column="38" lean-forward="false" selection-start-line="425" selection-start-column="25" selection-end-line="425" selection-end-column="38" />
+          <folding>
+            <element signature="e#90#128#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/py/apps/reader/views/gameview.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/py/apps/reader/views/gameboard.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/qml/apps/reader/springboard.qml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/py/apps/reader/dialogs/_prefs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="82858">
           <caret line="4874" column="0" lean-forward="true" selection-start-line="4874" selection-start-column="0" selection-end-line="4874" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/py/libs/google/googletts.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/py/libs/google/googledef.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/py/libs/google/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/py/libs/google/googletrans.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="442">
+          <caret line="26" column="12" lean-forward="false" selection-start-line="26" selection-start-column="12" selection-end-line="26" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/qml/apps/reader/comet/comet.qml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-714">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/py/apps/reader/views/gameboard.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/py/apps/reader/views/gameview.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/qml/apps/reader/kagami/textpopup.qml.bak_140906">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="202">
+          <caret line="57" column="11" lean-forward="false" selection-start-line="57" selection-start-column="11" selection-end-line="57" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/html/shiori.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="34" column="17" lean-forward="false" selection-start-line="34" selection-start-column="4" selection-end-line="34" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/qml/apps/reader/springboard.qml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-4047">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/py/apps/reader/dialogs/prefs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-303">
+          <caret line="72" column="52" lean-forward="false" selection-start-line="72" selection-start-column="43" selection-end-line="72" selection-end-column="67" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/py/apps/reader/dialogs/_prefs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="275">
+          <caret line="5105" column="51" lean-forward="false" selection-start-line="5105" selection-start-column="38" selection-end-line="5105" selection-end-column="55" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/py/apps/reader/managers/netman.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2904">
+          <caret line="1741" column="0" lean-forward="false" selection-start-line="1741" selection-start-column="0" selection-end-line="1741" selection-end-column="0" />
+          <folding>
+            <element signature="e#447#468#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/py/apps/reader/managers/dataman.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="9455" column="4" lean-forward="false" selection-start-line="9455" selection-start-column="4" selection-end-line="9455" selection-end-column="35" />
+          <folding>
+            <element signature="e#126#165#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/py/apps/reader/managers/dictman.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="253">
+          <caret line="424" column="64" lean-forward="true" selection-start-line="424" selection-start-column="64" selection-end-line="424" selection-end-column="64" />
+          <folding>
+            <element signature="e#90#128#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/py/apps/reader/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="394">
+          <caret line="1262" column="34" lean-forward="true" selection-start-line="1262" selection-start-column="34" selection-end-line="1262" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/share.yaml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="684" column="12" lean-forward="false" selection-start-line="684" selection-start-column="4" selection-end-line="684" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/qml/apps/reader/kagami/shiori.qml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="815">
+          <caret line="336" column="17" lean-forward="false" selection-start-line="336" selection-start-column="4" selection-end-line="336" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/py/apps/reader/qml/shiori.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="33" column="6" lean-forward="false" selection-start-line="33" selection-start-column="6" selection-end-line="33" selection-end-column="6" />
           <folding />
         </state>
       </provider>
     </entry>
   </component>
   <component name="hg4idea.settings">
+    <option name="CHECK_INCOMING_OUTGOING" value="true" />
     <option name="RECENT_HG_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="masterDetails">

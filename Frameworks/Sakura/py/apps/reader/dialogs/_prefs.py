@@ -5003,6 +5003,10 @@ class _DictionaryTranslationTab(object):
       layout.addWidget(self.kojienButton)
     if 'zh' not in blans:
       layout.addWidget(self.zhongriButton)
+
+    layout.addWidget(QtWidgets.QLabel(my.tr("Online dictionaries required") + ":"))
+    layout.addWidget(self.jishoOrgButton)
+
     ret.setLayout(layout)
 
     #ss = settings.global_()
@@ -5010,6 +5014,7 @@ class _DictionaryTranslationTab(object):
     #ss.meCabDictionaryChanged.connect(lambda v:
     #    ret.setEnabled(bool(v)))
     return ret
+
 
   def getJMDictButton(self, lang):
     ret = self.jmdictButtons.get(lang)
@@ -5093,6 +5098,13 @@ class _DictionaryTranslationTab(object):
     ret = QtWidgets.QCheckBox(LINGOES_DICT_NAMES['ja-en']) #my.tr("recommended for English")))
     ret.setChecked(settings.global_().isLingoesJaEnEnabled())
     ret.toggled.connect(settings.global_().setLingoesJaEnEnabled)
+    return ret
+
+  @memoizedproperty
+  def jishoOrgButton(self):
+    ret = QtWidgets.QCheckBox(my.tr("Jisho.org"))
+    ret.setChecked(settings.global_().isJishoOrgEnabled())
+    ret.toggled.connect(settings.global_().setJishoOrgEnabled)
     return ret
 
   @memoizedproperty
