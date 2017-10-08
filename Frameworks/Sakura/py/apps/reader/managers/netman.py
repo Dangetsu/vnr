@@ -1745,6 +1745,14 @@ class _NetworkManager(object):
       items = json.loads(r.content)
       return items['data']
 
+  def byars_api(self, text):
+    params = {'w': text, 'm':0}
+
+    r = session.get('http://e-lib.ua/dic/results', params=params, headers=GZIP_HEADERS)
+    if r.ok:
+      content = r.content
+      return content
+
 
   #@staticmethod
   #def _parseTranslationScripts(h, begin, end):
@@ -1808,6 +1816,8 @@ class NetworkManager(QObject):
   def updateOnline(self): self.__d.updateOnline()
 
   def jisho_api(self, text): return self.__d.jisho_api(text)
+
+  def byars_api(self, text): return self.__d.byars_api(text)
 
   def blockedLanguages(self, v): return self.__d.blockedLanguages
   def setBlockedLanguages(self, v): self.__d.blockedLanguages = v

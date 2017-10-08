@@ -5006,6 +5006,10 @@ class _DictionaryTranslationTab(object):
 
     layout.addWidget(QtWidgets.QLabel(my.tr("Online dictionaries required") + ":"))
     layout.addWidget(self.jishoOrgButton)
+    for lang in config.JMDICT_LANGS:
+      if lang not in blans:
+        if lang == "ru":
+          layout.addWidget(self.byarsButton)
 
     ret.setLayout(layout)
 
@@ -5105,6 +5109,13 @@ class _DictionaryTranslationTab(object):
     ret = QtWidgets.QCheckBox(my.tr("Jisho.org"))
     ret.setChecked(settings.global_().isJishoOrgEnabled())
     ret.toggled.connect(settings.global_().setJishoOrgEnabled)
+    return ret
+
+  @memoizedproperty
+  def byarsButton(self):
+    ret = QtWidgets.QCheckBox(my.tr("БЯРС"))
+    ret.setChecked(settings.global_().isByarsEnabled())
+    ret.toggled.connect(settings.global_().setByarsEnabled)
     return ret
 
   @memoizedproperty

@@ -22,7 +22,7 @@ a{color:silver}
 .f{background-color:rgba(255,0,0,40%);font-weight:bold;font-family:"MS Mincho"}
 .zh{background-color:rgba(0,0,255,40%);font-weight:bold;font-family:Tahoma,HanaMinA,HanaMinB}
 .zh .def{font-weight:normal}
-.sk,.th{background-color:rgba(128,225,0,40%)}
+.sk,.th,.kana,.kanji{background-color:rgba(128,225,0,40%)}
 .ta{text-align:right}
 .hl{background-color:rgba(255,165,0,40%)}
 u,.role{background-color:rgba(128,0,128,60%)}
@@ -75,6 +75,10 @@ u,.role{background-color:rgba(128,0,128,60%)}
             </div>
         </p>
 %endfor
+%endif
+%if byars
+    <h4>БЯРС</h4>
+    <p class="s">{{byars}}</p>
 %endif
 	</body>
 </html>

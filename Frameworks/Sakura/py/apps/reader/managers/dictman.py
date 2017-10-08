@@ -13,7 +13,7 @@ from mytr import my
 from hanjaconv import hanjaconv
 from unitraits.jpchars import iskanji
 import config, convutil, dicts, ebdict, growl, hanzidict, mecabman, rc, settings
-import _dictman, netman
+import _dictman, netman, re
 
 @memoized
 def manager(): return DictionaryManager()
@@ -421,6 +421,7 @@ class DictionaryManager:
       if ss.isJMDictRuEnabledJM():
         JMDictEnabled = False
 
+      # Init jisho dict
       jisho = []
       if ss.isJishoOrgEnabled() and netman.manager().isOnline():
         jishomass = netman.manager().jisho_api(text)
@@ -456,6 +457,20 @@ class DictionaryManager:
                         'jptext': jptext,
                         'alldefinitions': alldefinitions})
 
+      # Init rus byars dict
+      byars = ''
+      if ss.isByarsEnabled() and netman.manager().isOnline():
+        byars = netman.manager().byars_api(text)
+        # Убираем лишнее
+        byars = re.sub(r'<p class="dicname">Яркси</p>', '', byars)
+        byars = re.sub(r'<p class="dicname">БЯРС</p>', '', byars)
+        byars = re.sub(r'onclick=".*?"', '', byars)
+        byars = re.sub(r'href=".*?"', 'href="#"', byars)
+        byars = re.sub(r'<span class="id">〔.*?〕<\/span>', '', byars)
+        byars = re.sub(r'<object .*?<\/object>', '', byars)
+        byars = re.sub(r'<div class=\"akusentoblock\">.*<\/ul>\s*<\/div>', '', byars, flags=re.M | re.S)
+
+
       #with SkProfiler("en-vi"): # 1/8/2014: take 7 seconds for OVDP
       ret = rc.jinja_template('html/shiori').render({
         'language': 'ja',
@@ -463,6 +478,7 @@ class DictionaryManager:
         'text': text,
         'feature': f,
         'jisho': jisho,
+        'byars': byars,
         'kanji': d.renderHanzi(text, html=True),
         'tuples': d.lookupDB(text, exact=exact, feature=feature),
         'eb_strings': eb_strings, # exact not used, since it is already very fast

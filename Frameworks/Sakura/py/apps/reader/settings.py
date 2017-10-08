@@ -1263,6 +1263,12 @@ class Settings(QSettings):
       self.setValue('JishoOrg', v)
       self._updateDictionaryEnabled()
 
+  def isByarsEnabled(self): return to_bool(self.value('Byars'))
+  def setByarsEnabled(self, v):
+    if v != self.isByarsEnabled():
+      self.setValue('Byars', v)
+      self._updateDictionaryEnabled()
+
   def isStardictJaViEnabled(self): return to_bool(self.value('StardictJaVi'))
   def setStardictJaViEnabled(self, v):
     if v != self.isStardictJaViEnabled():
