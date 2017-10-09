@@ -5461,6 +5461,7 @@ class _FeatureTab(object):
     ret = QtWidgets.QGroupBox(tr_("Features"))
     layout = QtWidgets.QVBoxLayout()
     #layout.addWidget(self.internetAccessButton)
+    layout.addWidget(self.autoUpdateDictButton)
 
     for it in self.machineTranslationButton, self.userCommentButton:
       layout.addWidget(it)
@@ -5476,6 +5477,13 @@ class _FeatureTab(object):
 #    layout.addWidget(introLabel)
 
     ret.setLayout(layout)
+    return ret
+
+  @memoizedproperty
+  def autoUpdateDictButton(self):
+    ret = QtWidgets.QCheckBox(my.tr("Auto update shared dictionary"))
+    ret.setChecked(settings.global_().isAutoUpdateDictEnabled())
+    ret.toggled.connect(settings.global_().setAutoUpdateDictEnabled)
     return ret
 
   #@memoizedproperty

@@ -1946,7 +1946,9 @@ class MainObject(QObject):
     #if settings.global_().isAnyTranslationScriptEnabled():
     #  skevents.runlater(self.checkTranslationScripts, 60000) # 1min
     skevents.runlater(self.checkDigests, 90000) # 1.5min
-    skevents.runlater(self.checkTerms, 120000) # 2min
+
+    if settings.global_().isAutoUpdateDictEnabled():
+      skevents.runlater(self.checkTerms, 120000) # 2min
 
     #if dm.hasTerms():
     #  dprint("warm up dictionary terms")

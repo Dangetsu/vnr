@@ -819,6 +819,11 @@ class Settings(QSettings):
 
   ## Features ##
 
+  def isAutoUpdateDictEnabled(self): return to_bool(self.value('autoUpdateDict'))
+  def setAutoUpdateDictEnabled(self, v):
+    if v != self.isAutoUpdateDictEnabled():
+      self.setValue('autoUpdateDict', v)
+
   internetConnectionChanged = Signal(str)
   def internetConnection(self): return self.value('InternetConnection', defs.INTERNET_CONNECTION_AUTO)
   def setInternetConnection(self, value):

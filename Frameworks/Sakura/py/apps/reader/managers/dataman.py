@@ -9573,6 +9573,7 @@ class DataManager(QObject):
     """
     @param* reset  whether do incremental update
     """
+
     d = self.__d
     if d.updateTermsLocked:
       growl.notify(my.tr("Waiting for dictionary update") + " ...")
