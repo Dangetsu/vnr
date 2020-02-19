@@ -165,7 +165,7 @@ Item { id: root_
 
     return canSubmit && (userId === _SUPER_USER_ID
       || currentItem.userId === userId && !currentItem.protected
-      || userAccess.length > 0 && (userAccess.indexOf(c.userId+':'+datamanPlugin_.gameItemId)>=0)
+      || userAccess.length > 0 && (userAccess.indexOf(c.userId+':'+c.gameId)>=0)
       || currentItem.userId === _GUEST_USER_ID && userLevel > 0);
   }
   //function createComment() {

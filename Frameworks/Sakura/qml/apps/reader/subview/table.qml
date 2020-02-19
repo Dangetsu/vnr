@@ -52,7 +52,7 @@ Item { id: root_
 
     return !!c && !!userId && (userId === _SUPER_USER_ID
         || c.userId === userId && !c.protected
-        || userAccess.length > 0 && (userAccess.indexOf(c.userId+':'+datamanPlugin_.gameItemId)>=0)
+        || userAccess.length > 0 && (userAccess.indexOf(c.userId+':'+c.gameId)>=0)
         || c.userId === _GUEST_USER_ID && userLevel > 0);
   }
 
@@ -65,7 +65,7 @@ Item { id: root_
         }
     }
     return !!c && !!userId && (c.userId === userId && !c.protected
-        || userAccess.length > 0 && (userAccess.indexOf(c.userId+':'+datamanPlugin_.gameItemId)>=0)
+        || userAccess.length > 0 && (userAccess.indexOf(c.userId+':'+c.gameId)>=0)
         || userId !== _GUEST_USER_ID && !c.locked)
   }
 
